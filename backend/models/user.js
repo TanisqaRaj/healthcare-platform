@@ -1,54 +1,24 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema({
-    firebaseUid: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true // Index for faster queries by Firebase UID
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true, // Store email in lowercase
-    },
-    role: {
-        type: String,
-        enum: ['user', 'doctor', 'shop-owner', 'admin'],  // List of possible roles
-        default: 'user' // Default role for new users
-    },
-    bio: {
-        type: String,
-        default: '' // Optional field for user biography
-    },
-    skills: [{
-        type: String,
-        default: [] // List of skills (for doctors and shop owners)
-    }],
-    profilePictureUrl: {
-        type: String,
-        default: '' // Optional profile picture URL
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now // Timestamp for when the user was created
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now // Timestamp for when the user was last updated
-    },
+const userSchema = new mongoose.Schema({
+  uid: { type: String, required: true, unique: true }, // Firebase UID
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  role: {
+    type: String,
+    enum: ["patient", "doctor", "medical", "admin"],
+    required: true,
+  },
+  bio: { type: String }, // Optional bio for doctors or others
+  specialization: { type: String }, // For doctors
+  skills: [{ type: String }], // List of skills
+  videos: [{ type: String }], // Video URLs
+  ratings: { type: Number, default: 0 }, // Rating for mentors/doctors
+  coins: { type: Number, default: 0 }, // Credits earned on the platform
+  location: { type: String }, // Address or location for meetups
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
-UserSchema.pre('save', function (next) {
-    // Automatically update 'updatedAt' field on document update
-    this.updatedAt = Date.now();
-    next();
-});
-
-// Create the User model based on the schema
-export default mongoose.model('User', UserSchema);
+const User = mongoose.model("User", userSchema);
+export default User;
