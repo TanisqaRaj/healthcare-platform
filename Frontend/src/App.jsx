@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './app.css';
 import Home from './Home';
+import AdminEditProduct from './components/AdminEditProduct';
 import {
   createBrowserRouter,
   Route,
@@ -14,10 +15,14 @@ function App() {
   
 
   return (
-         <Routes>
-            <Route path="/" element={<Home />} />
+    <>
+  
+    <AdminEditProduct/>
+    </>
+        //  <Routes>
+        //     <Route path="/" element={<Home />} />
             
-         </Routes>       
+        //  </Routes>       
   );
 }
 
