@@ -1,0 +1,3 @@
+.hero_section{
+    @apply bg-[url('./assets/images/mask.png')] bg-no-repeat bg-center bg-cover;
+}
