@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { TbShoppingBagSearch } from "react-icons/tb";
 import { FaHospitalUser } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa6";
