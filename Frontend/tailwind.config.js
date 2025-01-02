@@ -12,15 +12,17 @@ export default {
         purpleColor:"#9771FF",
         irisBlueColor:"#01B5C5",
         headingColor:"#181A1E",
-        textColor:"#4E545F"
-
+        textColor:"#4E545F",
+        irissky:{
+          DEFAULT: "#0ea5e9",
+          500: "#0ea5e9",
+        },
       },
       boxShadow:{
         pannelShadow:"rgba(17,12,46,0.15) 0px 48px 100px 0px;"
       },
     },
   },
-  
   plugins: [],
 }
 
