@@ -65,7 +65,7 @@ const Login = () => {
                                 onChange={(e) => setLoginType(e.target.value)}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             >
-                                <option value="doctor">Patient</option>
+                                <option value="patient">Patient</option>
                                 <option value="doctor">Doctor</option>
                                 <option value="pharmacy">Pharmacy</option>
                                 <option value="admin">Admin</option>
