@@ -1,34 +1,47 @@
-// src/ThankYou.jsx
+import  { useState, useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import './ThankYou.css'; // Import the CSS file
+function ThankYou() {
+  const [avatarX, setAvatarX] = useState(200);
+  const [avatarY, setAvatarY] = useState(200);
 
-const ThankYou = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  useEffect(() => {
+    const animation = setInterval(() => {
+      setAvatarX(avatarX + 1);
+      setAvatarY(avatarY + 1);
+    }, 10);
 
-  const handleGoHome = () => {
-    navigate('/'); // Navigate to the home page
-  };
+    return () => clearInterval(animation);
+  }, [avatarX, avatarY]);
 
   return (
-    <div className="content">
-      <div className="wrapper-1">
-        <div className="wrapper-2">
-          <h1>Thank you!</h1>
-          <p>Thanks for contacting us. We will notify you with details as soon as possible.</p>
-          <p>You should receive a confirmation email soon.</p>
-          <button className="go-home" onClick={handleGoHome}>
-            Go Home
-          </button>
+    <div className="container">
+      <div className="text">
+        <h1>Thank You</h1>
+        <p>We&apos;ll reach You Shortly</p>
+      </div>
+      <div className="avatar" style={{ left: avatarX, top: avatarY }}>
+        <img src="https://www.flaticon.com/free-icons/avatar" alt="Avatar" />
+      </div>
+      <div className="gear"></div>
+      <div className="icons">
+        <div className="icon">
+          <img src="https://www.flaticon.com/free-icons/email" alt="Email" />
         </div>
-        <div className="footer-like">
-          <p>
-            Email not received? <a href="#">Click here to send again</a>
-          </p>
+        <div className="icon">
+          <img src="https://www.flaticon.com/free-icons/shopping-cart" alt="Shopping Cart" />
+        </div>
+        <div className="icon">
+          <img src="https://www.flaticon.com/free-icons/globe" alt="Globe" />
         </div>
       </div>
+      <div className="computer">
+        <div className="screen"></div>
+        <div className="keyboard"></div>
+        <div className="mouse"></div>
+      </div>
+      <div className="lamp"></div>
     </div>
   );
-};
+}
 
 export default ThankYou;

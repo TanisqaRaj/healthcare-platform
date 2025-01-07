@@ -1,60 +1,101 @@
-import { useState } from 'react';
-import LoginImg from '.././assets/images/loginimg.png';
+import  { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LoginImg from '../assets/images/loginimg.png'; // Adjust the path as per your project structure
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
+    const [identifier, setIdentifier] = useState(''); // Can be email, phone, or username
     const [password, setPassword] = useState('');
     const [loginType, setLoginType] = useState('doctor');
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
-    // Email validation regex (simple)
+    // Regex validations
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // Password validation regex (at least 6 alphanumeric characters)
+    const phoneRegex = /^[0-9]{10}$/; // Simple phone number validation
+    const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/; // Simple username validation
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Reset error message
         setErrorMessage('');
 
-        // Validate email
-        if (!emailRegex.test(email)) {
-            setErrorMessage('Please enter a valid email address.');
+        // Frontend validation
+        if (!emailRegex.test(identifier) && !phoneRegex.test(identifier) && !usernameRegex.test(identifier)) {
+            setErrorMessage('Please enter a valid email, phone number, or username.');
             return;
         }
 
-        // Validate password
         if (!passwordRegex.test(password)) {
             setErrorMessage('Password must be at least 6 characters long and include both letters and numbers.');
             return;
         }
 
-        // If validation passes, proceed with login logic
-        alert('Login successful!');
+        // Backend call
+        try {
+            const response = await fetch('http://localhost:8080/login', { // Update URL if needed
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ identifier, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Store the token in local storage
+                localStorage.setItem('authToken', data.token);
+
+                // Role-based navigation
+                if (data.user.role === 'doctor') {
+                    navigate('/doctor-dashboard');
+                } else if (data.user.role === 'patient') {
+                    navigate('/patient-dashboard');
+                } else if (data.user.role === 'admin') {
+                    navigate('/admin-dashboard');
+                } else if (data.user.role === 'pharmacy') {
+                    navigate('/pharmacy-dashboard');
+                }
+            } else {
+                const errorData = await response.json();
+                setErrorMessage(errorData.message || 'Failed to log in.');
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('An error occurred. Please try again.');
+        }
+    };
+
+    const handleBackClick = () => {
+        navigate('/');
     };
 
     return (
         <div className="flex min-h-screen">
-            <div className="w-full md:w-1/2 bg-blue-600 flex flex-col justify-center items-center p-8">
-                <h1 className="text-4xl text-white mb-2">Lets you sign in</h1>
-                <p className="text-white mb-4">
-                    Welcome to our Page{' '}
-                    <a href="#" className="text-blue-300">
-                        Sign Up
-                    </a>
-                </p>
-                <div className="w-full max-w-xs">
+            {/* Login form section */}
+            <div className="w-full md:w-1/2 bg-blue-600 flex flex-col justify-center items-center p-8 shadow-2xl rounded-lg">
+                <div className="w-full max-w-xs bg-white p-2 rounded-lg shadow-lg">
+                    <button onClick={handleBackClick} className="text-blue-600 mb-4">
+                        <i className="fas fa-arrow-left"></i>
+                    </button>
+                    <h1 className="text-4xl text-blue-600 mb-2">Let&apos;s you sign in</h1>
+                    <p className="text-blue-600 mb-4">
+                        Welcome to our Page{' '}
+                        <a href="#" className="text-blue-300">
+                            Sign Up
+                        </a>
+                    </p>
+                    {/* Error Message */}
                     {errorMessage && (
                         <div className="mb-4 text-red-500 text-sm">
                             {errorMessage}
                         </div>
                     )}
                     <form onSubmit={handleSubmit}>
+                        {/* Login Type Dropdown */}
                         <div className="mb-4">
                             <label
-                                className="block text-white text-sm font-bold mb-2"
+                                className="block text-gray-700 text-sm font-bold mb-2"
                                 htmlFor="loginType"
                             >
                                 Login As
@@ -71,25 +112,27 @@ const Login = () => {
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
+                        {/* Identifier Input */}
                         <div className="mb-4">
                             <label
-                                className="block text-white text-sm font-bold mb-2"
-                                htmlFor="email"
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="identifier"
                             >
-                                Email
+                                Email, Phone Number, or Username
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Email"
+                                id="identifier"
+                                type="text"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                                placeholder="Email, Phone Number, or Username"
                             />
                         </div>
+                        {/* Password Input */}
                         <div className="mb-4">
                             <label
-                                className="block text-white text-sm font-bold mb-2"
+                                className="block text-gray-700 text-sm font-bold mb-2"
                                 htmlFor="password"
                             >
                                 Password
@@ -103,12 +146,7 @@ const Login = () => {
                                 placeholder="Password"
                             />
                         </div>
-                        <div className="mb-4">
-                            <label className="inline-flex items-center text-white">
-                                <input type="checkbox" className="form-checkbox" />
-                                <span className="ml-2">Keep me logged in</span>
-                            </label>
-                        </div>
+                        {/* Submit Button */}
                         <div className="mb-4">
                             <button
                                 type="submit"
@@ -120,6 +158,7 @@ const Login = () => {
                     </form>
                 </div>
             </div>
+            {/* Login Image Section */}
             <div className="hidden md:flex md:w-1/2 bg-white justify-center items-center">
                 <img src={LoginImg} alt="login img" className="max-w-full h-auto" />
             </div>

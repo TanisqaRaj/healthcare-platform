@@ -1,24 +1,22 @@
-import mongoose from "mongoose";
+// models/User.js
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  uid: { type: String, required: true, unique: true }, // Firebase UID
-  name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  role: {
-    type: String,
-    enum: ["patient", "doctor", "medical", "admin"],
-    required: true,
-  },
-  bio: { type: String }, // Optional bio for doctors or others
-  specialization: { type: String }, // For doctors
-  skills: [{ type: String }], // List of skills
-  videos: [{ type: String }], // Video URLs
-  ratings: { type: Number, default: 0 }, // Rating for mentors/doctors
-  coins: { type: Number, default: 0 }, // Credits earned on the platform
-  location: { type: String }, // Address or location for meetups
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
+  phone: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
+  role: { type: String, required: true, enum: ['user'] },
+  numericId: { type: Number, unique: true },
+  password: { type: String, required: true },
+}, { timestamps: true });
+
+// Middleware to auto-assign numericId
+userSchema.pre('save', async function (next) {
+  if (!this.numericId) {
+    const lastUser = await mongoose.model('User').findOne().sort({ numericId: -1 });
+    this.numericId = lastUser ? lastUser.numericId + 1 : 1; // Start from 1
+  }
+  next();
 });
 
-const User = mongoose.model("User", userSchema);
-export default User;
+export default mongoose.model('User', userSchema);

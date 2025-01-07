@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'; // No need for Router here
 import './app.css';
 
-import Landing from './landing';
+import Landing from './Landing';
 import Login from './components/Login';
 import About from './components/pages/About';
 import Contact from './components/pages/Contact/Contact';
