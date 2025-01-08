@@ -1,25 +1,34 @@
 import About from "./components/pages/About";
 // import Contact from './components/pages/Contact/Contact'
 import "./app.css";
-import Home from "./components/Pages/Home";
+
 import Header from "./Pharmacy/Components/Header";
 import Footer from "./Pharmacy/Components/Footer";
 import Hero from "./Pharmacy/Components/hero/Hero";
 import NavBar from "./Pharmacy/Components/NavBar";
 // import About from './Pharmacy/Components/navbar/About';
 import Services from "./Pharmacy/Components/navbar/Services";
-import Contact from "./Pharmacy/Components/navbar/Contact";
+import Contact from "./components/pages/Contact/Contact";
 import NotFound from "./Pharmacy/Components/navbar/NotFound";
 // import Login from './Pharmacy/Login';
-import Login from "./components/Login";
+
 import Carousel from "./Pharmacy/Components/hero/Carousel";
 import TermsAndCond from "./Pharmacy/Components/hero/footer/TermsAndCond";
 import HelpCenter from "./Pharmacy/Components/hero/footer/HelpCenter";
 import Registration from "./components/Registration";
-import Landing from "./Landing";
+
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PrivacyPolicy from "./Pharmacy/Components/hero/footer/PrivacyPolicy";
+ // No need for Router here
+import './app.css';
+
+import Landing from './Landing';
+import Login from './components/Login';
+import UserDash from './components/userdash/UserDash'
+
+
+
 
 function App() {
   const router = createBrowserRouter([
@@ -115,6 +124,16 @@ function App() {
         <div>
           <NavBar />
           <HelpCenter />
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/userdash",
+      element: (
+        <div>
+          <NavBar />
+          <UserDash />
           <Footer />
         </div>
       ),

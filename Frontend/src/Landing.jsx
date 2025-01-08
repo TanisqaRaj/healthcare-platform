@@ -1,6 +1,7 @@
 import  { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Logo from './assets/images/logo2.jpg';
 
 
 const Landing = () => {
@@ -23,9 +24,9 @@ const Landing = () => {
             <img
               alt="Logo"
               className="h-10"
-              height={50}
-              src="https://storage.googleapis.com/a1aa/image/DyaGmK4lLgJjJNwouV8WWCg4nTuHvHeeEHf5fGKq0k1Gbe4fE.jpg"
-              width={150}
+              height={150}
+              src={Logo}
+              width={50}
             />
           </div>
           {/* Navigation Bar */}
@@ -36,7 +37,7 @@ const Landing = () => {
             <a className="text-gray-700 hover:text-teal-600" href="/about">
               About
             </a>
-            <a className="text-gray-700 hover:text-teal-600" href="/services">
+            <a className="text-gray-700 hover:text-teal-600" href="/userdash">
               Services
             </a>
             <a className="text-gray-700 hover:text-teal-600" href="/contact">

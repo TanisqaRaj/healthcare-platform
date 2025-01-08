@@ -1,144 +1,169 @@
-import { useState } from "react";
-import LoginImg from ".././assets/images/loginimg.png";
-import { useNavigate } from "react-router-dom";
+import  { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LoginImg from '../assets/images/loginimg.png'; // Adjust the path as per your project structure
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginType, setLoginType] = useState("doctor");
-  const [errorMessage, setErrorMessage] = useState("");
+    const [identifier, setIdentifier] = useState(''); // Can be email, phone, or username
+    const [password, setPassword] = useState('');
+    const [loginType, setLoginType] = useState('doctor');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
-  // Email validation regex (simple)
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    // Regex validations
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^[0-9]{10}$/; // Simple phone number validation
+    const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/; // Simple username validation
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
-  // Password validation regex (at least 6 alphanumeric characters)
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrorMessage('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+        // Frontend validation
+        if (!emailRegex.test(identifier) && !phoneRegex.test(identifier) && !usernameRegex.test(identifier)) {
+            setErrorMessage('Please enter a valid email, phone number, or username.');
+            return;
+        }
 
-    // Reset error message
-    setErrorMessage("");
+        if (!passwordRegex.test(password)) {
+            setErrorMessage('Password must be at least 6 characters long and include both letters and numbers.');
+            return;
+        }
 
-    // Validate email
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Please enter a valid email address.");
-      return;
-    }
+        // Backend call
+        try {
+            const response = await fetch('http://localhost:8080/login', { // Update URL if needed
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ identifier, password }),
+            });
 
-    // Validate password
-    if (!passwordRegex.test(password)) {
-      setErrorMessage(
-        "Password must be at least 6 characters long and include both letters and numbers."
-      );
-      return;
-    }
+            if (response.ok) {
+                const data = await response.json();
+                // Store the token in local storage
+                localStorage.setItem('authToken', data.token);
 
-    // If validation passes, proceed with login logic
-    alert("Login successful!");
-  };
+                // Role-based navigation
+                if (data.user.role === 'doctor') {
+                    navigate('/doctor-dashboard');
+                } else if (data.user.role === 'patient') {
+                    navigate('/patient-dashboard');
+                } else if (data.user.role === 'admin') {
+                    navigate('/admin-dashboard');
+                } else if (data.user.role === 'pharmacy') {
+                    navigate('/pharmacy-dashboard');
+                }
+            } else {
+                const errorData = await response.json();
+                setErrorMessage(errorData.message || 'Failed to log in.');
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMessage('An error occurred. Please try again.');
+        }
+    };
 
-  const navigate = useNavigate();
+    const handleBackClick = () => {
+        navigate('/');
+    };
 
-  const handleNavigateSignUp = () => {
-    navigate("/registration");
-  };
-
-  return (
-    <div className="flex min-h-screen">
-      <div className="w-full md:w-1/2 bg-blue-600 flex flex-col justify-center items-center p-8">
-        <h1 className="text-4xl text-white mb-2">Lets you sign in</h1>
-        <p className="text-white mb-4">
-          Welcome to our Page{" "}
-          <a href="#" className="text-blue-300">
-            Sign Up
-          </a>
-        </p>
-        <div className="w-full max-w-xs">
-          {errorMessage && (
-            <div className="mb-4 text-red-500 text-sm">{errorMessage}</div>
-          )}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="loginType"
-              >
-                Login As
-              </label>
-              <select
-                id="loginType"
-                value={loginType}
-                onChange={(e) => setLoginType(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              >
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-                <option value="pharmacy">Pharmacy</option>
-                <option value="admin">Admin</option>
-              </select>
+    return (
+        <div className="flex min-h-screen">
+            {/* Login form section */}
+            <div className="w-full md:w-1/2 bg-blue-600 flex flex-col justify-center items-center p-8 shadow-2xl rounded-lg">
+                <div className="w-full max-w-xs bg-white p-2 rounded-lg shadow-lg">
+                    <button onClick={handleBackClick} className="text-blue-600 mb-4">
+                        <i className="fas fa-arrow-left"></i>
+                    </button>
+                    <h1 className="text-4xl text-blue-600 mb-2">Let&apos;s you sign in</h1>
+                    <p className="text-blue-600 mb-4">
+                        Welcome to our Page{' '}
+                        <a href="#" className="text-blue-300">
+                            Sign Up
+                        </a>
+                    </p>
+                    {/* Error Message */}
+                    {errorMessage && (
+                        <div className="mb-4 text-red-500 text-sm">
+                            {errorMessage}
+                        </div>
+                    )}
+                    <form onSubmit={handleSubmit}>
+                        {/* Login Type Dropdown */}
+                        <div className="mb-4">
+                            <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="loginType"
+                            >
+                                Login As
+                            </label>
+                            <select
+                                id="loginType"
+                                value={loginType}
+                                onChange={(e) => setLoginType(e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            >
+                                <option value="patient">Patient</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="pharmacy">Pharmacy</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        {/* Identifier Input */}
+                        <div className="mb-4">
+                            <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="identifier"
+                            >
+                                Email, Phone Number, or Username
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="identifier"
+                                type="text"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
+                                placeholder="Email, Phone Number, or Username"
+                            />
+                        </div>
+                        {/* Password Input */}
+                        <div className="mb-4">
+                            <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="password"
+                            >
+                                Password
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Password"
+                            />
+                        </div>
+                        {/* Submit Button */}
+                        <div className="mb-4">
+                            <button
+                                type="submit"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+                            >
+                                Sign In
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div className="mb-4">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-              />
+            {/* Login Image Section */}
+            <div className="hidden md:flex md:w-1/2 bg-white justify-center items-center">
+                <img src={LoginImg} alt="login img" className="max-w-full h-auto" />
             </div>
-            <div className="mb-4">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="inline-flex items-center text-white">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span className="ml-2">Keep me logged in</span>
-              </label>
-            </div>
-            <div className="mb-4 space-x-10 justify-between w-full">
-              <button
-                type="submit"
-                className=" w-[9vw] mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-              >
-                Sign In
-              </button>
-              <button
-                onClick={handleNavigateSignUp}
-                type="submit"
-                className="w-[9vw] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                SignUp
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-      <div className="hidden md:flex md:w-1/2 bg-white justify-center items-center">
-        <img src={LoginImg} alt="login img" className="max-w-full h-auto" />
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Login;
