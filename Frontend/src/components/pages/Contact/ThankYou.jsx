@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import './ThankYou.css'; // Import the CSS file
 import  { useState, useEffect } from 'react';
 
 function ThankYou() {

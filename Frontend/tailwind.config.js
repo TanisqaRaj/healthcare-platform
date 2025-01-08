@@ -17,6 +17,8 @@ export default {
           DEFAULT: "#0ea5e9",
           500: "#0ea5e9",
         },
+        pharmacyGreen:"#34d399"
+
       },
       boxShadow:{
         pannelShadow:"rgba(17,12,46,0.15) 0px 48px 100px 0px;"
