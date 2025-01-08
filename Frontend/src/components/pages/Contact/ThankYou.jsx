@@ -1,5 +1,3 @@
-// src/ThankYou.jsx
-
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './ThankYou.css'; // Import the CSS file
 

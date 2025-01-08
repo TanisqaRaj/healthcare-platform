@@ -1,6 +1,7 @@
 import React from 'react';
 
 
+// Sample ProductData with placeholders for images
 const ProductData = [
   {
     id: 1,
@@ -38,6 +39,7 @@ const Hero = () => {
   return (
     <div className="w-[100vw]">
       
+      {/* Header Section */}
       <header className="flex justify-between py-3 px-4">
         <h2 className="">Supplement</h2>
         <div className="flex justify-center">
@@ -51,6 +53,7 @@ const Hero = () => {
       </header>
 
       
+      {/* Product Grid Section */}
       <div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 px-3 py-3 gap-x-4 gap-y-4 border h-[400px]">
           {ProductData.map((data) => (
