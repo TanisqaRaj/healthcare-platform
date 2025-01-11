@@ -21,7 +21,7 @@ import Registration from "./components/Registration";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PrivacyPolicy from "./Pharmacy/Components/hero/footer/PrivacyPolicy";
  // No need for Router here
-import './app.css';
+
 
 import Landing from './Landing';
 import Login from './components/Login';

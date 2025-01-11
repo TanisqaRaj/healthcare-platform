@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import  { useState } from "react";
 import { useForm } from "react-hook-form";
-import Login from "./Login";
 import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
 
@@ -8,7 +7,6 @@ const Registration = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -37,7 +35,7 @@ const Registration = () => {
     navigate("/login");
   };
   // const [step, setStep] = useState(1);
-  const [options, setOptions]=useState(['option1', 'option2' , 'option3'])
+  const [options]=useState(['option1', 'option2' , 'option3'])
   async function onSubmit(data) {
     await new Promise((resolve) => setTimeout(resolve , 2000));
     console.log("Submitting the form...", data);

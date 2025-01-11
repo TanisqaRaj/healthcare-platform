@@ -1,6 +1,8 @@
 import express from 'express';
-import connectDB from './db.js'; // Note the .js extension for ES6 imports
+import connectDB from './db.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import authRoutes from './routes/authRoutes.js'; // Import the modified authRoutes
 
 // Load environment variables
 dotenv.config();
@@ -10,8 +12,15 @@ connectDB();
 
 const app = express();
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 
+// Routes
+app.use('/auth', authRoutes); // Use the auth route as the base path
+
 // Start the server
-const PORT = process.env.PORT || 3030;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Main server running on port ${PORT}`);
+});

@@ -68,5 +68,5 @@ app.get('/test-email', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`contact Server is running on port ${PORT}`);
 });

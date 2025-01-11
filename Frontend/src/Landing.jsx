@@ -52,7 +52,7 @@ const Landing = () => {
             <a className="text-gray-700 hover:text-teal-600" href="/login">
               Login
             </a>
-            <a className="text-gray-700 hover:text-teal-600" href="/register">
+            <a className="text-gray-700 hover:text-teal-600" href="/registration">
               Register
             </a>
           </div>
