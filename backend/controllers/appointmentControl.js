@@ -40,7 +40,7 @@ export const createAppointment = async (req, res) => {
 
         // Save the appointment
         const savedAppointment = await appointment.save();
-        res.status(201).json(savedAppointment);
+        res.status(201).json({sucess:true,appointment:savedAppointment});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

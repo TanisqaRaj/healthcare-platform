@@ -18,7 +18,7 @@ const doctorSchema = new mongoose.Schema(
         },
         name: { type: String, required: true },
         phone: {
-            type: String,
+            type: Number,
             required: true,
             match: /^[0-9]{10}$/, // Ensures a valid 10-digit phone number
         },
