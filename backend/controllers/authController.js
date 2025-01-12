@@ -50,7 +50,7 @@ export const registerDoctor = async (req, res) => {
     bio,
     gender,
     mciNumber,
-    profession,
+    department,
     experience,
     password,
     certificate,
@@ -82,13 +82,15 @@ export const registerDoctor = async (req, res) => {
       bio,
       gender,
       mciNumber,
-      profession,
+      department,
       experience,
       password: hashedPassword,
     });
 
+    // Save the doctor (doctorId will be auto-generated based on department)
     await doctor.save();
-    return res.status(201).json({ message: "Doctor registered successfully" });
+
+    return res.status(201).json({ message: "Doctor registered successfully", doctor });
   } catch (error) {
     console.error("Error in registerDoctor:", error.message);
     return res.status(500).json({ message: "Internal Server error" });

@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginImg from '../assets/images/loginimg.png'; // Adjust the path as per your project structure
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -6,7 +6,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 const Login = () => {
     const [identifier, setIdentifier] = useState(''); // Can be email, phone, or username
     const [password, setPassword] = useState('');
-    const [loginType, setLoginType] = useState('doctor');
+
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
@@ -32,38 +32,7 @@ const Login = () => {
         }
 
         // Backend call
-        try {
-            const response = await fetch('http://localhost:8080/login', { // Update URL if needed
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ identifier, password }),
-            });
 
-            if (response.ok) {
-                const data = await response.json();
-                // Store the token in local storage
-                localStorage.setItem('authToken', data.token);
-
-                // Role-based navigation
-                if (data.user.role === 'doctor') {
-                    navigate('/doctor-dashboard');
-                } else if (data.user.role === 'patient') {
-                    navigate('/patient-dashboard');
-                } else if (data.user.role === 'admin') {
-                    navigate('/admin-dashboard');
-                } else if (data.user.role === 'pharmacy') {
-                    navigate('/pharmacy-dashboard');
-                }
-            } else {
-                const errorData = await response.json();
-                setErrorMessage(errorData.message || 'Failed to log in.');
-            }
-        } catch (error) {
-            console.error(error);
-            setErrorMessage('An error occurred. Please try again.');
-        }
     };
 
     const handleBackClick = () => {
@@ -81,7 +50,7 @@ const Login = () => {
                     <h1 className="text-4xl text-blue-600 mb-2">Let&apos;s you sign in</h1>
                     <p className="text-blue-600 mb-4">
                         Welcome to our Page{' '}
-                        <a href="#" className="text-blue-300">
+                        <a href="/registration" className="text-blue-300">
                             Sign Up
                         </a>
                     </p>
@@ -96,19 +65,18 @@ const Login = () => {
                         <div className="mb-4">
                             <label
                                 className="block text-gray-700 text-sm font-bold mb-2"
-                                htmlFor="loginType"
+                                htmlFor="role"
                             >
-                                Login As
+                                Select Role
                             </label>
                             <select
-                                id="loginType"
-                                value={loginType}
-                                onChange={(e) => setLoginType(e.target.value)}
+                                id="role"
+                                name="role"
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            >
-                                <option value="patient">Patient</option>
+                            >   <option >Select Role</option>
+                                <option value="user">User</option>
                                 <option value="doctor">Doctor</option>
-                                <option value="pharmacy">Pharmacy</option>
+
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
