@@ -76,7 +76,6 @@ const Login = () => {
                             >   <option >Select Role</option>
                                 <option value="user">User</option>
                                 <option value="doctor">Doctor</option>
-
                                 <option value="admin">Admin</option>
                             </select>
                         </div>

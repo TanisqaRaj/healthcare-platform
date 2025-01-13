@@ -38,6 +38,7 @@ const doctorSchema = new mongoose.Schema(
             required: true,
             enum: ['male', 'female', 'other'],
         },
+        profession:{type:[String],required:true},
         experience: { type: Number, required: true }, // Experience in years
         department: { type: String, required: true }, // Profession (e.g., General Physician, Surgeon)
         mciNumber: { type: String, required: true, unique: true }, // Unique Medical Council of India number
