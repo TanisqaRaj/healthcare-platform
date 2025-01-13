@@ -13,8 +13,13 @@ connectDB();
 
 const app = express();
 
+app.use(express.json({limit:'50mb'}));
+app.use(express.urlencoded({limit:'50mb'}));
 // Middleware
-app.use(cors());
+var corsOptions = {
+  origin: '*',
+}
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes

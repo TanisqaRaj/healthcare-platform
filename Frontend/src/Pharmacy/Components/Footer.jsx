@@ -21,6 +21,15 @@ const Footer = () => {
   const helpCenter = () => {
     navigate("/helpcenter");
   };
+  const handleNAvigateAppointment = () => {
+    navigate("/appointment");
+  };
+  const handleNavigatePharmacy = () => {
+    navigate("/pharmacy");
+  };
+  const handleNavigateUserDashboard = () => {
+    navigate("/userdashboard");
+  };
 
   return (
     <footer className="w-full shadow-md bg-emerald-400 flex">
@@ -43,9 +52,9 @@ const Footer = () => {
          
           <div className="flex-col space-y-2 w-full hidden md:flex md:w-1/2 lg:w-1/4">
             <h1 className="text-xl font-bold text-slate-800">Quick Links</h1>
-            <div className="text-slate-800 font-medium hover:cursor-pointer">Find a doctor</div>
-            <div className="text-slate-800 font-medium hover:cursor-pointer">Book appointment</div>
-            <div className="text-slate-800 font-medium hover:cursor-pointer">Buy medicine</div>
+            <div className="text-slate-800 font-medium hover:cursor-pointer" onClick={handleNavigateUserDashboard}> Find a doctor</div>
+            <div className="text-slate-800 font-medium hover:cursor-pointer"onClick={handleNAvigateAppointment}>Book appointment</div>
+            <div className="text-slate-800 font-medium hover:cursor-pointer" onClick={handleNavigatePharmacy}>Buy medicine</div>
           </div>
 
           <div className="hidden lg:flex flex-col space-y-2 w-full lg:w-1/4">

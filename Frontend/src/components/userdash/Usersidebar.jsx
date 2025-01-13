@@ -54,6 +54,9 @@ export function UsersidebarItem({ icon, text, active, alert }) {
 
   return (
     <li
+      onClick={onclick}
+      role="button"
+      tabIndex={0}
       className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
         active
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
@@ -79,7 +82,10 @@ export function UsersidebarItem({ icon, text, active, alert }) {
         <div
           className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm invisible opacity-0 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
         >
+          
           {text}
+          
+          
         </div>
       )}
     </li>
