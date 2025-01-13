@@ -20,15 +20,15 @@ const UserDash = () => {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md">
+      {/* <div className="flex items-center justify-between bg-gray-100 p-4 shadow-md"> */}
         {/* Logo */}
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <img src="/path/to/logo.png" alt="Logo" className="h-8 w-auto" />
           <h1 className="text-xl font-semibold ml-2">Medi mentor</h1>
-        </div>
+        </div> */}
 
         {/* Search Box */}
-        <div className="flex items-center w-full max-w-md mx-auto bg-white rounded-full shadow-sm border border-gray-300 px-4 py-2">
+        {/* <div className="flex items-center w-full max-w-md mx-auto bg-white rounded-full shadow-sm border border-gray-300 px-4 py-2">
           <input
             type="text"
             placeholder="Search"
@@ -40,8 +40,8 @@ const UserDash = () => {
           >
             <Search size={20} />
           </button>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* Main Content */}
       <div className="flex">

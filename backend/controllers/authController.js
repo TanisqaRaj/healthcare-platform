@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 // User Registration
 export const registerUser = async (req, res) => {
-  const { name, email, phone, role,image, username, password, gender } = req.body;
+  const { name, email, phone , role,image, username, password, gender } = req.body;
 
   try {
     // Check if the user already exists

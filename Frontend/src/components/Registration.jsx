@@ -1,8 +1,9 @@
-import  { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
-
+import axios from "axios";
+import { faker } from "@faker-js/faker";
 const Registration = () => {
   const {
     register,
@@ -10,11 +11,25 @@ const Registration = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const [isDoctor, setIsDoctor] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
+  const handleSelect = (selectedList) => {
+    setSelectedOptions(selectedList);
+  };
+  
+
+  const handleRemove = (selectedList) => {
+    setSelectedOptions(selectedList);
+  };
+
+  const [isDoctor, setIsDoctor] = useState("");
+  const [image, setImage] = useState("");
+  const [certificate, setCertificate] = useState("");
+  const navigate = useNavigate();
   function roleChange(e) {
     setIsDoctor(e.target.value);
   }
+
   function validUsername(text, errors) {
     if (!/^[^0-9]*$/.test(text)) {
       errors.name = true;
@@ -22,24 +37,86 @@ const Registration = () => {
     }
   }
 
-  const [image, setImage] = useState("");
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     console.log(file);
     setImage(event.target.files[0]);
   };
-
-  const navigate = useNavigate();
+  const handleCertificateChange = (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+    setCertificate(event.target.files[0]);
+  };
 
   const handleNavigateLogin = () => {
     navigate("/login");
   };
   // const [step, setStep] = useState(1);
-  const [options]=useState(['option1', 'option2' , 'option3'])
+  const [options] = useState(["General Physician", "Cardiologist", "Surgeon","Pediatrician","Dermatologist","Gynecologist","Orthopedic Surgeon","Neurologist","Ophthalmologist","Dentist","ENT Specialist"]);
+
   async function onSubmit(data) {
-    await new Promise((resolve) => setTimeout(resolve , 2000));
-    console.log("Submitting the form...", data);
+    let url =
+      data.role === "patient"
+        ? "http://localhost:8080/auth/register/user"
+        : "http://localhost:8080/auth/register/doctor";
+    const registerObj = {
+      name: data.firstname.trim() + " " + data.lastname.trim(),
+      email: data.email,
+      phone: data.phone,
+      role: data.role === "patient" ? "user" : "doctor",
+      username: data.username,
+      password: data.password,
+      gender: data.gender,
+      department: data.role === "doctor" ? "nuerogist" : null,
+      bio: data.role === "doctor" ? data.doctorBio : null,
+      mciNumber: data.role === "doctor" ? data.mciNumber : null,
+      profession: data.role === "doctor" ? selectedOptions : null,
+      experience: data.role === "doctor" ? data.experience : null,
+      department: data.role === "doctor" ? data.department : null,
+
+    };
+
+    const processFileToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    };
+
+    try {
+      // Process profile image
+      if (image) {
+        registerObj.image = await processFileToBase64(image);
+      }
+
+      // Process certificate
+      if (certificate) {
+        registerObj.certificate = await processFileToBase64(certificate);
+      }
+
+      console.log("Register object:", registerObj);
+
+      // Submit the form with updated object
+      axios
+        .post(url, registerObj)
+        .then((response) => {
+          console.log("Registration successful:", response.data);
+          navigate("/login");
+        })
+        .catch((error) => {
+          console.error("Registration failed:", error);
+        });
+    } catch (error) {
+      console.error("Error processing files:", error);
+    }
   }
+
+  const handleBackClick = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <div className="min-h-screen flex justify-center items-center">
@@ -47,13 +124,16 @@ const Registration = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full min-w-10 p-6 space-y-4 bg-white shadow-lg rounded-lg"
         >
+          {/* Previous page */}
+          <button onClick={handleBackClick} className="text-emerald-600 mb-4">
+            <i className="fas fa-arrow-left"></i>
+          </button>
           {/* Name */}
           <div className="flex gap-1 items-center">
             <label>Name</label>
             <div className="flex flex-row w-[500px]">
               <input
                 {...register("firstname", {
-                  required: true,
                   maxLength: { value: 100, message: "max length atmost 100" },
                   minLength: { value: 2, message: "min length atleast 2" },
                 })}
@@ -86,7 +166,6 @@ const Registration = () => {
             <label>Username</label>
             <input
               {...register("username", {
-                required: true,
                 maxLength: { value: 100, message: "max length atmost 100" },
                 minLength: { value: 2, message: "min length atleast 2" },
               })}
@@ -104,7 +183,6 @@ const Registration = () => {
             <label>Email</label>
             <input
               {...register("email", {
-                required: true,
                 pattern: {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                   message: "Invalid email address",
@@ -118,11 +196,11 @@ const Registration = () => {
               <p className="text-red-700">{errors.email.message}</p>
             )}
           </div>
+          {/* Password */}
           <div>
             <label>Password</label>
             <input
               {...register("password", {
-                required: true,
                 pattern: {
                   value:
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
@@ -142,29 +220,46 @@ const Registration = () => {
           <div>
             <label>Contact</label>
             <input
-              {...register("contact", { required: true,
-                pattern:{
-                  value:/^[0-9]{10}$/,
-                  message:"Please enter a valid 10-digit phone number."
+              {...register("phone", {
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: "Please enter a valid 10-digit phone number.",
                 },
-                
-               })}
+              })}
               type="text"
               placeholder="Enter your Contact no.."
               className="w-full px-3 py-1 mb-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
             />
-            {errors.contact && (
-              <p className="text-red-700">{errors.contact.message}</p>
+            {errors.phone && (
+              <p className="text-red-700">{errors.phone.message}</p>
             )}
           </div>
           {/* Gender */}
           <div>
             <label>Gender</label>
-            <input type="radio" name="gender" id="male" />
+            <input
+              {...register("gender")}
+              value="male"
+              type="radio"
+              name="gender"
+              id="male"
+            />
             <label htmlFor="male">Male</label>
-            <input type="radio" name="gender" id="female" />
+            <input
+              {...register("gender")}
+              value="female"
+              type="radio"
+              name="gender"
+              id="female"
+            />
             <label htmlFor="female">Female</label>
-            <input type="radio" name="gender" id="other" />
+            <input
+              {...register("gender")}
+              value="other"
+              type="radio"
+              name="gender"
+              id="other"
+            />
             <label htmlFor="other">Other</label>
           </div>
           {/* ProfilePic */}
@@ -172,7 +267,7 @@ const Registration = () => {
             <label>Upload pic </label>
 
             <input
-              {...register("profilepic", { required: true })}
+              {...register("profilepic")}
               type="file"
               onChange={handleImageChange}
             />
@@ -190,9 +285,7 @@ const Registration = () => {
           <div>
             <label>Select Role</label>
             <select
-              {...register("role", {
-                required:true,
-              })}
+              {...register("role")}
               className={`w-full px-3 py-1 mb-2 border "hover:bg-emerald-500 rounded-lg`}
               value={isDoctor}
               onChange={roleChange}
@@ -209,26 +302,53 @@ const Registration = () => {
           {/* If selected role is doctor */}
           {isDoctor === "doctor" && (
             <div>
+              
+              <div className="flex justify-between items-center">
               {/* DoctorBio */}
+                <div>
+                  <label className="block mb-1 text-sm font-medium text-gray-600">
+                    Doctor Bio
+                  </label>
+                  <textarea
+                    className={"w-full px-4 py-2 border rounded"}
+                    placeholder="Write bio....."
+                    {...register("doctorBio")}
+                  />
+                  {errors.doctorBio && (
+                    <p className=" text-red-500">{errors.doctorBio.message}</p>
+                  )}
+                </div>
+
+                {/* Skills */}
+                <div className="flex">
+                  <label>Skills</label>
+                  <Multiselect
+                    // {...register("skills")}
+                    options={options} // Options for the dropdown
+                    isObject={false} // Since your options are an array of strings
+                    selectedValues={selectedOptions}
+                    onSelect={handleSelect}
+                    onRemove={handleRemove}
+                  />
+                </div>
+              </div>
+              {/* MCI number */}
               <div>
-                <label className="block mb-1 text-sm font-medium text-gray-600">
-                  Doctor Bio
-                </label>
-                <textarea
-                  className={"w-full px-4 py-2 border rounded"}
-                  placeholder="Write bio....."
-                  {...register("doctorBio", { required: true })}
+                <label>MCI number</label>
+                <input
+                  type="text"
+                  {...register("mciNumber")}
+                  className="w-full px-3 mb-2 py-1 border border-gray-300 rounded-lg"
                 />
-                {errors.doctorBio && (
-                  <p className=" text-red-500">{errors.doctorBio.message}</p>
-                )}
               </div>
               {/* UploadCertificate */}
               <div>
                 <label>Upload Certificate</label>
                 <input
+                  {...register("uploadCerificate")}
                   type="file"
-                  {...register("uploadCerificate", { required: true })}
+                  onChange={handleCertificateChange}
+                  className="w-full px-3 mb-2 py-1 border border-gray-300 rounded-lg"
                 />
               </div>
               {/* Experience */}
@@ -237,18 +357,24 @@ const Registration = () => {
                 <input
                   className="border items-center"
                   type="number"
-                  {...register("experience", { required: true })}
+                  {...register("experience")}
                 />
                 <span>Years</span>
               </div>
-              {/* Department */}
+              {/* department - Multiselect*/}
               <div>
-                <Multiselect
-                  className="border rounded-md"
-                  options={options} 
-                  isObject={false}
-                />
-
+                <label className="gap-x-3 p-3">Department</label>
+                <select
+                  {...register("department")}
+                >
+                  <option>Select department</option>
+                  <option value="Cardiology">Cardiology</option>
+                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="Dermatology">Dermatology</option>
+                  <option value="Gynecology">Gynecology</option>
+                  <option value="Orthopedic">Orthopedic</option>
+                  <option value="Psychiatry">Psychiatry</option>
+                </select>
               </div>
             </div>
           )}
@@ -281,4 +407,3 @@ const Registration = () => {
 };
 
 export default Registration;
-
