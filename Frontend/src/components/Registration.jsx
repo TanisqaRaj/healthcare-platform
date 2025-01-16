@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
 import axios from "axios";
-import { faker } from "@faker-js/faker";
+
 const Registration = () => {
   const {
     register,
@@ -67,7 +67,7 @@ const Registration = () => {
       username: data.username,
       password: data.password,
       gender: data.gender,
-      department: data.role === "doctor" ? "nuerogist" : null,
+      
       bio: data.role === "doctor" ? data.doctorBio : null,
       mciNumber: data.role === "doctor" ? data.mciNumber : null,
       profession: data.role === "doctor" ? selectedOptions : null,
