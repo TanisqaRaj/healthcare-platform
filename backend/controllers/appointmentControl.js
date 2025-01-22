@@ -5,7 +5,7 @@ import Doctor from '../models/Doctor.js';
 export const createAppointment = async (req, res) => {
     try {
         const {
-            patientName, patientPhone, patientEmail, gender, age, appointmentDate,address, disease, mode, doctorName } = req.body;
+            patientName, patientPhone, patientEmail, gender, age, appointmentDate, address, disease, mode, doctorName } = req.body;
 
         // Validate doctor name and fetch doctor details
         const doctor = await Doctor.findOne({ name: doctorName });
@@ -40,7 +40,7 @@ export const createAppointment = async (req, res) => {
 
         // Save the appointment
         const savedAppointment = await appointment.save();
-        res.status(201).json({sucess:true,appointment:savedAppointment});
+        res.status(201).json({ sucess: true, appointment: savedAppointment });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -61,7 +61,7 @@ export const getAllAppointments = async (req, res) => {
 export const getAppointmentByGeneratedId = async (req, res) => {
     try {
         const { appointmentID } = req.params;
-        const appointment = await Appointment.findOne({ appointmentID}).populate('doctor', 'name department');
+        const appointment = await Appointment.findOne({ appointmentID }).populate('doctor', 'name department');
 
         if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
         res.status(200).json(appointment);
@@ -99,5 +99,20 @@ export const deleteAppointment = async (req, res) => {
     }
 };
 
+//fetch doctor name in drop down during appointment creation
 
+export const getDoctorNameScroll= async (res,req)=>{
+    try {
+        // Fetch all doctor names from the database
+        const doctors = await Doctor.find({}, 'name');
 
+        if (!doctors.length) {
+            return res.status(404).json({ message: 'No doctors found' });
+        }
+
+        // Return doctor names in the response
+        res.status(200).json(doctors);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

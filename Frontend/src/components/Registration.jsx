@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
 import axios from "axios";
 
+
 const Registration = () => {
   const {
     register,
@@ -16,7 +17,6 @@ const Registration = () => {
   const handleSelect = (selectedList) => {
     setSelectedOptions(selectedList);
   };
-  
 
   const handleRemove = (selectedList) => {
     setSelectedOptions(selectedList);
@@ -67,7 +67,7 @@ const Registration = () => {
       username: data.username,
       password: data.password,
       gender: data.gender,
-      
+
       bio: data.role === "doctor" ? data.doctorBio : null,
       mciNumber: data.role === "doctor" ? data.mciNumber : null,
       profession: data.role === "doctor" ? selectedOptions : null,

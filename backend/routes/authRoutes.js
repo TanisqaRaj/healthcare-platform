@@ -1,13 +1,23 @@
 import express from 'express';
 import { registerUser } from '../controllers/authController.js';
 import { registerDoctor } from '../controllers/authController.js';
+import { loginAuth } from '../controllers/authController.js';
+import { verifyToken } from '../middleware/verifyToken.js'; // Ensure the middleware is correctly imported
 
 const router = express.Router();
 
-// Route for user registration
-router.post('/register/user', registerUser); //to register a user
+// Route for user registration (public)
+router.post('/register/user', registerUser);
 
-// Route for doctor registration
-router.post('/register/doctor', registerDoctor); //to register a doctor
+// Route for doctor registration (public)
+router.post('/register/doctor', registerDoctor);
+
+// Route for login (public)
+router.post('/login', loginAuth);
+
+// Example of a protected route
+router.get('/protected', verifyToken, (req, res) => {
+  res.status(200).json({ message: 'Access granted to protected route', user: req.user });
+});
 
 export default router;

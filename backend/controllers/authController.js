@@ -1,6 +1,8 @@
 import Doctor from "../models/Doctor.js";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import  jwt from "jsonwebtoken";
+
 
 // User Registration
 export const registerUser = async (req, res) => {
@@ -54,6 +56,7 @@ export const registerDoctor = async (req, res) => {
     experience,
     password,
     certificate,
+    profession,
     image,
   } = req.body;
 
@@ -84,6 +87,7 @@ export const registerDoctor = async (req, res) => {
       mciNumber,
       department,
       experience,
+      profession,
       password: hashedPassword,
     });
 
@@ -96,3 +100,47 @@ export const registerDoctor = async (req, res) => {
     return res.status(500).json({ message: "Internal Server error" });
   }
 };
+
+// Function to create a JWT token
+const createToken = (userId) => {
+  return jwt.sign(
+    { _id: userId },
+    process.env.JWT_SECRET,
+    { algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRY }
+  );
+};
+
+// Login function
+export const loginAuth = async (req, res) => {
+  const { email, password, role } = req.body;
+
+  if (!email || !password || !role) {
+    return res.status(400).json({ message: "Please fill all the fields" });
+  }
+
+  try {
+    let user;
+
+    // Find user by email and role
+    if (role === 'user') {
+      user = await User.findOne({ email });
+    } else if (role === 'doctor') {
+      user = await Doctor.findOne({ email });
+    }
+
+    // Check if user exists and password matches
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // Generate JWT token
+      const token = createToken(user._id);
+
+      return res.status(200).json({ message: "Login Success", token });
+    } else {
+      return res.status(401).json({ message: "Invalid Credentials" });
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
