@@ -3,23 +3,36 @@ import { useNavigate } from "react-router-dom";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import LoginImg from "../assets/images/loginimg.png"; // Adjust the path as per your project structure
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../reduxslice/AuthSlice";
+import userresponse from "../constant/user";
+
+import doctorresponce from "../constant/doctor";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState(""); // Can be email, phone, or username
   const [password, setPassword] = useState("");
-  const [loginType, setLoginType] = useState("doctor");
+  const [loginType, setLoginType] = useState("");
   const [errorMessage, setErrorMessage] = useState({});
   const navigate = useNavigate();
-
+  const token = useSelector((state) => state.auth.token);
+  console.log(token);
   // Regex validations
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const phoneRegex = /^[0-9]{10}$/; // Simple phone number validation
   const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/; // Simple username validation
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const passwordRegex = /^[A-Za-z]+@[0-9]+$/;
+  ;
+
+  const navigateRegister = () => {
+    navigate("/registration");
+  };
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+
 
     // Frontend validation
     if (
@@ -28,51 +41,53 @@ const Login = () => {
       !usernameRegex.test(identifier)
     ) {
       setErrorMessage({
-        emailError:'Email is required',
-        phoneError:"Phone is required",
-        userNameError:"Username is required"
+        emailError: "Email is required",
+        phoneError: "Phone is required",
+        userNameError: "Username is required",
       });
       return;
-    }
-    else{
+    } else {
       setErrorMessage({});
     }
 
     if (!passwordRegex.test(password)) {
       setErrorMessage({
-        passwordError:"Password is required",}
-      );
+        passwordError: "Password is required",
+      });
       return;
-    }
-    else{
+    } else {
       setErrorMessage({});
     }
 
     // Backend call
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch("http://localhost:8080/auth/login", {
         // Update URL if needed
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ identifier, password }),
+        body: JSON.stringify({ email:identifier, password, role:loginType }),
       });
 
       if (response.ok) {
         const data = await response.json();
+
         // Store the token in local storage
-        localStorage.setItem("authToken", data.token);
+        dispatch(
+          login({
+            token: data.token,
+            user: data.user,
+          })
+        );
 
         // Role-based navigation
         if (data.user.role === "doctor") {
           navigate("/doctor-dashboard");
-        } else if (data.user.role === "patient") {
-          navigate("/patient-dashboard");
+        } else if (data.user.role === "user") {
+          navigate("/dashboard");
         } else if (data.user.role === "admin") {
           navigate("/admin-dashboard");
-        } else if (data.user.role === "pharmacy") {
-          navigate("/pharmacy-dashboard");
         }
       } else {
         const errorData = await response.json();
@@ -98,25 +113,36 @@ const Login = () => {
           </button>
           <div className="flex items-center justify-center">
             <h2 className="text-2xl sm:text-4xl text-emerald-500 p-2 mb-6">
-                Let&apos;s you sign in
+              Let&apos;s you sign in
             </h2>
           </div>
-         
+
           {/* Error Message */}
           {errorMessage.phoneError && (
-            <div className="mb-4 text-red-500 text-sm">{errorMessage.phoneError}</div>
+            <div className="mb-4 text-red-500 text-sm">
+              {errorMessage.phoneError}
+            </div>
           )}
           {errorMessage.emailError && (
-            <div className="mb-4 text-red-500 text-sm">{errorMessage.emailError}</div>
+            <div className="mb-4 text-red-500 text-sm">
+              {errorMessage.emailError}
+            </div>
           )}
           {errorMessage.userNameError && (
-            <div className="mb-4 text-red-500 text-sm">{errorMessage.userNameError}</div>
+            <div className="mb-4 text-red-500 text-sm">
+              {errorMessage.userNameError}
+            </div>
           )}
           {errorMessage.passwordError && (
-            <div className="mb-4 text-red-500 text-sm">{errorMessage.passwordError}</div>
+            <div className="mb-4 text-red-500 text-sm">
+              {errorMessage.passwordError}
+            </div>
           )}
-          
-          <form onSubmit={handleSubmit}
+
+          <form
+            onSubmit={(e) => {
+              handleSubmit(e);
+            }}
             className="p-5"
           >
             {/* Login Type Dropdown */}
@@ -133,10 +159,10 @@ const Login = () => {
                 onChange={(e) => setLoginType(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 sm:py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
+                <option value="">Select role</option>
                 <option value="user">User</option>
                 <option value="doctor">Doctor</option>
                 <option value="admin">Admin</option>
-
               </select>
             </div>
             {/* Identifier Input */}
@@ -147,7 +173,7 @@ const Login = () => {
               >
                 <span className="block sm:hidden">Username</span>
                 <span className="hidden sm:block">
-                    Email or Phone Number or Username
+                  Email or Phone Number or Username
                 </span>
               </label>
               <input
@@ -186,11 +212,14 @@ const Login = () => {
               </button>
             </div>
             {/* SignUp */}
-            <div className="flex flex-row justify-center items-center">
-                <p className="text-center p-2 text-gray-600 text-sm">
-                    Don't have an acoount?
-                </p>
-                <a href="/registration" className="text-sm text-emerald-500">Signup</a>
+            <div
+              className="flex flex-row justify-center items-center"
+              onClick={navigateRegister}
+            >
+              <p className="text-center p-2 text-gray-600 text-sm">
+                Don't have an acoount?
+              </p>
+              <p className="text-sm text-emerald-500">Signup</p>
             </div>
           </form>
         </div>
@@ -198,10 +227,9 @@ const Login = () => {
 
       {/* Login Image Section */}
       <div className="hidden md:flex md:w-1/2 p-1 justify-center items-center">
-      <div className="w-full max-w-lg bg-white p-2 rounded-lg shadow-lg">
-        <img src={LoginImg} alt="login img" className="max-w-full h-auto" />
-      </div>
-        
+        <div className="w-full max-w-lg bg-white p-2 rounded-lg shadow-lg">
+          <img src={LoginImg} alt="login img" className="max-w-full h-auto" />
+        </div>
       </div>
     </div>
   );

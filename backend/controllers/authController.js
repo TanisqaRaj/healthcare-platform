@@ -133,7 +133,7 @@ export const loginAuth = async (req, res) => {
       // Generate JWT token
       const token = createToken(user._id);
 
-      return res.status(200).json({ message: "Login Success", token });
+      return res.status(200).json({ message: "Login Success", token , success:true , user});
     } else {
       return res.status(401).json({ message: "Invalid Credentials" });
     }

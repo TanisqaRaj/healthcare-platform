@@ -17,7 +17,7 @@ const About = () => {
       <div className="relative">
         <button
           onClick={handleBack}
-          className="absolute top-6 left-6 flex items-center px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+          className="absolute top-6 left-6 flex items-center px-4 py-2 bg-emerald-500 rounded hover:bg-emerald-600 focus:outline-none"
         >
           <FaArrowLeft className="mr-2" />
         </button>

@@ -13,11 +13,10 @@ import HelpCenter from "./Pharmacy/Components/hero/footer/HelpCenter";
 import Registration from "./components/Registration";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PrivacyPolicy from "./Pharmacy/Components/hero/footer/PrivacyPolicy";
-import Landing from './Landing';
-import Login from './components/Login';
-import UserDash from './components/userdash/UserDash'
-import Appointment from "./components/userdash/sidebarpages/Appointment";
-
+import Landing from "./Landing";
+import Login from "./components/Login";
+import Sidebar from "./components/dashboard/Sidebar";
+import Content from "./components/dashboard/Content";
 
 function App() {
   const router = createBrowserRouter([
@@ -26,11 +25,7 @@ function App() {
       element: (
         <div>
           <Landing />
-          <Footer/>
-          {/* <NavBar/>
-            <Header/>
-            <Home/>
-            <Footer/> */}
+          <Footer />
         </div>
       ),
     },
@@ -50,7 +45,6 @@ function App() {
       element: (
         <div>
           <NavBar />
-          {/* <Header /> */}
           <Services />
           <Footer />
         </div>
@@ -61,7 +55,6 @@ function App() {
       element: (
         <div>
           <NavBar />
-          {/* <Header /> */}
           <Contact />
           <Footer />
         </div>
@@ -81,21 +74,23 @@ function App() {
     },
     {
       path: "/login",
-      element:(
-      <div>
-        <NavBar/>
-        <Login />,
-        <Footer/>
-      </div> 
-      )
+      element: (
+        <div>
+          <NavBar />
+          <Login />,
+          <Footer />
+        </div>
+      ),
     },
     {
       path: "/registration",
-      element:<div>
+      element: (
+        <div>
+          <NavBar />
           <Registration />,
-          <Footer/>
-      </div> 
-
+          <Footer />
+        </div>
+      ),
     },
     {
       path: "/terms",
@@ -129,25 +124,17 @@ function App() {
       ),
     },
     {
-      path: "/userdashboard",
+      path: "/dashboard",
       element: (
         <div>
           <NavBar />
-          <UserDash />
+          <div className="flex">
+            <Sidebar />
+            <Content />
+          </div>
           <Footer />
         </div>
       ),
-    },
-    {
-      path:'/appointment',
-      element:(
-        <div>
-          <NavBar/>
-          <Appointment/>
-          <Footer/>
-        </div>
-      )
-
     },
     {
       path: "/*",
