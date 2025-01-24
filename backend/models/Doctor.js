@@ -67,18 +67,5 @@ doctorSchema.pre('save', async function (next) {
     next();
 });
 
-// Middleware to hash password before saving
-doctorSchema.pre('save', async function (next) {
-    if (this.isModified('password')) {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-    }
-    next();
-});
-
-// Method to compare password during login
-doctorSchema.methods.comparePassword = async function (candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
-};
 
 export default mongoose.model('Doctor', doctorSchema);

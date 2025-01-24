@@ -7,17 +7,17 @@ const Carousel = () => {
 
   const slides = [
     {
-      image: "C:\Users\rajta\OneDrive\Desktop\Projects\healthcare-platform\Frontend\src\assets\pharmacy\skin_care1_1920.jpg",
+      image: "https://plus.unsplash.com/premium_photo-1668487826871-2f2cac23ad56?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWVkaWNpbmV8ZW58MHx8MHx8fDA%3D",
       title: "Slide 1 Title",
       description: "This is the description for Slide 1."
     },
     {
-      image: "C:\Users\rajta\OneDrive\Desktop\Projects\healthcare-platform\Frontend\src\assets\pharmacy\skin_care1_1920.jpg", 
+      image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1lZGljaW5lfGVufDB8fDB8fHww", 
       title: "Slide 2 Title",
       description: "This is the description for Slide 2."
     },
     {
-      image: "C:\Users\rajta\OneDrive\Desktop\Projects\healthcare-platform\Frontend\src\assets\pharmacy\skin_care1_1920.jpg", 
+      image: "https://media.istockphoto.com/id/2147705600/photo/doctor-holding-clipboard-consulting-child.webp?a=1&b=1&s=612x612&w=0&k=20&c=bbX5pyM2bI3OXRUYZNJw9fXN5Xa3bjl7HCN2jCtl08U=", 
       title: "Slide 3 Title",
       description: "This is the description for Slide 3."
     }

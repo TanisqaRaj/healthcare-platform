@@ -19,11 +19,11 @@ const Landing = () => {
   };
 
   return (
-    <div>
+    <div className="w-[100vw] m-0 p-0">
       <title>Doctor Appointment</title>
 
       {/* Landing Header */}
-      <header className="bg-white shadow-md">
+      <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center py-4 px-6">
           {/* Logo Section */}
           <div className="flex items-center">
@@ -81,7 +81,10 @@ const Landing = () => {
             <a className="text-gray-700 hover:text-teal-600" href="/login">
               Login
             </a>
-            <a className="text-gray-700 hover:text-teal-600" href="/registration">
+            <a
+              className="text-gray-700 hover:text-teal-600"
+              href="/registration"
+            >
               Register
             </a>
           </div>
@@ -89,7 +92,10 @@ const Landing = () => {
       </header>
 
       {/* Landing Hero Section */}
-      <section className="bg-teal-600 text-white py-20" data-aos="fade-up">
+      <section
+        className="bg-teal-600 w-[100vw] h-[100vh] text-white py-20"
+        data-aos="fade-up"
+      >
         <div className="container mx-auto flex flex-col md:flex-row items-center">
           <div className="md:w-1/2">
             <h1 className="text-4xl font-bold mb-4">
@@ -101,16 +107,15 @@ const Landing = () => {
             </p>
             <a
               className="bg-white text-teal-600 px-6 py-2 rounded-full font-semibold"
-              href="/book-appointment"
+              href="/dashboard"
             >
               Book Appointment
             </a>
           </div>
-          <div className="md:w-1/2 mt-10 md:mt-0 flex justify-end">
+          <div className="md:w-1/2 mt-10 md:mt-0 flex justify-end h-[80vh]">
             <img
               alt="Doctor"
               className="rounded-lg shadow-lg"
-              height={500}
               src="https://images.unsplash.com/photo-1550831107-1553da8c8464?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGRvY3RvcnxlbnwwfHx8fDE2NjU2NjY2NzA&ixlib=rb-1.2.1&q=80&w=1080"
               width={500}
             />
@@ -119,7 +124,7 @@ const Landing = () => {
       </section>
 
       {/* Landing Services Section */}
-      <section className="py-20">
+      <section className="py-20 w-[100vw]">
         <div className="container mx-auto">
           <div
             className="flex flex-col md:flex-row items-center mb-10"
@@ -183,8 +188,11 @@ const Landing = () => {
       </section>
 
       {/* Landing Video Section */}
-      <section className="bg-gray-200 py-20" data-aos="zoom-in">
-        <div className="container mx-auto text-center">
+      <section
+        className="bg-gray-200 py-20 w-[100vw] h-[100vh]"
+        data-aos="zoom-in "
+      >
+        <div className="container mx-auto text-center ">
           <h2 className="text-3xl font-bold mb-4">
             Doctor Pharmacy Reservation
           </h2>
@@ -198,11 +206,10 @@ const Landing = () => {
           >
             Reserve Now
           </a>
-          <div className="mt-10">
+          <div className="mt-10 ">
             <img
               alt="Doctor Video"
-              className="rounded-lg shadow-lg mx-auto"
-              height={450}
+              className="rounded-lg shadow-lg mx-auto h-[80vh]"
               src="https://storage.googleapis.com/a1aa/image/mfx3ThaRELQaFi4RJppZNyeTXCwIuKg0vdbLN9yxuuYqmHfnA.jpg"
               width={800}
             />
@@ -211,7 +218,7 @@ const Landing = () => {
       </section>
 
       {/* Landing Health Tips Section */}
-      <section className="py-20">
+      <section className="py-20 w-[100vw] h-[100vh]">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-10">
             Basic Safety Medication Usages
@@ -272,16 +279,6 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
-      {/* Landing Footer */}
-      {/* <footer className="bg-teal-600 text-white py-10">
-        <div className="container mx-auto text-center">
-          <a className="text-gray-700 hover:text-yellow-500" href="tel:+1234567890">
-            <i className="fas fa-phone-alt" /> +123 456 7890
-          </a>
-          <p>© 2025 Doctor Appointment. All rights reserved.</p>
-        </div>
-      </footer> */}
     </div>
   );
 };

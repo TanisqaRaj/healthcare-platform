@@ -18,12 +18,9 @@ const Login = () => {
     setIsDoctor(e.target.value)
  }
 
-  // const selectedRole = watch("role");
   const [isDoctor, setIsDoctor] = useState('');
 
-  // useEffect(() => {
-  //   setIsDoctor(selectedRole === "doctor");
-  // });
+
 
   function validUsername(text,errors){
     if(!(/^[^0-9]*$/.test(text))){
