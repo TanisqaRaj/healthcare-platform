@@ -82,7 +82,6 @@ const Registration = () => {
       username: data.username,
       password: data.password,
       gender: data.gender,
-      department: data.role === "doctor" ? "nuerogist" : null,
       bio: data.role === "doctor" ? data.doctorBio : null,
       mciNumber: data.role === "doctor" ? data.mciNumber : null,
       profession: data.role === "doctor" ? selectedOptions : null, //Skills

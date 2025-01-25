@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { RiArrowDropDownLine } from "react-icons/ri";
+
 import LoginImg from "../assets/images/loginimg.png"; // Adjust the path as per your project structure
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../reduxslice/AuthSlice";
-import userresponse from "../constant/user";
 
-import doctorresponce from "../constant/doctor";
+
+
 
 const Login = () => {
   const [identifier, setIdentifier] = useState(""); // Can be email, phone, or username
@@ -62,12 +62,12 @@ const Login = () => {
     // Backend call
     try {
       const response = await fetch("http://localhost:8080/auth/login", {
-        // Update URL if needed
+        
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email:identifier, password, role:loginType }),
+        body: JSON.stringify({ email:identifier, username:identifier, password, role:loginType }),
       });
 
       if (response.ok) {
@@ -217,7 +217,7 @@ const Login = () => {
               onClick={navigateRegister}
             >
               <p className="text-center p-2 text-gray-600 text-sm">
-                Don't have an acoount?
+                Don&apos;t have an acoount?
               </p>
               <p className="text-sm text-emerald-500">Signup</p>
             </div>

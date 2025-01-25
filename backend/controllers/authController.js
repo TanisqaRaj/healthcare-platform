@@ -112,9 +112,9 @@ const createToken = (userId) => {
 
 // Login function
 export const loginAuth = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, username ,password, role } = req.body;
 
-  if (!email || !password || !role) {
+  if (!email  && !username || !password || !role) {
     return res.status(400).json({ message: "Please fill all the fields" });
   }
 
@@ -123,9 +123,9 @@ export const loginAuth = async (req, res) => {
 
     // Find user by email and role
     if (role === 'user') {
-      user = await User.findOne({ email });
+      user = await User.findOne( { $or:[{email }, {username}]});
     } else if (role === 'doctor') {
-      user = await Doctor.findOne({ email });
+      user = await Doctor.findOne({$or:[ {email} , {username} ]} );
     }
 
     // Check if user exists and password matches
