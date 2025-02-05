@@ -3,7 +3,6 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import  jwt from "jsonwebtoken";
 
-
 // User Registration
 export const registerUser = async (req, res) => {
   const { name, email, phone , role,image, username, password, gender } = req.body;
@@ -143,4 +142,20 @@ export const loginAuth = async (req, res) => {
   }
 };
 
+export const checkTokenExpiry = (req, res) => {
+  const token = req.body?.token; // Safely access token
+  console.log(token);
+  if (!token) {
+    return res.status(200).json({ success: false, message: 'Access Denied. No token provided.' });
+  }
 
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    return res.status(200).json({ success: true, message: 'Token is valid' });
+  } catch (error) {
+
+    console.error('Token verification failed:', error.message);
+    return res.status(200).json({ success: false, message: 'Invalid Token' });
+  }
+};

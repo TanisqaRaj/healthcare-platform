@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser } from '../controllers/authController.js';
+import { checkTokenExpiry, registerUser } from '../controllers/authController.js';
 import { registerDoctor } from '../controllers/authController.js';
 import { loginAuth } from '../controllers/authController.js';
 import { verifyToken } from '../middleware/verifyToken.js'; // Ensure the middleware is correctly imported
@@ -14,6 +14,8 @@ router.post('/register/doctor', registerDoctor);
 
 // Route for login (public)
 router.post('/login', loginAuth);
+
+router.post('/verify-token', checkTokenExpiry);
 
 // Example of a protected route
 router.get('/protected', verifyToken, (req, res) => {

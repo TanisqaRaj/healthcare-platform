@@ -4,20 +4,54 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Logo from "../../assets/images/logo2.jpg";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../reduxslice/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const NavBar = () => {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-    });
-  }, []);
+  
 
   const [isOpen, setIsOpen] = useState(false);
+  const navigate=useNavigate();
+  const dispatch= useDispatch();
+  const user=useSelector((state)=> state.auth.user);
+  const token=useSelector((state)=>state.auth.token);
+  const handleLogout = () =>{
+    dispatch(logout());
+    navigate("/")
+  }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  const expirytoken=async()=>{
+      const tokenObj={
+        token:token
+      }
+        if(token){
+          axios.post("http://localhost:8080/auth/verify-token" , tokenObj)
+          .then((response)=>{
+            if(response.data.success){
+              navigate("/dashboard");
+            }
+            else{
+              dispatch(logout())
+              navigate("/") //change it to protected route
+            }
+          })
+        }
+        else{
+          return;
+        }
+    }
+    useEffect(()=>{
+      expirytoken();
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    },[])
 
   return (
     <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
@@ -28,12 +62,13 @@ const NavBar = () => {
         </div>
         {/* Navigation Bar */}
         <nav className="flex-grow flex justify-center space-x-6">
-          <a className="text-gray-700 hover:text-teal-600" href="/">
+          <a className="text-gray-700 hover:text-teal-600" href="/" onClick={handleLogout}>
             Home
           </a>
           <a className="text-gray-700 hover:text-teal-600" href="/about">
             About
           </a>
+          {/* Services */}
           <div className="relative">
             <div
               className="flex items-center cursor-pointer text-gray-700 hover:text-teal-600"
@@ -59,7 +94,7 @@ const NavBar = () => {
               </div>
             )}
           </div>
-
+          {/* Contact */}
           <a className="text-gray-700 hover:text-teal-600" href="/contact">
             Contact
           </a>
@@ -69,12 +104,23 @@ const NavBar = () => {
         </nav>
         {/* Login/Register Section */}
         <div className="flex items-center space-x-4">
-          <a className="text-gray-700 hover:text-teal-600" href="/login">
-            Login
-          </a>
-          <a className="text-gray-700 hover:text-teal-600" href="/registration">
-            SignUp
-          </a>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="text-gray-700 hover:text-red-600"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <a className="text-gray-700 hover:text-teal-600" href="/login">
+                Login
+              </a>
+              <a className="text-gray-700 hover:text-teal-600" href="/registration">
+                SignUp
+              </a>
+            </>
+          )}
         </div>
       </div>
     </header>

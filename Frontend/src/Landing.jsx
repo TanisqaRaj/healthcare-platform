@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Logo from "./assets/images/logo2.jpg";
-import { RiArrowDropDownLine } from "react-icons/ri";
 
 const Landing = () => {
-  useEffect(() => {
+useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
     });
   }, []);
-
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -23,10 +20,10 @@ const Landing = () => {
       <title>Doctor Appointment</title>
 
       {/* Landing Header */}
-      <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
-        <div className="container mx-auto flex justify-between items-center py-4 px-6">
+      {/* <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
+        <div className="container mx-auto flex justify-between items-center py-4 px-6"> */}
           {/* Logo Section */}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <img
               alt="Logo"
               className="h-10"
@@ -34,9 +31,9 @@ const Landing = () => {
               src={Logo}
               width={50}
             />
-          </div>
+          </div> */}
           {/* Navigation Bar */}
-          <nav className="flex-grow flex justify-center space-x-6">
+          {/* <nav className="flex-grow flex justify-center space-x-6">
             <a className="text-gray-700 hover:text-teal-600" href="/">
               Home
             </a>
@@ -75,9 +72,9 @@ const Landing = () => {
             <a className="text-gray-700 hover:text-teal-600" href="/pharmacy">
               Pharmacy
             </a>
-          </nav>
+          </nav> */}
           {/* Login/Register Section */}
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <a className="text-gray-700 hover:text-teal-600" href="/login">
               Login
             </a>
@@ -89,7 +86,7 @@ const Landing = () => {
             </a>
           </div>
         </div>
-      </header>
+      </header> */}
 
       {/* Landing Hero Section */}
       <section
@@ -107,7 +104,7 @@ const Landing = () => {
             </p>
             <a
               className="bg-white text-teal-600 px-6 py-2 rounded-full font-semibold"
-              href="/dashboard"
+              href="/login"
             >
               Book Appointment
             </a>

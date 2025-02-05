@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import DashHeader from "./DashHeader";
 import { useNavigate } from "react-router-dom";
+import Appointment from "./sidebar/Appointment";
 
 const Content = () => {
   const [trendingNews, setTrendingNews] = useState([]);
+  const [ appVisible, setAppVisisble] = useState(false);
   const navigate = useNavigate();
-
+ const handleOnClose = () => setAppVisisble(false)
   const doctorlist = [
     {
       name: "Tanisqa",
@@ -40,12 +42,9 @@ const Content = () => {
       desc: "Study pressure, romance among factors behind Kota student suicides: Health Minister",
       link: "https://timesofindia.indiatimes.com/city/jaipur/study-pressure-romance-among-factors-behind-kota-student-suicides-minister/articleshow/117362030.cms",
     },
-  ];
+  ]; 
 
-  const navigateAppointment = () => {
-    navigate("/registration");
-  };
-
+  // newsApi call
   useEffect(() => {
     const fetchTrendingNews = async () => {
       try {
@@ -117,7 +116,7 @@ const Content = () => {
               </div>
               <button
                 className="mt-4 bg-emerald-500 text-white py-2 px-6 rounded-lg hover:bg-emerald-700 duration-300"
-                onClick={navigateAppointment}
+                onClick={()=>setAppVisisble(true)}
               >
                 Book Appointment
               </button>
@@ -187,6 +186,9 @@ const Content = () => {
           ))}
         </div>
       </div>
+
+
+      <Appointment onClose={handleOnClose} visible={appVisible}/>
     </div>
   );
 };

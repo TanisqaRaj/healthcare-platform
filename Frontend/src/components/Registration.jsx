@@ -131,11 +131,18 @@ const Registration = () => {
   };
 
   return (
-    <div className=" w-full min-h-screen flex justify-center items-center rounded-lg  py-10 px-20">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className=" w-full min-w-10 px-16 pb-6 space-y-4 bg-white rounded-lg shadow-lg"
-      >
+    <div
+    className="w-[100vw] min-h-screen flex justify-center items-center rounded-lg py-20 px-40 bg-opacity-20 backdrop-blur-sm"
+    style={{
+      backgroundImage: "url('../src/assets/images/BGregistration.jpg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+  >
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full min-w-10 px-16 pb-16 space-y-4 bg-white bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg"
+    >
         {/* Previous page */}
         <button onClick={handleBackClick} className="text-emerald-600 mb-4">
           <i className="fas fa-arrow-left"></i>
@@ -399,8 +406,9 @@ const Registration = () => {
             </div>
           </div>
         )}
-        {/* SignIn SignUp Button */}
+        {/* SignUp SignIn Button */}
         <div className="flex w-full">
+          {/* SignUp button */}
           <div className="w-1/2">
             <button
               type="Submit"
@@ -410,15 +418,15 @@ const Registration = () => {
               {isSubmitting ? "Submitting..." : "SignUp"}
             </button>
           </div>
-          <div>
-            <button
+          {/* Signin button */}
+          <div
+              className="flex flex-row justify-center items-center"
               onClick={handleNavigateLogin}
-              type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 "
-              disabled={isSubmitting}
             >
-              {isSubmitting && !Registration ? "Submitting..." : "SignIn"}
-            </button>
+              <p className="text-center p-2 text-white text-lg">
+                Already have an acoount?
+              </p>
+              <p className="text-lg text-emerald-400 hover:cursor-pointer">SignIn</p>
           </div>
         </div>
       </form>

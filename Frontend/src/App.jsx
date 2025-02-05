@@ -11,19 +11,24 @@ import Carousel from "./Pharmacy/Components/hero/Carousel";
 import TermsAndCond from "./Pharmacy/Components/hero/footer/TermsAndCond";
 import HelpCenter from "./Pharmacy/Components/hero/footer/HelpCenter";
 import Registration from "./components/Registration";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
 import PrivacyPolicy from "./Pharmacy/Components/hero/footer/PrivacyPolicy";
 import Landing from "./Landing";
 import Login from "./components/Login";
 import Sidebar from "./components/dashboard/Sidebar";
 import Content from "./components/dashboard/Content";
+import AppointmentList from "./components/dashboard/sidebar/AppointmentList";
+import Appointment from "./components/dashboard/sidebar/Appointment";
+
 
 function App() {
+  
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
         <div>
+          <NavBar/>
           <Landing />
           <Footer />
         </div>
@@ -132,6 +137,26 @@ function App() {
             <Sidebar />
             <Content />
           </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/appointmentlist",
+      element: (
+        <div>
+          <NavBar />
+          <AppointmentList />
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/appointment",
+      element: (
+        <div>
+          <NavBar />
+          <Appointment />
           <Footer />
         </div>
       ),
