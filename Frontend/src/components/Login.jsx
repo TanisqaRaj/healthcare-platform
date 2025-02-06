@@ -83,7 +83,7 @@ const Login = () => {
 
         // Role-based navigation
         if (data.user.role === "doctor") {
-          navigate("/doctor-dashboard");
+          navigate("/dashboard");
         } else if (data.user.role === "user") {
           navigate("/dashboard");
         } else if (data.user.role === "admin") {

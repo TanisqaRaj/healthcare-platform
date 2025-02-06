@@ -3,16 +3,20 @@ import { BsLayoutSidebarInset } from "react-icons/bs";
 import { FaNotesMedical, FaListUl } from "react-icons/fa";
 import { TbHistoryToggle } from "react-icons/tb";
 import { AiTwotoneMedicineBox } from "react-icons/ai";
+import { FaBookMedical } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
+  const navigate=useNavigate();
   const user = useSelector((state) => state.auth.user);
   const sidebarItems = [
-    { title: "Appointment Form", icon: <FaNotesMedical /> },
-    { title: "Appointment List", icon: <FaListUl /> },
+    { title: "Book Appointment", icon: <FaBookMedical /> ,path:"/appointment"},
+    { title: "Appointments", icon: <FaNotesMedical />,  },
+    { title: "Appointment List", icon: <FaListUl /> , path: "/appointmentlist"},
     { title: "Appointment History", icon: <TbHistoryToggle /> },
-    { title: "Buy Medicine", icon: <AiTwotoneMedicineBox /> },
+    { title: "Buy Medicine", icon: <AiTwotoneMedicineBox />, path:"/pharmacy" },
   ];
 
   return (
@@ -48,16 +52,18 @@ const Sidebar = () => {
 
       {/* Sidebar Items */}
       <div className="space-y-6">
-        {sidebarItems.map((item, index) => (
+        {sidebarItems.map((item, index) => (          
           <div
             key={index}
             className={`flex items-center gap-4 cursor-pointer hover:bg-emerald-600 px-4 py-2 rounded-md ${
               !open && "justify-center"
             }`}
+            onClick={() => navigate(item.path)} 
           >
             <div className="text-xl">{item.icon}</div>
             {open && (
-              <span className="text-lg  text-gray-800 font-medium">
+              <span className="text-lg  text-gray-800 font-medium"
+              >
                 {item.title}
               </span>
             )}
