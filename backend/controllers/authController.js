@@ -141,7 +141,7 @@ export const loginAuth = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
+//token expiry check
 export const checkTokenExpiry = (req, res) => {
   const token = req.body?.token; // Safely access token
   console.log(token);

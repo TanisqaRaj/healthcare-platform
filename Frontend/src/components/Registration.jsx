@@ -55,14 +55,21 @@ const Registration = () => {
   const [options] = useState([
     "General Physician",
     "Cardiologist",
-    "Surgeon",
+    "GeneralSurgeon",
     "Pediatrician",
     "Dermatologist",
     "Gynecologist",
     "Orthopedic Surgeon",
     "Neurologist",
+    "Psychiatrist",
+    "Pulmonologist",
+    "Nephrologist",
+    "Endocrinologist",
+    "Gastroenterologist",
     "Ophthalmologist",
+    "Oncologist ",
     "Dentist",
+    "Urologist",
     "ENT Specialist",
     "Neurosurgeon",
     "Cosmetic Surgeon",
@@ -396,10 +403,23 @@ const Registration = () => {
                 <select {...register("department")} className="border">
                   <option>Select department</option>
                   <option value="Cardiology">Cardiology</option>
+                  <option value="NeuroSurgery">NeuroSurgery</option>
+                  <option value="Neurology">Neurology</option>
                   <option value="Pediatrics">Pediatrics</option>
                   <option value="Dermatology">Dermatology</option>
                   <option value="Gynecology">Gynecology</option>
-                  <option value="Orthopedic">Orthopedic</option>
+                  <option value="GeneralSurgery">GeneralSurgery</option>
+                  <option value="Dentistry">Dentistry</option>
+                  <option value="Pulmonology">Pulmonology</option>
+                  <option value="Urology">Urology</option>
+                  <option value="Endocrinology">Endocrinology</option>
+                  <option value="Gastroenterology">Gastroenterology</option>
+                  <option value="Orthopedics">Orthopedics</option>
+                  <option value="Ophthalmnology">Ophthalmnology</option>
+                  <option value="Oncology">Oncology</option>
+                  <option value="ENT">ENT</option>
+                  <option value="Family Medicine">Family Medicine</option>
+                  <option value="Nephrology">Nephrology</option>
                   <option value="Psychiatry">Psychiatry</option>
                 </select>
               </div>

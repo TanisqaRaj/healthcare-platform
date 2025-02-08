@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import  appointmentRoute from'./routes/appointmentRoutes.js';
+import doctorRoute from './routes/doctorRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,9 @@ app.use('/auth', authRoutes); // Use the auth route as the base path
 
 //appointment routes
 app.use('/appointments', appointmentRoute); // Use the appointment route as the base path
+
+//doctor routes
+app.use('/doctors', doctorRoute); // Use the doctor route as the base path
 
 // Start the server
 const PORT = process.env.PORT || 8080;

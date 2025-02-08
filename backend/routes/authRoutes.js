@@ -17,6 +17,7 @@ router.post('/login', loginAuth);
 
 router.post('/verify-token', checkTokenExpiry);
 
+
 // Example of a protected route
 router.get('/protected', verifyToken, (req, res) => {
   res.status(200).json({ message: 'Access granted to protected route', user: req.user });

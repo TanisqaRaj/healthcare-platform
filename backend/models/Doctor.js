@@ -67,5 +67,5 @@ doctorSchema.pre('save', async function (next) {
     next();
 });
 
-
-export default mongoose.model('Doctor', doctorSchema);
+const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);
+export default Doctor;
