@@ -38,9 +38,11 @@ const doctorSchema = new mongoose.Schema(
             required: true,
             enum: ['male', 'female', 'other'],
         },
+        rating: { type: Number, default: 4.5 },
         profession:{type:[String],required:true},
         experience: { type: Number, required: true }, // Experience in years
         department: { type: String, required: true }, // Profession (e.g., General Physician, Surgeon)
+        fee:{type:Number, required: false,default: 500},
         mciNumber: { type: String, required: true, unique: true }, // Unique Medical Council of India number
         password: { type: String, required: true, minlength: 6 }, // Encrypted password
     },

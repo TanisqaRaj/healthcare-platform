@@ -115,7 +115,7 @@ export const searchdoctor = async (req, res) => {
         const doctors = await Doctor.find(searchQuery)
             .limit(parseInt(limit))
             .skip((parseInt(page) - 1) * parseInt(limit))
-            .select("name department profession email phone");
+            .select("pic name department profession");
 
         console.log("✅ Fetched Doctors:", doctors);
 
@@ -140,3 +140,45 @@ export const searchdoctor = async (req, res) => {
 const sanitizeRegex = (input) => {
     return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
+
+//get all doctors
+export const getDoctors = async (req, res) => {
+    try {
+        const { page = 1, limit = 10, lastId } = req.query;
+
+        let filter = {};
+        if (lastId) {
+            filter = { _id: { $gt: lastId } }; // Fetch doctors after last seen _id
+        }
+
+        const doctors = await Doctor.find(filter)
+            .sort({ _id: 1 }) // Ensures consistent order
+            .limit(parseInt(limit))
+            .select("pic name rating fee bio profession"); // Only required fields
+
+        const totalDoctors = await Doctor.countDocuments(); // Get total count
+
+        res.status(200).json({
+            success: true,
+            totalDoctors,
+            doctors,
+            lastId: doctors.length ? doctors[doctors.length - 1]._id : null, // Pass last _id for next request
+        });
+    } catch (error) {
+        res.status(500).json({ message: "❌ Server Error: " + error.message });
+    }
+};
+
+//get total Number of doctors
+export const getTotalDoctors = async (req, res) => {
+    try {
+        const totalDoctors = await Doctor.countDocuments();
+        res.status(200).json({
+            success: true,
+            totalDoctors
+        });
+    } catch (error) {
+        res.status(500).json({ message: "❌ Server Error: " + error.message });
+    }
+};
+
