@@ -19,6 +19,7 @@ import Sidebar from "./components/dashboard/Sidebar";
 import Content from "./components/dashboard/Content";
 import AppointmentList from "./components/dashboard/sidebar/AppointmentList";
 import Appointment from "./components/dashboard/sidebar/Appointment";
+import BookAppointment from "./components/dashboard/sidebar/BookAppointment";
 
 
 function App() {
@@ -157,6 +158,19 @@ function App() {
         <div>
           <NavBar />
           <Appointment />
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/bookappointment",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <Sidebar/>
+            <BookAppointment />
+          </div>
           <Footer />
         </div>
       ),
