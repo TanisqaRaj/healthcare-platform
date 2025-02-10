@@ -1,33 +1,8 @@
 import { useEffect, useState } from "react";
 import DashHeader from "./DashHeader";
-import { useNavigate } from "react-router-dom";
-import Appointment from "./sidebar/Appointment";
 
 const Content = () => {
   const [trendingNews, setTrendingNews] = useState([]);
-  const [ appVisible, setAppVisisble] = useState(false);
-  const navigate = useNavigate();
- const handleOnClose = () => setAppVisisble(false)
-  const doctorlist = [
-    {
-      name: "Tanisqa",
-      image:
-        "https://tse1.mm.bing.net/th?id=OIP.hoDdwwlNXYBkmPjCYh8LwQHaE8&pid=Api&P=0&h=220",
-      desc: "Specialized neurologist with expertise in treating complex neurological disorders.",
-    },
-    {
-      name: "Alisha",
-      image:
-        "https://tse1.mm.bing.net/th?id=OIP.hoDdwwlNXYBkmPjCYh8LwQHaE8&pid=Api&P=0&h=220",
-      desc: "Specialized neurologist with expertise in treating complex neurological disorders.",
-    },
-    {
-      name: "Taranjeet",
-      image:
-        "https://tse1.mm.bing.net/th?id=OIP.hoDdwwlNXYBkmPjCYh8LwQHaE8&pid=Api&P=0&h=220",
-      desc: "Specialized neurologist with expertise in treating complex neurological disorders.",
-    },
-  ];
 
   const pharmacy = [
     {
@@ -88,40 +63,6 @@ const Content = () => {
               Completed Appointments
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Doctor List Section */}
-      <div className="pb-5">
-        <p className="px-4 pt-10 lg:px-10 pb-10 text-2xl font-bold text-gray-700 text-start">
-          Find Your Doctor
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 lg:px-10">
-          {doctorlist.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center bg-white border rounded-lg shadow-lg hover:shadow-2xl duration-300 p-4"
-            >
-              <div className="w-full flex justify-center mb-4">
-                <img
-                  src={item.image}
-                  className=" border w-24 h-24 object-cover rounded-full"
-                />
-              </div>
-              <div className="text-xl font-semibold text-gray-800 text-center">
-                {item.name}
-              </div>
-              <div className="text-sm text-gray-600 text-center mt-2">
-                {item.desc}
-              </div>
-              <button
-                className="mt-4 bg-emerald-500 text-white py-2 px-6 rounded-lg hover:bg-emerald-700 duration-300"
-                onClick={()=>setAppVisisble(true)}
-              >
-                Book Appointment
-              </button>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -188,7 +129,7 @@ const Content = () => {
       </div>
 
 
-      <Appointment onClose={handleOnClose} visible={appVisible}/>
+      
     </div>
   );
 };

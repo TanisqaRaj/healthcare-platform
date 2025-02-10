@@ -12,7 +12,7 @@ const Sidebar = () => {
   const navigate=useNavigate();
   const user = useSelector((state) => state.auth.user);
   const sidebarItems = [
-    { title: "Book Appointment", icon: <FaBookMedical /> ,path:"/appointment"},
+    { title: "Book Appointment", icon: <FaBookMedical /> ,path:"/bookappointment"},
     { title: "Appointments", icon: <FaNotesMedical />,  },
     { title: "Appointment List", icon: <FaListUl /> , path: "/appointmentlist"},
     { title: "Appointment History", icon: <TbHistoryToggle /> },
