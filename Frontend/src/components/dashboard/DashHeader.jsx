@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
-const DashHeader = ({searchTerm, setSearchTerm}) => {
+const DashHeader = ({searchTerm, setSearchTerm }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -69,7 +69,10 @@ const DashHeader = ({searchTerm, setSearchTerm}) => {
             value={searchTerm}
             placeholder="Search Doctor here..."
             className="w-full h-10 pl-2 outline-none rounded-l-full"
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+            }
+          }
           ></input>
           <div className="text-lg min-w-[40px] h-10 bg-emerald-400 flex items-center justify-center rounded-r-full">
             <IoMdSearch />

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
 import axios from "axios";
 
-
 const Registration = () => {
   const {
     register,
