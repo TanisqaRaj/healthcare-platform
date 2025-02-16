@@ -8,12 +8,11 @@ import axios from "axios";
 
 const BookAppointment = () => {
   const [appVisible, setAppVisible] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  // const [searchTerm, setSearchTerm] = useState("");
+  const [hasMore, setHasMore] = useState(true); 
   const [visibleDoctors, setVisibleDoctors] = useState([]);
   const [page, setPage] = useState(0);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [totalDoctors, setTotalDoctors] = useState([]);
+  const [totalDoctors, setTotalDoctors] = useState(0);
 
   // const doctorList = Array.from({ length: 100 }, (_, index) => ({
   //   name: `Doctor ${index + 1}`,
@@ -53,9 +52,9 @@ const BookAppointment = () => {
     }
   };
 
-  useEffect(() => {
-    filterDoctors();
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   filterDoctors();
+  // }, [searchTerm]);
 
   const fetchInitialData = async () => {
     try {

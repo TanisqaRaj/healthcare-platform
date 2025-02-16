@@ -38,7 +38,6 @@ const Content = () => {
 
   return (
     <div>
-      <DashHeader />
 
       {/* Records Section */}
       <div className="pt-20 px-4 lg:px-10">

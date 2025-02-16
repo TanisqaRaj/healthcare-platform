@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import axios from "axios";
 
 const DashHeader = ({ setFilteredDoctors }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [isDoctor, setIsDoctor] = useState("true");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -20,7 +22,8 @@ const DashHeader = ({ setFilteredDoctors }) => {
     setIsDoctor("true");
   };
 
-  const submitQuery = () => {
+  const submitQuery = async () => {
+    await filterDoctors();
     closePopup();
   };
 
@@ -29,15 +32,31 @@ const DashHeader = ({ setFilteredDoctors }) => {
   };
 
 //debouncing
+// useEffect(() => {
+//   if (searchTerm == "") {
+//     setFilteredDoctors([]);
+//   } else {
+//     let timeout = setTimeout(() => {
+//       filterDoctors();
+//     }, 800);
+//   }
+//   return () => clearTimeout(timeout);
+// }, [searchTerm]);
+
 useEffect(() => {
-  if (searchTerm == "") {
+  let timeoutId;
+  if (searchTerm === "") {
     setFilteredDoctors([]);
   } else {
-    let timeout = setTimeout(() => {
+    // debouncing
+    timeoutId = setTimeout(() => {
       filterDoctors();
-    }, 800);
+    }, 2000);
   }
-  return () => clearTimeout(timeout);
+
+  return () => {
+    clearTimeout(timeoutId);
+  };
 }, [searchTerm]);
 
   const filterDoctors = async () => {
@@ -109,7 +128,8 @@ useEffect(() => {
               setSearchTerm(e.target.value);
             }}
           ></input>
-          <div className="text-lg min-w-[40px] h-10 bg-emerald-400 flex items-center justify-center rounded-r-full">
+          <div 
+          className="text-lg min-w-[40px] h-10 bg-emerald-400 flex items-center justify-center rounded-r-full">
             <IoMdSearch />
           </div>
         </div>

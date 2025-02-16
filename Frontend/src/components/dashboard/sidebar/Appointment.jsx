@@ -7,6 +7,8 @@ export default function Appointment({ visible, onClose }) {
     if (e.target.id === "container") onClose();
   };
 
+  
+
   const {
     register,
     handleSubmit,
