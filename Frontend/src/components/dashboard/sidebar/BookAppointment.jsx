@@ -8,12 +8,11 @@ import axios from "axios";
 
 const BookAppointment = () => {
   const [appVisible, setAppVisible] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [hasMore, setHasMore] = useState(true); 
   const [visibleDoctors, setVisibleDoctors] = useState([]);
   const [page, setPage] = useState(0);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [totalDoctors, setTotalDoctors] = useState([]);
+  const [totalDoctors, setTotalDoctors] = useState(0);
 
   // const doctorList = Array.from({ length: 100 }, (_, index) => ({
   //   name: `Doctor ${index + 1}`,
@@ -30,62 +29,66 @@ const BookAppointment = () => {
     fetchTotalDoctors();
   }, []);
 
-  useEffect(() => {
-    if (totalDoctors > 0) {
-      fetchData();
-    }
-  }, [totalDoctors]);
-
-  useEffect(() => {
-    filterDoctors();
-  }, [searchTerm]);
-
   //Count Total doctor
   const fetchTotalDoctors = async () => {
-    const response = await axios.get(
-      "http://localhost:8080/doctors/totaldoctors"
-    );
-    if (response.data.success) {
-      console.log("response is", response.data.totalDoctors);
-      setTotalDoctors(response.data.totalDoctors);
-      // await fetchData();
-    } else {
-      alert("somthing went wrong");
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/doctors/totaldoctors"
+      );
+
+      const success = response?.data?.success;
+      if (success) {
+        const total = response.data.totalDoctors;
+        setTotalDoctors(total);
+
+        if (total > 0) {
+          await fetchInitialData();
+        }
+      } else {
+        alert("something went wrong");
+      }
+    } catch (error) {
+      console.error("error is", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   filterDoctors();
+  // }, [searchTerm]);
+
+  const fetchInitialData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/doctors/listdoctors?page=0&limit=10"
+      );
+      const success = response?.data?.success;
+      if (success) {
+        setVisibleDoctors(response.data.doctors);
+        setPage((prev) => prev + 1);
+      } else {
+        alert("something went wrong");
+      }
+    } catch (error) {
+      console.error("error is", error);
     }
   };
 
   //Display all doctor list
-  // const fetchData = () => {
-  //   if (visibleDoctors.length >= doctorList.length) {
-  //     setHasMore(false);
-  //     return;
-  //   }
-  //   setTimeout(() => {
-  //     const newDoctors = doctorList.slice(page, page + 2);
-  //     setVisibleDoctors((prev) => [...prev, ...newDoctors]);
-  //     setPage((prev) => prev + 2);
-  //   }, 2000);
-  // };
-
   const fetchData = async () => {
-    console.log(totalDoctors)
-    console.log(hasMore)
-    console.log("fetch data called")
     if (visibleDoctors.length >= totalDoctors) {
       setHasMore(false);
       return;
     }
     try {
-      let url=`http://localhost:8080/doctors/listdoctors?page=${page}&limit=10`
-      if(visibleDoctors.length>0){
-        const lastDoctor=visibleDoctors[visibleDoctors.length-1]
-        url=`http://localhost:8080/doctors/listdoctors?page=${page}&limit=10&lastId=${lastDoctor._id}`
+      let url = `http://localhost:8080/doctors/listdoctors?page=${page}&limit=10`;
+      if (visibleDoctors.length > 0) {
+        const lastDoctor = visibleDoctors[visibleDoctors.length - 1];
+        url = `http://localhost:8080/doctors/listdoctors?page=${page}&limit=10&lastId=${lastDoctor._id}`;
       }
-      
-      const response = await axios.get(
-        url
-      );
-      if (response.data.success) {
+
+      const response = await axios.get(url);
+      let success = response?.data?.success;
+      if (success) {
         setVisibleDoctors((prev) => [...prev, ...response.data.doctors]);
         setPage((prev) => prev + 1);
       } else {
@@ -96,46 +99,11 @@ const BookAppointment = () => {
     }
   };
 
-  const fetchNextDoctors = () => {
-    fetchData();
-  };
-
-  //Search Function
-  // const filterDoctors = () => {
-  //   if (searchTerm !== "") {
-  //     setFilteredDoctors(
-  //       doctorList.filter(
-  //         (doctor) =>
-  //           searchTerm !== "" &&
-  //           (doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //             (Array.isArray(doctor.profession) &&
-  //               doctor.profession.some((profession) =>
-  //                 profession.toLowerCase().includes(searchTerm.toLowerCase())
-  //               )))
-  //       )
-  //     );
-  //   } else {
-  //     setFilteredDoctors([]);
-  //   }
-  // };
-
-  const filterDoctors = async () => {
-    const response = await axios.get(
-      `http://localhost:8080/doctors/searchdoctor?query=${searchTerm}`
-    );
-    if (response.data.success) {
-      setFilteredDoctors(response.data.doctors);
-      setHasMore(false);
-    } else {
-      alert("something went wrong");
-    }
-  };
-
   const handleOnClose = () => setAppVisible(false);
 
   return (
     <div>
-      <DashHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <DashHeader setFilteredDoctors={setFilteredDoctors}/>
       <div className="pb-5 px-10 py-10">
         <InfiniteScroll
           dataLength={visibleDoctors.length}
@@ -152,7 +120,8 @@ const BookAppointment = () => {
                 >
                   <div className="hidden sm:block">
                     <img
-                      src={item.image}
+                       src={`data:image/png;base64,${item?.image}`}
+                       style={{ height: "250px", width: "350px", objectFit: "cover" }}
                       className="border w-30 h-30 object-cover rounded-3xl shadow-lg hover:scale-105 duration-300"
                     />
                   </div>
@@ -204,7 +173,8 @@ const BookAppointment = () => {
                 >
                   <div className="hidden sm:block">
                     <img
-                      src={item.image}
+                      src={`data:image/png;base64,${item?.image}`}
+                      style={{ height: "250px", width: "350px", objectFit: "cover" }}
                       className="border w-30 h-30 object-cover rounded-3xl shadow-lg hover:scale-105 duration-300"
                     />
                   </div>

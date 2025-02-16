@@ -6,9 +6,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../reduxslice/AuthSlice";
 
-
-
-
 const Login = () => {
   const [identifier, setIdentifier] = useState(""); // Can be email, phone, or username
   const [password, setPassword] = useState("");

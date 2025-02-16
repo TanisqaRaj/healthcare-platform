@@ -1,38 +1,93 @@
 import { useEffect, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import axios from "axios";
 
-const DashHeader = ({searchTerm, setSearchTerm }) => {
+const DashHeader = ({ setFilteredDoctors }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [isDoctor, setIsDoctor] = useState("true");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const openPopup = () => {
     setIsPopupOpen(true);
     setIsOpen(false);
+    setIsDoctor("false");
   };
 
   const closePopup = () => {
     setIsPopupOpen(false);
     setQuery("");
+    setIsDoctor("true");
   };
 
-  const submitQuery = () => {
+  const submitQuery = async () => {
+    await filterDoctors();
     closePopup();
   };
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-   
-  const searchDoctor = async () => {
-    axios.get("url").then((response) => {
-      console.log(response.data);
-    });
+
+//debouncing
+// useEffect(() => {
+//   if (searchTerm == "") {
+//     setFilteredDoctors([]);
+//   } else {
+//     let timeout = setTimeout(() => {
+//       filterDoctors();
+//     }, 800);
+//   }
+//   return () => clearTimeout(timeout);
+// }, [searchTerm]);
+
+useEffect(() => {
+  let timeoutId;
+  if (searchTerm === "") {
+    setFilteredDoctors([]);
+  } else {
+    // debouncing
+    timeoutId = setTimeout(() => {
+      filterDoctors();
+    }, 2000);
+  }
+
+  return () => {
+    clearTimeout(timeoutId);
   };
-  useEffect(() => {
-    searchDoctor();
-  }, []);
+}, [searchTerm]);
+
+  const filterDoctors = async () => {
+    console.log("searchTerm", searchTerm);
+    if (searchTerm === "") {
+      setFilteredDoctors([]);
+      return;
+    }
+    const response = await axios.get(
+      `http://localhost:8080/doctors/searchdoctor?query=${searchTerm}&isDoctor=${isDoctor}`
+    );
+    let success = response?.data?.success;
+    if (success) {
+      const newDoctors = response.data.doctors;
+      if (newDoctors.length === 0) {
+        const emtyDoctor = {
+          name: "No doctors found",
+          rating: 0,
+          fee: 0,
+          bio: "No doctors found",
+          profession: ["No doctors found"],
+        };
+        setFilteredDoctors([emtyDoctor]);
+      } else {
+        setFilteredDoctors(newDoctors);
+      }
+    } else {
+      alert("something went wrong");
+      setFilteredDoctors([]);
+    }
+  };
 
   return (
     <header className="h-16 flex px-10  w-[95vw]  right-0 z-50">
@@ -70,11 +125,11 @@ const DashHeader = ({searchTerm, setSearchTerm }) => {
             placeholder="Search Doctor here..."
             className="w-full h-10 pl-2 outline-none rounded-l-full"
             onChange={(e) => {
-              setSearchTerm(e.target.value)
-            }
-          }
+              setSearchTerm(e.target.value);
+            }}
           ></input>
-          <div className="text-lg min-w-[40px] h-10 bg-emerald-400 flex items-center justify-center rounded-r-full">
+          <div 
+          className="text-lg min-w-[40px] h-10 bg-emerald-400 flex items-center justify-center rounded-r-full">
             <IoMdSearch />
           </div>
         </div>

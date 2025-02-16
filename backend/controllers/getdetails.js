@@ -31,7 +31,7 @@ const isSymptom = async (query) => {
 
 export const searchdoctor = async (req, res) => {
     try {
-        const { query, page = 1, limit = 10 } = req.query;
+        const { query, page = 1, limit = 10 ,isDoctor} = req.query;
         let searchQuery = {};
 
         let suggestedProfessions = [];
@@ -115,7 +115,7 @@ export const searchdoctor = async (req, res) => {
         const doctors = await Doctor.find(searchQuery)
             .limit(parseInt(limit))
             .skip((parseInt(page) - 1) * parseInt(limit))
-            .select("pic name department profession");
+            .select("image name department profession");
 
         console.log("✅ Fetched Doctors:", doctors);
 
