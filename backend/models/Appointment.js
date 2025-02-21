@@ -11,6 +11,8 @@ const appointmentSchema = new mongoose.Schema({
         default: 'male'
     },
     age: { type: Number, required: true },
+    desc:{type:String,required:true},
+    status:{type: String, enum: ['pending', 'approved', 'cancelled'], default: 'pending'},
     appointmentDate: { type: Date, required: true },
     address: { type: String, required: true },
     disease: { type: String, required: true },
