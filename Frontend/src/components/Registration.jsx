@@ -12,74 +12,61 @@ const Registration = () => {
   } = useForm();
 
   const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const handleSelect = (selectedList) => {
-    setSelectedOptions(selectedList);
-  };
-
-  const handleRemove = (selectedList) => {
-    setSelectedOptions(selectedList);
-  };
-
   const [isDoctor, setIsDoctor] = useState("");
   const [image, setImage] = useState("");
   const [certificate, setCertificate] = useState("");
   const navigate = useNavigate();
-  function roleChange(e) {
-    setIsDoctor(e.target.value);
-  }
 
-  function validUsername(text, errors) {
+  const handleSelect = (selectedList) => setSelectedOptions(selectedList);
+  const handleRemove = (selectedList) => setSelectedOptions(selectedList);
+  const roleChange = (e) => setIsDoctor(e.target.value);
+
+  const validUsername = (text, errors) => {
     if (!/^[^0-9]*$/.test(text)) {
       errors.name = true;
       errors.name.message = "Name can only include letters and spaces";
     }
-  }
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    console.log(file);
-    setImage(event.target.files[0]);
-  };
-  const handleCertificateChange = (event) => {
-    const file = event.target.files[0];
-    console.log(file);
-    setCertificate(event.target.files[0]);
   };
 
-  const handleNavigateLogin = () => {
-    navigate("/login");
+  //  Optimized Base64 Conversion
+  const processFileToBase64 = (file, isCertificate = false) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.split(",")[1];
+        //  Check if PDF or Image
+        if (isCertificate && file.type === "application/pdf") {
+          resolve(base64String); // Store PDF directly as Base64
+        } else {
+          resolve(base64String); // Compress Image in Backend
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
-  // const [step, setStep] = useState(1);
-  const [options] = useState([
-    "General Physician",
-    "Cardiologist",
-    "GeneralSurgeon",
-    "Pediatrician",
-    "Dermatologist",
-    "Gynecologist",
-    "Orthopedic Surgeon",
-    "Neurologist",
-    "Psychiatrist",
-    "Pulmonologist",
-    "Nephrologist",
-    "Endocrinologist",
-    "Gastroenterologist",
-    "Ophthalmologist",
-    "Oncologist ",
-    "Dentist",
-    "Urologist",
-    "ENT Specialist",
-    "Neurosurgeon",
-    "Cosmetic Surgeon",
-    "Anaesthetic",
-  ]);
+
+  //  Image Upload
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) setImage(file);
+  };
+
+  //  Certificate Upload
+  const handleCertificateChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) setCertificate(file);
+  };
+
+  const handleNavigateLogin = () => navigate("/login");
+  const handleBackClick = () => navigate("/");
 
   async function onSubmit(data) {
     let url =
       data.role === "patient"
         ? "http://localhost:8080/auth/register/user"
         : "http://localhost:8080/auth/register/doctor";
+
     const registerObj = {
       name: data.firstname.trim() + " " + data.lastname.trim(),
       email: data.email,
@@ -90,69 +77,57 @@ const Registration = () => {
       gender: data.gender,
       bio: data.role === "doctor" ? data.doctorBio : null,
       mciNumber: data.role === "doctor" ? data.mciNumber : null,
-      profession: data.role === "doctor" ? selectedOptions : null, //Skills
+      profession: data.role === "doctor" ? selectedOptions : null,
       experience: data.role === "doctor" ? data.experience : null,
       department: data.role === "doctor" ? data.department : null,
     };
 
-    const processFileToBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(",")[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    };
-
     try {
-      // Process profile image
+      //  Convert Profile Image to Base64
       if (image) {
         registerObj.image = await processFileToBase64(image);
       }
 
-      // Process certificate
+      //  Convert Certificate to Base64 (PDF or Image)
       if (certificate) {
-        registerObj.certificate = await processFileToBase64(certificate);
+        registerObj.certificate = await processFileToBase64(certificate, true);
       }
 
-      console.log("Register object:", registerObj);
+      console.log("📤 Register object:", registerObj);
 
-      // Submit the form with updated object
+      //  Submit Form
       axios
         .post(url, registerObj)
         .then((response) => {
-          console.log("Registration successful:", response.data);
+          console.log("✅ Registration successful:", response.data);
           navigate("/login");
         })
         .catch((error) => {
-          console.error("Registration failed:", error);
+          console.error("❌ Registration failed:", error);
         });
     } catch (error) {
-      console.error("Error processing files:", error);
+      console.error("❌ Error processing files:", error);
     }
   }
 
-  const handleBackClick = () => {
-    navigate("/");
-  };
-
   return (
     <div
-    className="w-[100vw] min-h-screen flex justify-center items-center rounded-lg py-20 px-40 bg-opacity-20 backdrop-blur-sm"
-    style={{
-      backgroundImage: "url('../src/assets/images/BGregistration.jpg')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}
-  >
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full min-w-10 px-16 pb-16 space-y-4 bg-white bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg"
+      className="w-[100vw] min-h-screen flex justify-center items-center rounded-lg py-20 px-40 bg-opacity-20 backdrop-blur-sm"
+      style={{
+        backgroundImage: "url('../src/assets/images/BGregistration.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full min-w-10 px-16 pb-16 space-y-4 bg-white bg-opacity-30 backdrop-blur-sm rounded-lg shadow-lg"
+      >
         {/* Previous page */}
         <button onClick={handleBackClick} className="text-emerald-600 mb-4">
           <i className="fas fa-arrow-left"></i>
         </button>
+
         {/* Signup text */}
         <div className="flex items-center justify-center">
           <h2 className="text-2xl sm:text-4xl text-emerald-500 p-2 mb-1">
@@ -192,6 +167,7 @@ const Registration = () => {
             )}
           </div>
         </div>
+
         {/* Username */}
         <div>
           <label>Username</label>
@@ -209,6 +185,7 @@ const Registration = () => {
             <p className="text-red-700">{errors.username.message}</p>
           )}
         </div>
+
         {/* Email */}
         <div>
           <label>Email</label>
@@ -227,6 +204,7 @@ const Registration = () => {
             <p className="text-red-700">{errors.email.message}</p>
           )}
         </div>
+
         {/* Password */}
         <div>
           <label>Password</label>
@@ -247,6 +225,7 @@ const Registration = () => {
             <p className="text-red-700">{errors.password.message}</p>
           )}
         </div>
+
         {/* Contact */}
         <div>
           <label>Contact</label>
@@ -265,53 +244,29 @@ const Registration = () => {
             <p className="text-red-700">{errors.phone.message}</p>
           )}
         </div>
+
         {/* Gender */}
         <div className="flex space-x-2">
           <label>Gender</label>
-          <input
-            {...register("gender")}
-            value="male"
-            type="radio"
-            name="gender"
-            id="male"
-          />
+          <input {...register("gender")} value="male" type="radio" name="gender" id="male" />
           <label htmlFor="male">Male</label>
-          <input
-            {...register("gender")}
-            value="female"
-            type="radio"
-            name="gender"
-            id="female"
-          />
+          <input {...register("gender")} value="female" type="radio" name="gender" id="female" />
           <label htmlFor="female">Female</label>
-          <input
-            {...register("gender")}
-            value="other"
-            type="radio"
-            name="gender"
-            id="other"
-          />
+          <input {...register("gender")} value="other" type="radio" name="gender" id="other" />
           <label htmlFor="other">Other</label>
         </div>
+
         {/* ProfilePic */}
         <div className="flex gap-1">
           <label>Upload pic </label>
-
-          <input
-            {...register("profilepic")}
-            type="file"
-            onChange={handleImageChange}
-          />
+          <input {...register("profilepic")} type="file" onChange={handleImageChange} />
           {image ? (
-            <img
-              src={URL.createObjectURL(image)}
-              alt=""
-              className="border w-40 h-40 rounded-md"
-            />
+            <img src={URL.createObjectURL(image)} alt="" className="border w-40 h-40 rounded-md" />
           ) : (
             <img src={image} alt="" className="border w-4 h-4 rounded-md" />
           )}
         </div>
+
         {/* Select Role */}
         <div>
           <label>Select Role</label>
@@ -330,6 +285,7 @@ const Registration = () => {
             <p className=" text-red-700">{errors.role.message}</p>
           )}
         </div>
+
         {/* If selected role is doctor */}
         {isDoctor === "doctor" && (
           <div>
@@ -356,8 +312,29 @@ const Registration = () => {
                 </label>
                 <Multiselect
                   className="w-full"
-                  // {...register("skills")}
-                  options={options} // Options for the dropdown
+                  options={[
+                    "General Physician",
+                    "Cardiologist",
+                    "GeneralSurgeon",
+                    "Pediatrician",
+                    "Dermatologist",
+                    "Gynecologist",
+                    "Orthopedic Surgeon",
+                    "Neurologist",
+                    "Psychiatrist",
+                    "Pulmonologist",
+                    "Nephrologist",
+                    "Endocrinologist",
+                    "Gastroenterologist",
+                    "Ophthalmologist",
+                    "Oncologist",
+                    "Dentist",
+                    "Urologist",
+                    "ENT Specialist",
+                    "Neurosurgeon",
+                    "Cosmetic Surgeon",
+                    "Anaesthetic",
+                  ]}
                   isObject={false}
                   selectedValues={selectedOptions}
                   onSelect={handleSelect}
@@ -365,6 +342,7 @@ const Registration = () => {
                 />
               </div>
             </div>
+
             {/* MCI number */}
             <div>
               <label>MCI number</label>
@@ -374,6 +352,7 @@ const Registration = () => {
                 className="w-full px-3 mb-2 py-1 border border-gray-300 rounded-lg"
               />
             </div>
+
             {/* UploadCertificate */}
             <div>
               <label>Upload Certificate</label>
@@ -384,50 +363,11 @@ const Registration = () => {
                 className="w-full px-3 mb-2 py-1 border border-gray-300 rounded-lg"
               />
             </div>
-            {/* Experience and department */}
-            <div className="w-full flex justify-center flex-row space-x-2">
-              {/* Experience */}
-              <div className="w-1/2">
-                <label>Experience</label>
-                <input
-                  className="border items-center w-full h-8"
-                  type="number"
-                  {...register("experience")}
-                />
-                <span>Years</span>
-              </div>
-              {/* department*/}
-              <div className="w-1/2 flex flex-col">
-                <label className="gap-x-3 p-1">Department</label>
-                <select {...register("department")} className="border">
-                  <option>Select department</option>
-                  <option value="Cardiology">Cardiology</option>
-                  <option value="NeuroSurgery">NeuroSurgery</option>
-                  <option value="Neurology">Neurology</option>
-                  <option value="Pediatrics">Pediatrics</option>
-                  <option value="Dermatology">Dermatology</option>
-                  <option value="Gynecology">Gynecology</option>
-                  <option value="GeneralSurgery">GeneralSurgery</option>
-                  <option value="Dentistry">Dentistry</option>
-                  <option value="Pulmonology">Pulmonology</option>
-                  <option value="Urology">Urology</option>
-                  <option value="Endocrinology">Endocrinology</option>
-                  <option value="Gastroenterology">Gastroenterology</option>
-                  <option value="Orthopedics">Orthopedics</option>
-                  <option value="Ophthalmnology">Ophthalmnology</option>
-                  <option value="Oncology">Oncology</option>
-                  <option value="ENT">ENT</option>
-                  <option value="Family Medicine">Family Medicine</option>
-                  <option value="Nephrology">Nephrology</option>
-                  <option value="Psychiatry">Psychiatry</option>
-                </select>
-              </div>
-            </div>
           </div>
         )}
+
         {/* SignUp SignIn Button */}
         <div className="flex w-full">
-          {/* SignUp button */}
           <div className="w-1/2">
             <button
               type="Submit"
@@ -437,15 +377,10 @@ const Registration = () => {
               {isSubmitting ? "Submitting..." : "SignUp"}
             </button>
           </div>
-          {/* Signin button */}
-          <div
-              className="flex flex-row justify-center items-center"
-              onClick={handleNavigateLogin}
-            >
-              <p className="text-center p-2 text-white text-lg">
-                Already have an acoount?
-              </p>
-              <p className="text-lg text-emerald-400 hover:cursor-pointer">SignIn</p>
+
+          <div className="flex flex-row justify-center items-center" onClick={handleNavigateLogin}>
+            <p className="text-center p-2 text-white text-lg">Already have an account?</p>
+            <p className="text-lg text-emerald-400 hover:cursor-pointer">SignIn</p>
           </div>
         </div>
       </form>

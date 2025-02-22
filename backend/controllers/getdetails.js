@@ -1,22 +1,18 @@
 import Doctor from "../models/Doctor.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
-import zlib from "node:zlib";
+import sharp from "sharp";
 
 dotenv.config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-//  Decompress Base64 String
-const decompressBase64 = (compressedBase64) => {
+// 🔓 Decode Base64 Image (No Need to Decompress Since It's Already Optimized Using Sharp)
+const decodeBase64 = (base64String) => {
     try {
-        if (!compressedBase64) return null;
-        const buffer = Buffer.from(compressedBase64, "base64");
-        if (buffer.length < 18 || buffer[0] !== 0x1f || buffer[1] !== 0x8b) {
-            throw new Error("Invalid gzip header");
-        }
-        return zlib.gunzipSync(buffer).toString();
+        if (!base64String) return null;
+        return base64String; // Image is already optimized using Sharp
     } catch (error) {
-        console.error("❌ Decompression Error:", error.message);
+        console.error("❌ Decode Error:", error.message);
         return null;
     }
 };
@@ -148,10 +144,10 @@ export const searchdoctor = async (req, res) => {
             .skip((parseInt(page) - 1) * parseInt(limit))
             .select("image name department profession");
 
-        // ✅ Decompress Images Before Sending
+        // ✅ Return Optimized Images
         const doctorsWithImages = doctors.map((doctor) => ({
             ...doctor.toObject(),
-            image: decompressBase64(doctor.image),
+            image: decodeBase64(doctor.image), // Return Base64 as is (already optimized)
         }));
 
         res.status(200).json({
@@ -167,7 +163,7 @@ export const searchdoctor = async (req, res) => {
     }
 };
 
-// ✅ Get All Doctors with Image Decompression
+// ✅ Get All Doctors with Optimized Images
 export const getDoctors = async (req, res) => {
     try {
         const { page = 1, limit = 10, lastId } = req.query;
@@ -184,10 +180,10 @@ export const getDoctors = async (req, res) => {
 
         const totalDoctors = await Doctor.countDocuments();
 
-        //  Decompress Images Before Sending
+        // ✅ Return Optimized Images
         const doctorsWithImages = doctors.map((doctor) => ({
             ...doctor.toObject(),
-            image: decompressBase64(doctor.image), // Decompress Base64 image
+            image: decodeBase64(doctor.image), // Return Base64 as is (already optimized)
         }));
 
         console.log("📥 Fetched Doctors:", doctorsWithImages.length);
