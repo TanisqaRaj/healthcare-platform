@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 const Landing = () => {
-useEffect(() => {
+  useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
@@ -19,81 +19,13 @@ useEffect(() => {
     <div className="w-[100vw] m-0 p-0">
       <title>Doctor Appointment</title>
 
-      {/* Landing Header */}
-      {/* <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
-        <div className="container mx-auto flex justify-between items-center py-4 px-6"> */}
-          {/* Logo Section */}
-          {/* <div className="flex items-center">
-            <img
-              alt="Logo"
-              className="h-10"
-              height={150}
-              src={Logo}
-              width={50}
-            />
-          </div> */}
-          {/* Navigation Bar */}
-          {/* <nav className="flex-grow flex justify-center space-x-6">
-            <a className="text-gray-700 hover:text-teal-600" href="/">
-              Home
-            </a>
-            <a className="text-gray-700 hover:text-teal-600" href="/about">
-              About
-            </a>
-            <div className="relative">
-              <div
-                className="flex items-center cursor-pointer text-gray-700 hover:text-teal-600"
-                onClick={toggleDropdown}
-              >
-                <a>Services</a>
-                <RiArrowDropDownLine className="ml-1" />
-              </div>
-
-              {isOpen && (
-                <div className="absolute mt-2 bg-white border rounded shadow-lg w-48 z-10">
-                  <ul className="py-2">
-                    <li className="px-4 py-2 hover:bg-teal-100">
-                      <a href="/appointment">Appointment</a>
-                    </li>
-                    <li className="px-4 py-2 hover:bg-teal-100">
-                      <a href="/pharmacy">Pharmacy</a>
-                    </li>
-                    <li className="px-4 py-2 hover:bg-teal-100">
-                      <a href="/chatbot">Chatbot</a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <a className="text-gray-700 hover:text-teal-600" href="/contact">
-              Contact
-            </a>
-            <a className="text-gray-700 hover:text-teal-600" href="/pharmacy">
-              Pharmacy
-            </a>
-          </nav> */}
-          {/* Login/Register Section */}
-          {/* <div className="flex items-center space-x-4">
-            <a className="text-gray-700 hover:text-teal-600" href="/login">
-              Login
-            </a>
-            <a
-              className="text-gray-700 hover:text-teal-600"
-              href="/registration"
-            >
-              Register
-            </a>
-          </div>
-        </div>
-      </header> */}
-
+      
       {/* Landing Hero Section */}
       <section
-        className="bg-teal-600 w-[100vw] h-[100vh] text-white py-20"
+        className="bg-emerald-700 w-[100vw] h-[100vh] text-white py-20"
         data-aos="fade-up"
       >
-        <div className="container mx-auto flex flex-col md:flex-row items-center">
+        <div className="container mx-auto flex flex-col md:flex-row items-center p-4">
           <div className="md:w-1/2">
             <h1 className="text-4xl font-bold mb-4">
               Doctor Appointment Booking
@@ -103,7 +35,7 @@ useEffect(() => {
               healthcare services at your convenience.
             </p>
             <a
-              className="bg-white text-teal-600 px-6 py-2 rounded-full font-semibold"
+              className="bg-white text-emerald-600 px-6 py-2 rounded-full font-semibold"
               href="/login"
             >
               Book Appointment
@@ -121,7 +53,7 @@ useEffect(() => {
       </section>
 
       {/* Landing Services Section */}
-      <section className="py-20 w-[100vw]">
+      <section className="py-20 px-4 w-[100vw]">
         <div className="container mx-auto">
           <div
             className="flex flex-col md:flex-row items-center mb-10"
@@ -136,7 +68,7 @@ useEffect(() => {
                 width={500}
               />
             </div>
-            <div className="md:w-1/2 md:pl-10 mt-10 md:mt-0">
+            <div className="md:w-1/2 md:pl-10 mt-10 md:mt-0 p-4">
               <h2 className="text-3xl font-bold mb-4">
                 Pro Doctor Pharmacy Services
               </h2>
@@ -145,7 +77,7 @@ useEffect(() => {
                 We ensure the best care for your health needs.
               </p>
               <a
-                className="bg-teal-600 text-white px-6 py-2 rounded-full font-semibold"
+                className="bg-emerald-600 text-white px-6 py-2 rounded-full font-semibold"
                 href="/pharmacy-services"
               >
                 Learn More
@@ -165,13 +97,13 @@ useEffect(() => {
                 the best tips and guidelines for your safety.
               </p>
               <a
-                className="bg-teal-600 text-white px-6 py-2 rounded-full font-semibold"
+                className="bg-emerald-600 text-white px-6 py-2 rounded-full font-semibold"
                 href="/medication-usage"
               >
                 Learn More
               </a>
             </div>
-            <div className="md:w-1/2 mt-10 md:mt-0">
+            <div className="md:w-1/2 mt-10 md:mt-0 p-4 items-end">
               <img
                 alt="Medication"
                 className="rounded-lg shadow-lg"
@@ -198,7 +130,7 @@ useEffect(() => {
             services at your convenience.
           </p>
           <a
-            className="bg-teal-600 text-white px-6 py-2 rounded-full font-semibold"
+            className="bg-emerald-600 text-white px-6 py-2 rounded-full font-semibold"
             href="/reserve"
           >
             Reserve Now
@@ -206,9 +138,9 @@ useEffect(() => {
           <div className="mt-10 ">
             <img
               alt="Doctor Video"
-              className="rounded-lg shadow-lg mx-auto h-[80vh]"
+              className="rounded-lg shadow-lg mx-auto h-[60vh]"
               src="https://storage.googleapis.com/a1aa/image/mfx3ThaRELQaFi4RJppZNyeTXCwIuKg0vdbLN9yxuuYqmHfnA.jpg"
-              width={800}
+              width={700}
             />
           </div>
         </div>

@@ -31,18 +31,6 @@ const DashHeader = ({ setFilteredDoctors }) => {
     setIsOpen(!isOpen);
   };
 
-//debouncing
-// useEffect(() => {
-//   if (searchTerm == "") {
-//     setFilteredDoctors([]);
-//   } else {
-//     let timeout = setTimeout(() => {
-//       filterDoctors();
-//     }, 800);
-//   }
-//   return () => clearTimeout(timeout);
-// }, [searchTerm]);
-
 useEffect(() => {
   let timeoutId;
   if (searchTerm === "") {

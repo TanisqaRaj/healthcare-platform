@@ -7,8 +7,6 @@ export default function Appointment({ visible, onClose }) {
     if (e.target.id === "container") onClose();
   };
 
-  
-
   const {
     register,
     handleSubmit,
@@ -156,6 +154,22 @@ export default function Appointment({ visible, onClose }) {
             />
             {errors.contact && (
               <p className="text-red-700 text-sm">{errors.contact.message}</p>
+            )}
+          </div>
+
+          {/* title */}
+          <div className="flex flex-row gap-2">
+            <label className="font-medium text-gray-800">Title</label>
+            <input
+              {...register("title", {
+                required: true,
+              })}
+              type="text"
+              placeholder="Enter your Disease name..."
+              className="w-full px-3 py-1 border border-gray-300 rounded-lg"
+            />
+            {errors.title && (
+              <p className="text-red-700 text-sm">{errors.title.message}</p>
             )}
           </div>
 
