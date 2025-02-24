@@ -6,7 +6,7 @@ import sharp from "sharp";
 dotenv.config();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// 🔓 Decode Base64 Image (No Need to Decompress Since It's Already Optimized Using Sharp)
+// 🔓 Decode Base64 Image
 const decodeBase64 = (base64String) => {
     try {
         if (!base64String) return null;
@@ -74,6 +74,9 @@ export const searchdoctor = async (req, res) => {
             console.log("🔍 Fetched Suggestions:", suggestedProfessions, suggestedDepartments);
         }
 
+        // Convert user input to lowercase
+        const lowerCaseQuery = query.toLowerCase();
+
         // ✅ Step 1: Use AI to Check if Query is a Symptom
         if (query && symptom) {
             try {
@@ -128,11 +131,12 @@ export const searchdoctor = async (req, res) => {
             // ✅ Step 2: Regular search for doctor name, profession, or department
             searchQuery = {
                 $or: [
-                    { nameLower: { $regex: query.toLowerCase() } },
-                    { departmentLower: { $regex: query.toLowerCase() } },
-                    { professionLower: { $regex: query.toLowerCase() } },
+                    { name: { $regex: lowerCaseQuery, $options: "i" } },
+                    { department: { $regex: lowerCaseQuery, $options: "i" } },
+                    { profession: { $regex: lowerCaseQuery, $options: "i" } },
                 ],
             };
+            console.log("🔍 Regular Search Query:", JSON.stringify(searchQuery, null, 2));
         }
 
         // ✅ Step 3: Debug MongoDB Query Before Fetching

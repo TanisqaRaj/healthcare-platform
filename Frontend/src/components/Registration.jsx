@@ -363,7 +363,48 @@ const Registration = () => {
                 className="w-full px-3 mb-2 py-1 border border-gray-300 rounded-lg"
               />
             </div>
+
+            {/* Experience and department */}
+            <div className="w-full flex justify-center flex-row space-x-2">
+              {/* Experience */}
+              <div className="w-1/2">
+                <label>Experience</label>
+                <input
+                  className="border items-center w-full h-8"
+                  type="number"
+                  {...register("experience")}
+                />
+                <span>Years</span>
+              </div>
+              {/* department*/}
+              <div className="w-1/2 flex flex-col">
+                <label className="gap-x-3 p-1">Department</label>
+                <select {...register("department")} className="border">
+                  <option>Select department</option>
+                  <option value="Cardiology">Cardiology</option>
+                  <option value="NeuroSurgery">NeuroSurgery</option>
+                  <option value="Neurology">Neurology</option>
+                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="Dermatology">Dermatology</option>
+                  <option value="Gynecology">Gynecology</option>
+                  <option value="GeneralSurgery">GeneralSurgery</option>
+                  <option value="Dentistry">Dentistry</option>
+                  <option value="Pulmonology">Pulmonology</option>
+                  <option value="Urology">Urology</option>
+                  <option value="Endocrinology">Endocrinology</option>
+                  <option value="Gastroenterology">Gastroenterology</option>
+                  <option value="Orthopedics">Orthopedics</option>
+                  <option value="Ophthalmnology">Ophthalmnology</option>
+                  <option value="Oncology">Oncology</option>
+                  <option value="ENT">ENT</option>
+                  <option value="Family Medicine">Family Medicine</option>
+                  <option value="Nephrology">Nephrology</option>
+                  <option value="Psychiatry">Psychiatry</option>
+                </select>
+              </div>
+            </div>
           </div>
+          
         )}
 
         {/* SignUp SignIn Button */}
