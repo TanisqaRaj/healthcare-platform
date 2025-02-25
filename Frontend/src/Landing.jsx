@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import doctor from "./assets/images/doctorsGrpPic.png";
+import doctors from './assets/images/Doctors.jpg'
+import CountUp from "react-countup";
 
 const Landing = () => {
   useEffect(() => {
@@ -15,11 +19,55 @@ const Landing = () => {
     setIsOpen(!isOpen);
   };
 
+  const [totalDoctors, setTotalDoctors] = useState(0);
+  const [totalUsers, setTotalusers] = useState(0);
+
+  const fetchTotalUsers = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/doctors/totalusers"
+      );
+      const success = response?.data?.success;
+
+      if (success) {
+        const total = response.data.totalUsers;
+        setTotalDoctors(total);
+      } else {
+        alert("Something went wrong");
+      }
+    } catch (error) {
+      console.error("❌ Error fetching total doctors:", error);
+    }
+  };
+
+  const fetchTotalDoctors = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/doctors/totaldoctors"
+      );
+      const success = response?.data?.success;
+
+      if (success) {
+        const total = response.data.totalDoctors;
+        setTotalDoctors(total);
+      } else {
+        alert("Something went wrong");
+      }
+    } catch (error) {
+      console.error("❌ Error fetching total doctors:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTotalUsers();
+    fetchTotalDoctors();
+    
+  }, []);
+
   return (
     <div className="w-[100vw] m-0 p-0">
       <title>Doctor Appointment</title>
 
-      
       {/* Landing Hero Section */}
       <section
         className="bg-emerald-700 w-[100vw] h-[100vh] text-white py-20"
@@ -44,17 +92,56 @@ const Landing = () => {
           <div className="md:w-1/2 mt-10 md:mt-0 flex justify-end h-[80vh]">
             <img
               alt="Doctor"
-              className="rounded-lg shadow-lg"
-              src="https://images.unsplash.com/photo-1550831107-1553da8c8464?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGRvY3RvcnxlbnwwfHx8fDE2NjU2NjY2NzA&ixlib=rb-1.2.1&q=80&w=1080"
+              // className="rounded-lg shadow-lg"
+              src={doctor}
+              // src="https://images.unsplash.com/photo-1550831107-1553da8c8464?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGRvY3RvcnxlbnwwfHx8fDE2NjU2NjY2NzA&ixlib=rb-1.2.1&q=80&w=1080"
               width={500}
             />
           </div>
         </div>
       </section>
 
+      {/* Total registered doctors */}
+      <div
+        className="flex flex-col md:flex-row items-center mb-10 p-8 mr-8"
+        data-aos="fade-right"
+      >
+        <div className="md:w-1/2">
+          <img
+            alt="Doctor and Patient"
+            className="rounded-lg shadow-lg"
+            height={300}
+            src={doctors}
+            // src="https://storage.googleapis.com/a1aa/image/buWFEDMxXxIfWqRLRKURPIjw9eej0uj94p012ovfpS4iae4fE.jpg"
+            width={500}
+          />
+        </div>
+        <div className="md:w-1/2 md:pl-10 mt-10 md:mt-0 p-4 text-center">
+          <h2 className="text-3xl font-bold">Trusted by Millions Globally</h2>
+          <div>
+            Explore the essential metrics that showcase our platform's trust,
+            quality, and commitment to healthcare excellence.
+          </div>
+          <div className="flex justify-between p-6 py-10 pl-16 pr-16 border rounded-2xl shadow-2xl mt-6 space-x-24 ">
+            <div className="font-sm text-4xl  w-full border p-10 bg-emerald-50 rounded-2xl shadow-md  hover:bg-emerald-100 duration-400">
+              <div className="font-semibold">
+                <CountUp end={totalDoctors} duration={4} />+
+              </div>
+              <div className="text-sm font-medium">Registered Doctors</div>
+            </div>
+            <div className="font-sm text-4xl  w-full border p-11 bg-emerald-100 rounded-2xl shadow-md hover:bg-emerald-200 duration-400">
+              <div className="font-semibold">
+                <CountUp end={totalUsers} duration={4} />+
+              </div>
+              <div className="text-sm font-medium">Registered Users</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Landing Services Section */}
       <section className="py-20 px-4 w-[100vw]">
-        <div className="container mx-auto">
+        <div className="container mx-auto mr-0 justify-between">
           <div
             className="flex flex-col md:flex-row items-center mb-10"
             data-aos="fade-right"
@@ -85,7 +172,7 @@ const Landing = () => {
             </div>
           </div>
           <div
-            className="flex flex-col md:flex-row items-center"
+            className="flex flex-col md:flex-row items-center ml-8"
             data-aos="fade-left"
           >
             <div className="md:w-1/2 md:pr-10">
@@ -147,7 +234,7 @@ const Landing = () => {
       </section>
 
       {/* Landing Health Tips Section */}
-      <section className="py-20 w-[100vw] h-[100vh]">
+      <section className="py-20 w-[100vw] h-[100vh] px-8">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-10">
             Basic Safety Medication Usages

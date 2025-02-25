@@ -5,6 +5,14 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
     if (e.target.id === "detAppList") close();
   };
 
+  const handleOpenMap = () => {
+    console.log("map.....");
+  };
+
+  const handleMeeting = () => {
+    window.open("https://meet.google.com/wio-amdd-xnr", "_blank");
+  };
+
   if (!show) return null;
   return (
     <div
@@ -13,7 +21,6 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
       onClick={handleClose}
     >
       <div className="h-[70vh] w-[70vw] flex rounded-lg bg-white shadow-lg overflow-auto">
-        
         {/* cross button */}
         <div
           className="p-2 mb-6 border h-10 rounded-r-lg p-1 hover:cursor-pointer"
@@ -51,6 +58,38 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
           <p>
             <strong>Status:</strong> {appointment.state}
           </p>
+
+          {/* When request is accepted and mode is online */}
+          {appointment.mode === "Online" &&
+            appointment.state === "Accepted" && (
+              <div className="mt-6">
+                <div className="font-semibold text-sm">
+                  Click here to join meeting
+                </div>
+                <button
+                  className="border p-1 text-sm bg-emerald-200 rounded-2xl px-2"
+                  onClick={handleMeeting}
+                >
+                  join now
+                </button>
+              </div>
+            )}
+
+          {/* When request is accepted and mode is offline */}
+          {appointment.mode === "Offline" &&
+            appointment.state === "Accepted" && (
+              <div className="mt-6">
+                <div className="font-semibold text-sm">
+                  Click here to see location
+                </div>
+                <button
+                  className="border p-1 text-sm bg-emerald-200 rounded-2xl px-2"
+                  onClick={handleOpenMap}
+                >
+                  Location
+                </button>
+              </div>
+            )}
         </div>
 
         {/* doctor details */}

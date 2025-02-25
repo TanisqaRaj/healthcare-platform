@@ -54,7 +54,7 @@ export default function Appointment({ visible, onClose }) {
       id="container"
       onClick={handleOnClose}
     >
-      <div className="h-[70vh] w-[70vw]  rounded-lg bg-white shadow-lg overflow-auto">
+      <div className="h-[70vh] w-[70vw] flex  rounded-lg bg-white shadow-lg overflow-auto">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full min-w-10 p-10 space-y-4 bg-white shadow-lg rounded-lg"
@@ -69,7 +69,10 @@ export default function Appointment({ visible, onClose }) {
                   value: 100,
                   message: "Max length is 100 characters.",
                 },
-                minLength: { value: 2, message: "Min length is 2 characters." },
+                minLength: {
+                  value: 2,
+                  message: "Min length is 2 characters.",
+                },
               })}
               placeholder="Enter patient name..."
               type="text"
@@ -137,6 +140,22 @@ export default function Appointment({ visible, onClose }) {
             </label>
           </div>
 
+          {/* Email */}
+          <div className="flex flex-row gap-2">
+            <label className="font-medium text-gray-800">Email</label>
+            <input
+              {...register("email", {
+                required: true,
+              })}
+              type="text"
+              placeholder="Enter your email..."
+              className="w-full px-3 py-1 border border-gray-300 rounded-lg"
+            />
+            {errors.email && (
+              <p className="text-red-700 text-sm">{errors.email.message}</p>
+            )}
+          </div>
+
           {/* Contact */}
           <div className="flex flex-row gap-2">
             <label className="font-medium text-gray-800">Contact</label>
@@ -154,6 +173,22 @@ export default function Appointment({ visible, onClose }) {
             />
             {errors.contact && (
               <p className="text-red-700 text-sm">{errors.contact.message}</p>
+            )}
+          </div>
+
+          {/* Address */}
+          <div className="flex flex-row gap-2">
+            <label className="font-medium text-gray-800">Adress</label>
+            <input
+              {...register("address", {
+                required: true,
+              })}
+              type="text"
+              placeholder="Enter your address"
+              className="w-full px-3 py-1 border border-gray-300 rounded-lg"
+            />
+            {errors.address && (
+              <p className="text-red-700 text-sm">{errors.address.message}</p>
             )}
           </div>
 
