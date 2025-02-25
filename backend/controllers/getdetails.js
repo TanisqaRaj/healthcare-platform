@@ -1,4 +1,5 @@
 import Doctor from "../models/Doctor.js";
+import User from "../models/user.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 import sharp from "sharp";
@@ -214,4 +215,20 @@ export const getTotalDoctors = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "❌ Server Error: " + error.message });
     }
+};
+
+//get total number of users
+
+export const getTotalUsers = async(req , res) =>{
+    try{
+        const totalUsers = await User.countDocuments();
+        res.status(200).json({
+            success: true,
+            totalUsers,
+        });
+    }
+    catch(error){
+        res.status(500).json({ message: " server Error : "+ error.message});
+    };
+
 };
