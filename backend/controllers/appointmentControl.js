@@ -1,118 +1,174 @@
-import Appointment from '../models/Appointment.js';
-import Doctor from '../models/Doctor.js';
+import Appointment from "../models/appointment.js";
+import Doctor from "../models/Doctor.js";
+import User from "../models/user.js";
+
+// Helper function to find doctor and user by their IDs
+const findDoctorAndUser = async (doctorId, userId) => {
+    const doctor = await Doctor.findById(doctorId);
+    const user = await User.findById(userId);
+    return { doctor, user };
+};
 
 // Create a new appointment
 export const createAppointment = async (req, res) => {
     try {
         const {
-            patientName, patientPhone, patientEmail, gender, age, appointmentDate, address, disease, mode, doctorName } = req.body;
-
-        // Validate doctor name and fetch doctor details
-        const doctor = await Doctor.findOne({ name: doctorName });
-        if (!doctor) return res.status(404).json({ message: 'Doctor not found' });
-
-        // Check if an appointment with the same patient and date already exists
-        const existingAppointment = await Appointment.findOne({
-            patientName,
-            appointmentDate,
-            doctor: doctor._id,
-        });
-        if (existingAppointment) {
-            return res.status(400).json({ message: 'An appointment with the same details already exists.' });
-        }
-
-        // Create a new appointment
-        const appointment = new Appointment({
             patientName,
             patientPhone,
-            patientEmail,
             gender,
             age,
+            title,
+            desc,
             appointmentDate,
             address,
             disease,
             mode,
-            doctor: doctor._id, // Store the doctor's ID in the appointment
-        });
+            doctorId,
+            userId
+        } = req.body;
 
-        // Generate appointment ID
-        await appointment.generateAppointmentID();
+        const { doctor, user } = await findDoctorAndUser(doctorId, userId);
 
-        // Save the appointment
-        const savedAppointment = await appointment.save();
-        res.status(201).json({ sucess: true, appointment: savedAppointment });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-
-// Fetch all appointments
-export const getAllAppointments = async (req, res) => {
-    try {
-        const appointments = await Appointment.find().populate('doctor', 'name department');
-        res.status(200).json(appointments);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Fetch a single appointment by ID
-export const getAppointmentByGeneratedId = async (req, res) => {
-    try {
-        const { appointmentID } = req.params;
-        const appointment = await Appointment.findOne({ appointmentID }).populate('doctor', 'name department');
-
-        if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
-        res.status(200).json(appointment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Update an appointment
-export const updateAppointment = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updates = req.body;
-
-        const updatedAppointment = await Appointment.findByIdAndUpdate(id, updates, { new: true }).populate('doctor', 'name department');
-        if (!updatedAppointment) return res.status(404).json({ message: 'Appointment not found' });
-
-        res.status(200).json(updatedAppointment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Delete an appointment
-export const deleteAppointment = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const deletedAppointment = await Appointment.findByIdAndDelete(id);
-        if (!deletedAppointment) return res.status(404).json({ message: 'Appointment not found' });
-
-        res.status(200).json({ message: 'Appointment deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-//fetch doctor name in drop down during appointment creation
-
-export const getDoctorNameScroll= async (res,req)=>{
-    try {
-        // Fetch all doctor names from the database
-        const doctors = await Doctor.find({}, 'name');
-
-        if (!doctors.length) {
-            return res.status(404).json({ message: 'No doctors found' });
+        if (!doctor || !user) {
+            return res.status(404).json({ message: "Doctor or User not found" });
         }
 
-        // Return doctor names in the response
-        res.status(200).json(doctors);
+        const newAppointment = new Appointment({
+            patientName,
+            patientPhone,
+            gender,
+            age,
+            title,
+            desc,
+            appointmentDate,
+            address,
+            disease,
+            mode,
+            doctor: doctor._id,
+            user: user._id
+        });
+
+        await newAppointment.generateAppointmentID();
+        await newAppointment.save();
+
+        res.status(201).json({ message: "Appointment created successfully", appointment: newAppointment });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("❌ Server Error:", error.message);
+        res.status(500).json({ message: "Server Error: " + error.message });
     }
 };
+
+// 📅 View current and future appointments
+export const getCurrentAppointments = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const currentDate = new Date().setUTCHours(0, 0, 0, 0);
+
+        const appointments = await Appointment.find({
+            user: userId,
+            appointmentDate: { $gte: currentDate }
+        })
+            .populate('doctor', 'name department')
+            .populate('user', 'name email');
+
+        if (!appointments.length) {
+            return res.status(404).json({ message: "No current or future appointments found" });
+        }
+
+        res.status(200).json({ appointments });
+    } catch (error) {
+        console.error("❌ Error fetching current appointments:", error.message);
+        res.status(500).json({ message: "Server Error: " + error.message });
+    }
+};
+
+// 🕰️ View appointment history (past appointments)
+export const getAppointmentHistory = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const currentDate = new Date().setUTCHours(0, 0, 0, 0);
+
+        const appointments = await Appointment.find({
+            user: userId,
+            appointmentDate: { $lt: currentDate }
+        })
+            .populate('doctor', 'name department')
+            .populate('user', 'name email');
+
+        if (!appointments.length) {
+            return res.status(404).json({ message: "No past appointments found" });
+        }
+
+        res.status(200).json({ appointments });
+    } catch (error) {
+        console.error("❌ Error fetching appointment history:", error.message);
+        res.status(500).json({ message: "Server Error: " + error.message });
+    }
+};
+
+// 📜 View appointment  full details by ID
+
+
+export const getAppointmentById = async (req, res) => {
+    try {
+        const { appointmentId } = req.params; // Extract ID from URL
+
+        console.log("Fetching appointment with ID:", appointmentId);
+
+        // Find appointment by ID and populate doctor details
+        const appointment = await Appointment.findById(appointmentId)
+            .populate({
+                path: "doctor",
+                select: "name email contact profession department experience", // Populate doctor details
+            });
+
+        if (!appointment) {
+            return res.status(404).json({ message: "Appointment not found" });
+        }
+
+        // Prepare structured response with correct field names
+        const response = {
+            appointmentDetails: {
+                patientName: appointment.patientName,
+                patientPhone: appointment.patientPhone,
+                gender: appointment.gender,
+                age: appointment.age,
+                title: appointment.title,
+                desc: appointment.desc,
+                appointmentDate: appointment.appointmentDate,
+                address: appointment.address,
+                disease: appointment.disease,
+                mode: appointment.mode,
+                state: appointment.state, // Corrected field name
+            },
+            doctorDetails: appointment.doctor, // Populated doctor object
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error("Error fetching appointment details:", error);
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+
+// ❌ Delete appointment
+// export const deleteAppointment = async (req, res) => {
+//     try {
+//         const { appointmentId } = req.params;
+
+//         const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId);
+
+//         if (!deletedAppointment) {
+//             return res.status(404).json({ message: "Appointment not found" });
+//         }
+
+//         res.status(200).json({ message: "Appointment deleted successfully" });
+//     } catch (error) {
+//         console.error("❌ Error deleting appointment:", error.message);
+//         res.status(500).json({ message: "Server Error: " + error.message });
+//     }
+// };
+
+
+

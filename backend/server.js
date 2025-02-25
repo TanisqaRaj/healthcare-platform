@@ -3,7 +3,7 @@ import connectDB from './db.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
-import  appointmentRoute from'./routes/appointmentRoutes.js';
+import appointmentRoute from './routes/appointmentRoutes.js';
 import doctorRoute from './routes/doctorRoutes.js';
 
 // Load environment variables
