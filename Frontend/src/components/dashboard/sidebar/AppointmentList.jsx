@@ -7,109 +7,10 @@ const AppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
-  // const [appointmentState, setAppointmentState] = useState([
-  //   {
-  //     name: "Sanu",
-  //     contact: "1234567890",
-  //     title: "Fever",
-  //     desc: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     mail: "sanu@gmail.com",
-  //     mode: "Online",
-  //     date: "12/3/2025",
-  //     dname: "Sanu",
-  //     dcontact: "1234567890",
-  //     username: "sanukumar",
-  //     bio: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     gender: "male",
-  //     dmail: "sanu1@gmail.com",
-  //     profession: [
-  //       "General Physician",
-  //       "Cardiologist",
-  //       "GeneralSurgeon",
-  //       "Pediatrician",
-  //     ],
-  //     department: "cardiology",
-  //     experience: "1",
-  //     state: "Pending",
-  //   },
-  //   {
-  //     name: "Taranjeet",
-  //     contact: "1234567890",
-  //     title: "Fever",
-  //     desc: "I have fever and cold",
-  //     mail: "taran@gmail.com",
-  //     mode: "Online",
-  //     date: "12/3/2025",
-  //     dname: "Sanu",
-  //     dcontact: "1234567890",
-  //     username: "sanukumar",
-  //     bio: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     gender: "male",
-  //     dmail: "sanu1@gmail.com",
-  //     profession: [
-  //       "General Physician",
-  //       "Cardiologist",
-  //       "GeneralSurgeon",
-  //       "Pediatrician",
-  //     ],
-  //     department: "cardiology",
-  //     experience: "1",
-  //     state: "Pending",
-  //   },
-  //   {
-  //     name: "Gaurav",
-  //     contact: "1234567890",
-  //     title: "Fever",
-  //     mail: "gaurav@gmail.com",
-  //     desc: "I have fever and cold",
-  //     mode: "Online",
-  //     date: "12/3/2025",
-  //     dname: "Sanu",
-  //     dcontact: "1234567890",
-  //     username: "sanukumar",
-  //     bio: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     gender: "male",
-  //     dmail: "sanu1@gmail.com",
-  //     profession: [
-  //       "General Physician",
-  //       "Cardiologist",
-  //       "GeneralSurgeon",
-  //       "Pediatrician",
-  //     ],
-  //     department: "cardiology",
-  //     experience: "1",
-  //     state: "Pending",
-  //   },
-  //   {
-  //     name: "Anurag",
-  //     contact: "1234567890",
-  //     title: "Fever",
-  //     desc: "I have fever and cold",
-  //     mail: "anurag@gmail.com",
-  //     mode: "Online",
-  //     date: "12/3/2025",
-  //     dname: "Sanu",
-  //     dcontact: "1234567890",
-  //     username: "sanukumar",
-  //     bio: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     gender: "male",
-  //     dmail: "sanu1@gmail.com",
-  //     profession: [
-  //       "General Physician",
-  //       "Cardiologist",
-  //       "GeneralSurgeon",
-  //       "Pediatrician",
-  //     ],
-  //     department: "cardiology",
-  //     experience: "1",
-  //     state: "Pending",
-  //   },
-  // ]);
-
   const appointmentState = [
     {
       "patient": {
-        "name": "Tanisqa",
+        "name": "Alisha",
         "contact": "1234567890",
         "mail": "sanu@gmail.com"
       },
@@ -129,11 +30,11 @@ const AppointmentList = () => {
         "department": "cardiology",
         "experience": "1"
       },
-      "title": "Fever",
+      "title": "Alzheimer",
       "desc": "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-      "mode": "Online",
+      "mode": "Offline",
       "date": "12/3/2025",
-      "state": "Pending"
+      "state": "Accepted"
     },
     {
       "patient": {
@@ -161,7 +62,7 @@ const AppointmentList = () => {
       "desc": "I have fever and cold",
       "mode": "Online",
       "date": "12/3/2025",
-      "state": "Pending"
+      "state": "Accepted"
     },
     {
       "patient": {
