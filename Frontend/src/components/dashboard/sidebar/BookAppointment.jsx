@@ -122,7 +122,7 @@ const BookAppointment = () => {
                         <div className="text-gray-600">per consultation</div>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600 text-start mt-2">{item.bio}</div>
+                    <div className="w-full text-sm text-gray-600 text-left mt-2">{item.bio}</div>
                     <div className="flex flex-col sm:flex-row gap-2 text-center text-gray-700">
                       {item.profession.map((profession, index) => (
                         <p key={index} className="border bg-slate-200 rounded-lg p-1">

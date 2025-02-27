@@ -129,8 +129,10 @@ useEffect(() => {
             <h2 className="text-lg font-bold mb-4">Write Your Query</h2>
             <textarea
               className="w-full h-24 p-2 border rounded-lg outline-none"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
               placeholder="Type your query here..."
             ></textarea>
             <div className="flex justify-end mt-4">

@@ -1,4 +1,4 @@
-import Appointment from "../models/appointment.js";
+import Appointment from "../models/Appointment.js";
 import Doctor from "../models/Doctor.js";
 import User from "../models/user.js";
 
@@ -119,7 +119,7 @@ export const getAppointmentById = async (req, res) => {
         const appointment = await Appointment.findById(appointmentId)
             .populate({
                 path: "doctor",
-                select: "name email contact profession department experience", // Populate doctor details
+                select: "name email username bio gender profession phone department experience", // Populate doctor details
             });
 
         if (!appointment) {

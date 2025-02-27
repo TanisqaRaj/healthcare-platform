@@ -9,6 +9,7 @@ const appointmentSchema = new mongoose.Schema({
         enum: ['male', 'female', 'other'],
         default: 'male'
     },
+    email: {type:String, required:true},
     age: { type: Number, required: true },
     title:{type: String, required: true},
     desc: { type: String, required: true },

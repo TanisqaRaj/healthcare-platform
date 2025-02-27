@@ -31,7 +31,7 @@ const Landing = () => {
 
       if (success) {
         const total = response.data.totalUsers;
-        setTotalDoctors(total);
+        setTotalusers(total);
       } else {
         alert("Something went wrong");
       }
