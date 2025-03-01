@@ -41,9 +41,9 @@ const appointmentSchema = new mongoose.Schema({
 
 // Generate a unique appointment ID using the doctor's department code
 appointmentSchema.methods.generateAppointmentID = async function () {
-    const doctor = await mongoose.model('Doctor').findById(this.doctor);
+    const doctor = await mongoose.model('Doctor').findById(this.doctorID);  
     const departmentCode = doctor.department.slice(0, 3).toUpperCase(); // First three letters of department
-    const date = this.appointmentDate.toISOString().split('T')[0].replace(/-/g, ''); // YYYYMMDD
+    const date = this.expectedDate.toISOString().split('T')[0].replace(/-/g, ''); // YYYYMMDD
     const randomNumber = Math.floor(10 + Math.random() * 90); // Random 2-digit number
     this.appointmentID = `${departmentCode}${date}${randomNumber}`;
 };

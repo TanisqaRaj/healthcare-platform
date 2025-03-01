@@ -21,7 +21,7 @@ export const createAppointment = async (req, res) => {
             title,
             desc,
             expectedDate,
-            address,
+            patientAddress,
             disease,
             mode,
             doctorId,
@@ -43,11 +43,11 @@ export const createAppointment = async (req, res) => {
             title,
             desc,
             expectedDate,
-            address,
+            patientAddress,
             disease,
             mode,
             doctorID: doctor._id,
-            userID: user._id,
+            patientID: user._id,
             patientEmail: email
         });
 

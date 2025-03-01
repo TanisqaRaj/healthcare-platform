@@ -1,11 +1,15 @@
 import React, { version } from "react";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-export default function Appointment({ visible, onClose ,doctorId}) {
+export default function Appointment({ visible, onClose , doctorId }) {
   const handleOnClose = (e) => {
     if (e.target.id === "container") onClose();
   };
+
+  const userId=useSelector((state)=> state.auth.user._id);
 
   const {
     register,
@@ -16,9 +20,12 @@ export default function Appointment({ visible, onClose ,doctorId}) {
   } = useForm();
 
   async function onSubmit(data) {
-    console.log(doctorId);
+    const appointmentData = { ...data, doctorId, userId };
+    console.log("DoctorId",doctorId);
+    console.log("userId", userId)
+    console.log("data",appointmentData)
     try{
-      const response=await axios.post("http://localhost:8080/appointment/create", data)
+      const response=await axios.post("http://localhost:8080/appointments/create",appointmentData )
       .then((response)=>{
         console.log(response.data);
       })
@@ -91,7 +98,7 @@ export default function Appointment({ visible, onClose ,doctorId}) {
             />
             {errors.patientname && (
               <p className="text-red-700 text-sm">
-                {errors.patientname.message}
+                {errors.patientName.message}
               </p>
             )}
           </div>
@@ -209,7 +216,7 @@ export default function Appointment({ visible, onClose ,doctorId}) {
           <div className="flex flex-row gap-2">
             <label className="font-medium text-gray-800">Adress</label>
             <input
-              {...register("address", {
+              {...register("patientAddress", {
                 required: true,
               })}
               type="text"
@@ -217,7 +224,7 @@ export default function Appointment({ visible, onClose ,doctorId}) {
               className="w-full px-3 py-1 border border-gray-300 rounded-lg"
             />
             {errors.address && (
-              <p className="text-red-700 text-sm">{errors.address.message}</p>
+              <p className="text-red-700 text-sm">{errors.patientAddress.message}</p>
             )}
           </div>
 

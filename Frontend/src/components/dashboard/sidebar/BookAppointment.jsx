@@ -13,12 +13,12 @@ const BookAppointment = () => {
   const [page, setPage] = useState(0);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [totalDoctors, setTotalDoctors] = useState(0);
-
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   useEffect(() => {
     fetchTotalDoctors();
   }, []);
 
-  // ✅ Count Total Doctors
+  // Count Total Doctors
   const fetchTotalDoctors = async () => {
     try {
       const response = await axios.get("http://localhost:8080/doctors/totaldoctors");
@@ -35,11 +35,11 @@ const BookAppointment = () => {
         alert("Something went wrong");
       }
     } catch (error) {
-      console.error("❌ Error fetching total doctors:", error);
+      console.error("Error fetching total doctors:", error);
     }
   };
 
-  // ✅ Fetch Initial Data
+  // Fetch Initial Data
   const fetchInitialData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/doctors/listdoctors?page=0&limit=10");
@@ -52,11 +52,11 @@ const BookAppointment = () => {
         alert("Something went wrong");
       }
     } catch (error) {
-      console.error("❌ Error fetching initial data:", error);
+      console.error(" Error fetching initial data:", error);
     }
   };
 
-  // ✅ Infinite Scroll: Fetch More Data
+  // Infinite Scroll: Fetch More Data
   const fetchData = async () => {
     if (visibleDoctors.length >= totalDoctors) {
       setHasMore(false);
@@ -79,8 +79,13 @@ const BookAppointment = () => {
         alert("Something went wrong");
       }
     } catch (error) {
-      console.error("❌ Error fetching more data:", error);
+      console.error(" Error fetching more data:", error);
     }
+  };
+
+  const handleBookAppointment = (doctorId) => {
+    setSelectedDoctorId(doctorId);
+    setAppVisible(true);
   };
 
   const handleOnClose = () => setAppVisible(false);
@@ -96,13 +101,13 @@ const BookAppointment = () => {
           loader={<h4>Loading...</h4>}
         >
           <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6 px-4 lg:px-14">
-            {/* ✅ Display Filtered Doctors if Available */}
+            {/* Display Filtered Doctors if Available */}
             {filteredDoctors.length > 0 ? (
               filteredDoctors.map((item, index) => (
                 <div key={index} className="flex flex-row items-center bg-white border rounded-lg shadow-lg hover:shadow-2xl duration-300 p-4">
                   <div className="hidden sm:block">
                     <img
-                      src={`data:image/jpeg;base64,${item?.image}`} // ✅ Fixed: Use JPEG since Sharp outputs JPEG
+                      src={`data:image/jpeg;base64,${item?.image}`} // Fixed: Use JPEG since Sharp outputs JPEG
                       alt={item?.name}
                       style={{ height: "250px", width: "350px", objectFit: "cover" }}
                       className="border w-30 h-30 object-cover rounded-3xl shadow-lg hover:scale-105 duration-300"
@@ -132,7 +137,7 @@ const BookAppointment = () => {
                     </div>
                     <button
                       className="mt-4 bg-emerald-500 text-white items-center py-2 px-6 rounded-lg hover:bg-emerald-700 duration-300"
-                      onClick={() => setAppVisible(true)}
+                      onClick={() => handleBookAppointment(item._id)}
                     >
                       Book Appointment
                     </button>
@@ -144,7 +149,7 @@ const BookAppointment = () => {
                 <div key={index} className="flex flex-row items-center bg-white border rounded-lg shadow-lg hover:shadow-2xl duration-300 p-4">
                   <div className="hidden sm:block">
                     <img
-                      src={`data:image/jpeg;base64,${item?.image}`} // ✅ Fixed: Use JPEG since Sharp outputs JPEG
+                      src={`data:image/jpeg;base64,${item?.image}`} 
                       alt={item?.name}
                       style={{ height: "250px", width: "350px", objectFit: "cover" }}
                       className="border w-30 h-30 object-cover rounded-3xl shadow-lg hover:scale-105 duration-300"
@@ -174,7 +179,7 @@ const BookAppointment = () => {
                     </div>
                     <button
                       className="mt-4 bg-emerald-500 text-white items-center py-2 px-6 rounded-lg hover:bg-emerald-700 duration-300"
-                      onClick={() => setAppVisible(true)}
+                      onClick={() => handleBookAppointment(item._id)}
                     >
                       Book Appointment
                     </button>
@@ -187,7 +192,7 @@ const BookAppointment = () => {
           </div>
         </InfiniteScroll>
       </div>
-      <Appointment onClose={handleOnClose} visible={appVisible} />
+      <Appointment onClose={handleOnClose} visible={appVisible} doctorId={selectedDoctorId} />
     </div>
   );
 };
