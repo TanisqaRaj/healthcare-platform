@@ -30,7 +30,7 @@ const isSymptom = async (query) => {
                     role: "user",
                     parts: [
                         {
-                            text: `Is "${query}" a medical symptom or medical disease or a medical problem? Reply only "yes" or "no".`,
+                            text:`Is "${query}" a medical symptom or medical disease or a medical problem? Reply only "yes" or "no".`, 
                         },
                     ],
                 },
@@ -100,7 +100,7 @@ export const searchdoctor = async (req, res) => {
                 const aiText = aiResponse.response?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
                 if (aiText) {
                     try {
-                        const cleanedJson = aiText.replace(/```json|```/g, "").trim();
+                        const cleanedJson = aiText.replace(/json|/g, "").trim();
                         const aiData = JSON.parse(cleanedJson);
 
                         console.log("🔍 AI Response:", aiData);
@@ -147,7 +147,7 @@ export const searchdoctor = async (req, res) => {
         const doctors = await Doctor.find(searchQuery)
             .limit(parseInt(limit))
             .skip((parseInt(page) - 1) * parseInt(limit))
-            .select("image name department profession");
+            .select("image name department profession doctorId");
 
         // ✅ Return Optimized Images
         const doctorsWithImages = doctors.map((doctor) => ({
@@ -181,7 +181,7 @@ export const getDoctors = async (req, res) => {
         const doctors = await Doctor.find(filter)
             .sort({ _id: 1 })
             .limit(parseInt(limit))
-            .select("image name rating fee bio profession");
+            .select("image name rating fee bio profession doctorId");
 
         const totalDoctors = await Doctor.countDocuments();
 

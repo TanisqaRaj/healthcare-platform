@@ -2,32 +2,31 @@ import mongoose from 'mongoose';
 
 const appointmentSchema = new mongoose.Schema({
     patientName: { type: String, required: true },
-    patientPhone: { type: String, required: true },
+    patientContact: { type: String, required: true },
     gender: {
         type: String,
         required: true,
         enum: ['male', 'female', 'other'],
-        default: 'male'
     },
-    email: {type:String, required:true},
     age: { type: Number, required: true },
     title:{type: String, required: true},
     desc: { type: String, required: true },
     state: { type: String, enum: ['pending', 'approved', 'cancelled'], default: 'pending' },
-    appointmentDate: { type: Date, required: true },
-    address: { type: String, required: true },
-    disease: { type: String, required: true },
+    expectedDate: { type: Date, required: true },
+    patientAddress: { type: String, required: true },
+    disease: { type: String, required: false},
+    patientEmail: { type: String, required: true },
     mode: {
         type: String,
         required: true,
         enum: ['online', 'offline']
     },
-    doctor: {
+    doctorID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Doctor', // Reference to the chosen doctor
         required: true
     },
-    user: {
+    patientID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Reference to the user who booked the appointment
         required: true

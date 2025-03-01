@@ -79,10 +79,10 @@ const Login = () => {
 
         // Role-based navigation
         if (data.user.role === "doctor") {
-          navigate("/dashboard");
+          navigate("/doctordashboard");
         } else if (data.user.role === "user") {
           navigate("/dashboard");
-        } else if (data.user.role === "admin") {
+        } else if (data.user.role === "") {
           navigate("/admin-dashboard");
         }
       } else {
@@ -158,7 +158,6 @@ const Login = () => {
                 <option value="">Select role</option>
                 <option value="user">User</option>
                 <option value="doctor">Doctor</option>
-                <option value="admin">Admin</option>
               </select>
             </div>
             {/* Identifier Input */}

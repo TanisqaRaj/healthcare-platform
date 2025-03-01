@@ -2,7 +2,7 @@ import React, { version } from "react";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 
-export default function Appointment({ visible, onClose }) {
+export default function Appointment({ visible, onClose ,doctorId}) {
   const handleOnClose = (e) => {
     if (e.target.id === "container") onClose();
   };
@@ -16,8 +16,19 @@ export default function Appointment({ visible, onClose }) {
   } = useForm();
 
   async function onSubmit(data) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Submitting the form...", data);
+    console.log(doctorId);
+    try{
+      const response=await axios.post("http://localhost:8080/appointment/create", data)
+      .then((response)=>{
+        console.log(response.data);
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+      
+    }catch(error){
+        console.log(error);
+    }
   }
 
   const [age, setAge] = useState("");
@@ -57,13 +68,13 @@ export default function Appointment({ visible, onClose }) {
       <div className="h-[70vh] w-[70vw] flex  rounded-lg bg-white shadow-lg overflow-auto">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full min-w-10 p-10 space-y-4 bg-white shadow-lg rounded-lg"
+          className="w-full min-w-10 p-10 space-y-3 bg-white  rounded-lg"
         >
           {/* Patient name */}
           <div className="flex flex-col gap-1">
             <label className="font-medium text-gray-800">Patient Name</label>
             <input
-              {...register("patientname", {
+              {...register("patientName", {
                 required: true,
                 maxLength: {
                   value: 100,
@@ -114,30 +125,68 @@ export default function Appointment({ visible, onClose }) {
             </div>
           </div>
 
-          {/* Gender */}
-          <div className="flex gap-2 items-center">
-            <label className="font-medium text-gray-800">Gender</label>
-            <input type="radio" name="gender" id="male" />
-            <label
-              htmlFor="male"
-              className="text-sm text-gray-700 cursor-pointer"
-            >
-              Male
-            </label>
-            <input type="radio" name="gender" id="female" />
-            <label
-              htmlFor="female"
-              className="text-sm text-gray-700 cursor-pointer"
-            >
-              Female
-            </label>
-            <input type="radio" name="gender" id="other" />
-            <label
-              htmlFor="other"
-              className="text-sm text-gray-700 cursor-pointer"
-            >
-              Other
-            </label>
+          {/* contact and gender */}
+          <div className="flex gap-x-3 justify-between items-center">
+            {/* Gender */}
+            <div className="flex gap-2 items-center w-full">
+              <label className="font-medium text-gray-800">Gender</label>
+              <input
+                type="radio"
+                {...register("gender")}
+                value="male"
+                id="male"
+              />
+              <label
+                htmlFor="male"
+                className="text-sm text-gray-700 cursor-pointer"
+              >
+                Male
+              </label>
+              <input
+                type="radio"
+                {...register("gender")}
+                value="female"
+                id="female"
+              />
+              <label
+                htmlFor="female"
+                className="text-sm text-gray-700 cursor-pointer"
+              >
+                Female
+              </label>
+              <input
+                type="radio"
+                {...register("gender")}
+                value="other"
+                id="other"
+              />
+              <label
+                htmlFor="other"
+                className="text-sm text-gray-700 cursor-pointer"
+              >
+                Other
+              </label>
+            </div>
+
+            {/* Contact */}
+            <div className="flex flex-row gap-2 w-full">
+              <label className="font-medium text-gray-800">Contact</label>
+              <input
+                {...register("patientContact", {
+                  required: true,
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Please enter a valid 10-digit phone number.",
+                  },
+                })}
+                type="text"
+                placeholder="Enter your contact no..."
+                className="w-full px-3 py-1 border border-gray-300 rounded-lg"
+              />
+              {errors.contact && (
+                <p className="text-red-700 text-sm">{errors.contact.message}</p>
+              )}
+            </div>
           </div>
 
           {/* Email */}
@@ -153,26 +202,6 @@ export default function Appointment({ visible, onClose }) {
             />
             {errors.email && (
               <p className="text-red-700 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
-          {/* Contact */}
-          <div className="flex flex-row gap-2">
-            <label className="font-medium text-gray-800">Contact</label>
-            <input
-              {...register("contact", {
-                required: true,
-                pattern: {
-                  value: /^[0-9]{10}$/,
-                  message: "Please enter a valid 10-digit phone number.",
-                },
-              })}
-              type="text"
-              placeholder="Enter your contact no..."
-              className="w-full px-3 py-1 border border-gray-300 rounded-lg"
-            />
-            {errors.contact && (
-              <p className="text-red-700 text-sm">{errors.contact.message}</p>
             )}
           </div>
 
@@ -192,33 +221,36 @@ export default function Appointment({ visible, onClose }) {
             )}
           </div>
 
-          {/* title */}
-          <div className="flex flex-row gap-2">
-            <label className="font-medium text-gray-800">Title</label>
-            <input
-              {...register("title", {
-                required: true,
-              })}
-              type="text"
-              placeholder="Enter your Disease name..."
-              className="w-full px-3 py-1 border border-gray-300 rounded-lg"
-            />
-            {errors.title && (
-              <p className="text-red-700 text-sm">{errors.title.message}</p>
-            )}
-          </div>
+          {/* Title and disease */}
+          <div className="flex justify-between items-center gap-x-3">
+            {/* title */}
+            <div className="flex flex-row gap-2 w-full">
+              <label className="font-medium text-gray-800">Title</label>
+              <input
+                {...register("title", {
+                  required: true,
+                })}
+                type="text"
+                placeholder="Enter your Disease name..."
+                className="w-full px-3 py-1 border border-gray-300 rounded-lg"
+              />
+              {errors.title && (
+                <p className="text-red-700 text-sm">{errors.title.message}</p>
+              )}
+            </div>
 
-          {/* Disease */}
-          <div className="flex flex-col gap-1">
-            <label className="font-medium text-gray-800">Disease</label>
-            <textarea
-              className="w-full px-3 py-2 border rounded-lg"
-              placeholder="Write about your disease..."
-              {...register("disease", { required: true })}
-            />
-            {errors.disease && (
-              <p className="text-red-700 text-sm">{errors.disease.message}</p>
-            )}
+            {/* Disease */}
+            <div className="flex gap-1 w-full">
+              <label className="font-medium text-gray-800">Disease</label>
+              <textarea
+                className="w-full px-3 py-2 border h-10 rounded-lg"
+                placeholder="Write about your disease..."
+                {...register("desc", { required: true })}
+              />
+              {errors.disease && (
+                <p className="text-red-700 text-sm">{errors.disease.message}</p>
+              )}
+            </div>
           </div>
 
           {/* Mode and Appointment date */}
@@ -232,7 +264,8 @@ export default function Appointment({ visible, onClose }) {
                 <div className="flex items-center gap-2">
                   <input
                     type="radio"
-                    name="mode"
+                    {...register("mode")}
+                    value="offline"
                     id="offline"
                     className="w-4 h-4"
                   />
@@ -246,7 +279,8 @@ export default function Appointment({ visible, onClose }) {
                 <div className="flex items-center gap-2">
                   <input
                     type="radio"
-                    name="mode"
+                    {...register("mode")}
+                    value="online"
                     id="online"
                     className="w-4 h-4"
                   />
@@ -263,10 +297,10 @@ export default function Appointment({ visible, onClose }) {
             {/* Appointment Date */}
             <div className="flex flex-col w-1/2">
               <label className="font-medium text-gray-800">
-                Select Date of Appointment
+                Select expected Date of Appointment
               </label>
               <input
-                {...register("appodate", { required: true })}
+                {...register("expectedDate", { required: true })}
                 type="date"
                 min={today}
                 defaultValue={today}
@@ -274,7 +308,7 @@ export default function Appointment({ visible, onClose }) {
               />
               {errors.appodate && (
                 <p className="mt-1 text-sm text-red-700">
-                  {errors.appodate.message}
+                  {errors.expectedDate.message}
                 </p>
               )}
             </div>
@@ -284,7 +318,7 @@ export default function Appointment({ visible, onClose }) {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-emerald-500 rounded-lg hover:bg-emerald-600"
+              className="px-4 mb-4 py-2 text-white bg-emerald-500 rounded-lg hover:bg-emerald-600"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit"}
