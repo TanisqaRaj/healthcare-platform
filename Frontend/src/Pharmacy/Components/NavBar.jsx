@@ -11,7 +11,6 @@ import axios from "axios";
 
 const NavBar = () => {
   
-
   const [isOpen, setIsOpen] = useState(false);
   const navigate=useNavigate();
   const dispatch= useDispatch();
@@ -98,7 +97,7 @@ const NavBar = () => {
           <a className="text-gray-700 hover:text-teal-600" href="/contact">
             Contact
           </a>
-          <a className="text-gray-700 hover:text-teal-600" href="/pharmacy">
+          <a className="text-gray-700 hover:text-teal-600 hover:cursor-pointer" onClick={()=>navigate("/pharmacy")}>
             Pharmacy
           </a>
         </nav>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import DashHeader from "./DashHeader";
 
 const Content = () => {
   const [trendingNews, setTrendingNews] = useState([]);

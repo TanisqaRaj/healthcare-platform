@@ -6,6 +6,7 @@ import DetailedAppoitmentList from "./DetailedAppoitmentList";
 const AppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  // const [appointmentState, setAppointmentState] = useState([]);
 
   const appointmentState = [
     {
@@ -130,7 +131,7 @@ const AppointmentList = () => {
   // API call
   // const fetchAppointmentlist = async () => {
   //   try {
-  //     const response = await axios.get("http://localhost:8080/appointmentState");
+  //     const response = await axios.get("http://localhost:8080/appointments/seedetails/{appointment_Id}");
   //     console.log(response.data);
   //     const list = response.data.appointmentState;
   //     setAppointmentState(list);
@@ -138,6 +139,10 @@ const AppointmentList = () => {
   //     console.error("Error:", error);
   //   }
   // };
+
+  //  useEffect(() => {
+  //     fetchAppointmentlist();
+  //   }, []);
 
   // useEffect(() => {
   //   socket.on("connect", () => {
@@ -190,6 +195,13 @@ const AppointmentList = () => {
                   <td className="px-4 py-3 border">{item.date}</td>
                   <td className="px-4 py-3 border">{item.doctor.dname}</td>
                   <td className="px-4 py-3 border">{item.doctor.dcontact}</td>
+                  {/* <td className="px-4 py-3 border">{item.appointmentDetails.patientName}</td>
+                  <td className="px-4 py-3 border">{item.appointmentDetails.patientPhone}</td>
+                  <td className="px-4 py-3 border">{item.appointmentDetails.title}</td>
+                  <td className="px-4 py-3 border">{item.appointmentDetails.mode}</td>
+                  <td className="px-4 py-3 border">{item.appointmentDetails.appointmentDate}</td>
+                  <td className="px-4 py-3 border">{item.doctorDetails.name}</td>
+                  <td className="px-4 py-3 border">{item.doctorDetails.phone}</td> */}
                   {/* appointment state */}
                   <td
                     className={`px-4 py-3 border ${
@@ -202,6 +214,17 @@ const AppointmentList = () => {
                         : "text-gray-800"
                     }`}
                   >
+                  {/* <td
+                    className={`px-4 py-3 border ${
+                      item.appointmentDetails.state === "Pending"
+                        ? "text-yellow-500"
+                        : item.appointmentDetails.state === "Accepted"
+                        ? "text-green-500"
+                        : item.appointmentDetails.state === "Rejected"
+                        ? "text-red-500"
+                        : "text-gray-800"
+                    }`}
+                  > */}
                     {item.state}
                   </td>
 

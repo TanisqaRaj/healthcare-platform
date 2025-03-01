@@ -24,6 +24,9 @@ import Content from "./components/dashboard/Content";
 import AppointmentList from "./components/dashboard/sidebar/AppointmentList";
 import Appointment from "./components/dashboard/sidebar/Appointment";
 import BookAppointment from "./components/dashboard/sidebar/BookAppointment";
+import DocSidebar from "./components/dashboard/docDash/DocSidebar";
+import DocContent from "./components/dashboard/docDash/DocContent";
+import IncomingRequest from "./components/dashboard/docDash/IncomingRequest";
 
 function App() {
   const router = createBrowserRouter([
@@ -175,6 +178,32 @@ function App() {
           <div className="flex">
             <Sidebar />
             <BookAppointment />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/doctordashboard",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <DocSidebar/>
+            <DocContent />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/incomingrequest",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <DocSidebar />
+            <IncomingRequest />
           </div>
           <Footer />
         </div>

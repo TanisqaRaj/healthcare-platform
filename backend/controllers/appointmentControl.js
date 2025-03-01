@@ -10,21 +10,23 @@ const findDoctorAndUser = async (doctorId, userId) => {
 };
 
 // Create a new appointment
+
 export const createAppointment = async (req, res) => {
     try {
         const {
             patientName,
-            patientPhone,
+            patientContact,
             gender,
             age,
             title,
             desc,
-            appointmentDate,
+            expectedDate,
             address,
             disease,
             mode,
             doctorId,
-            userId
+            userId,
+            email
         } = req.body;
 
         const { doctor, user } = await findDoctorAndUser(doctorId, userId);
@@ -35,17 +37,18 @@ export const createAppointment = async (req, res) => {
 
         const newAppointment = new Appointment({
             patientName,
-            patientPhone,
+            patientContact,
             gender,
             age,
             title,
             desc,
-            appointmentDate,
+            expectedDate,
             address,
             disease,
             mode,
-            doctor: doctor._id,
-            user: user._id
+            doctorID: doctor._id,
+            userID: user._id,
+            patientEmail: email
         });
 
         await newAppointment.generateAppointmentID();
@@ -54,7 +57,7 @@ export const createAppointment = async (req, res) => {
         res.status(201).json({ message: "Appointment created successfully", appointment: newAppointment });
     } catch (error) {
         console.error("❌ Server Error:", error.message);
-        res.status(500).json({ message: "Server Error: " + error.message });
+        res.status(500).json({ message: "Server Error: " + error.message });
     }
 };
 
