@@ -57,7 +57,7 @@ export const createAppointment = async (req, res) => {
         res.status(201).json({ message: "Appointment created successfully", appointment: newAppointment });
     } catch (error) {
         console.error("❌ Server Error:", error.message);
-        res.status(500).json({ message: "Server Error: " + error.message });
+        res.status(500).json({ message: "Server Error: " + error.message });
     }
 };
 
@@ -79,8 +79,8 @@ export const getUserAppointments = async (req, res) => {
                 select: "name email phone department experience bio profession gender username"
             })
             .populate({
-                path: "patientID",
-                select: "name email phone gender age address"
+                path: "appointmentID",
+                select: "patientName patientEmail patientContact gender age  title desc mode state expectedDate patientAddress"
             })
             .select('-__v')
             .lean();
@@ -106,12 +106,12 @@ export const getUserAppointments = async (req, res) => {
                     mode: appointment.mode
                 },
                 patient: {
-                    name: appointment.patientID.name,
-                    email: appointment.patientID.email,
-                    phone: appointment.patientID.phone,
-                    gender: appointment.patientID.gender,
-                    age: appointment.patientID.age,
-                    address: appointment.patientID.address,
+                    name: appointment.patientName,
+                    email: appointment.patientEmail,
+                    phone: appointment.patientContact,
+                    gender: appointment.gender,
+                    age: appointment.age,
+                    address: appointment.patientID.patientAddress,
                     disease: appointment.disease
                 },
                 doctor: {
@@ -155,8 +155,8 @@ export const getAppointmentHistory = async (req, res) => {
                 select: "name email phone department experience bio"
             })
             .populate({
-                path: "patientID",
-                select: "name email phone gender age address"
+                path: "appointmentID",
+                select: "patientName patientEmail patientContact gender age  title desc mode state expectedDate patientAddress"
             })
             .select('-__v') // Remove unnecessary fields
             .lean(); // Optimize query performance
@@ -182,12 +182,12 @@ export const getAppointmentHistory = async (req, res) => {
                     mode: appointment.mode
                 },
                 patient: {
-                    name: appointment.patientID.name,
-                    email: appointment.patientID.email,
-                    phone: appointment.patientID.phone,
-                    gender: appointment.patientID.gender,
-                    age: appointment.patientID.age,
-                    address: appointment.patientID.address,
+                    name: appointment.patientName,
+                    email: appointment.patientEmail,
+                    phone: appointment.patientContact,
+                    gender: appointment.gender,
+                    age: appointment.age,
+                    address: appointment.patientID.patientAddress,
                     disease: appointment.disease
                 },
                 doctor: {
@@ -197,7 +197,9 @@ export const getAppointmentHistory = async (req, res) => {
                     profession: appointment.doctorID.profession,
                     department: appointment.doctorID.department,
                     experience: appointment.doctorID.experience,
-                    bio: appointment.doctorID.bio
+                    bio: appointment.doctorID.bio,
+                    gender: appointment.doctorID.gender,
+                    username: appointment.doctorID.username
                 }
             }))
         };
@@ -246,7 +248,7 @@ export const getDoctorAppointments = async (req, res) => {
         const appointments = await Appointment.find({ doctorID: doctorId })
             .populate({
                 path: "patientID",
-                select: "name email phone gender age address"
+                select: "name email phone gender age patientAddress"
             })
             .select('-__v')
             .lean();
@@ -257,7 +259,7 @@ export const getDoctorAppointments = async (req, res) => {
 
         // Separate pending and approved appointments
         const pendingAppointments = appointments.filter(appointment => appointment.state === "pending");
-        const completedAppointments = appointments.filter(appointment => appointment.state === "approved");
+        const approvedAppointments = appointments.filter(appointment => appointment.state === "approved");
 
         // Structured Response
         const response = {
@@ -271,35 +273,38 @@ export const getDoctorAppointments = async (req, res) => {
                     title: appointment.title,
                     description: appointment.desc,
                     date: appointment.expectedDate,
-                    mode: appointment.mode
+                    mode: appointment.mode,
+
                 },
                 patient: {
-                    name: appointment.patientID.name,
-                    email: appointment.patientID.email,
-                    phone: appointment.patientID.phone,
-                    gender: appointment.patientID.gender,
-                    age: appointment.patientID.age,
-                    address: appointment.patientID.address,
+                    name: appointment.patientName,
+                    email: appointment.patientEmail,
+                    phone: appointment.patientContact,
+                    gender: appointment.gender,
+                    age: appointment.age,
+                    address: appointment.patientAddress,
                     disease: appointment.disease
                 }
             })),
-            completedAppointments: completedAppointments.map(appointment => ({
-                appointmentID: appointment._id,
+            approvedAppointments: approvedAppointments.map(appointment => ({
+                refappointmentID: appointment._id,
                 patientID: appointment.patientID._id,
                 status: appointment.state,
                 appointment: {
+                    appointmentID: appointment.appointmentID,
                     title: appointment.title,
                     description: appointment.desc,
                     date: appointment.expectedDate,
-                    mode: appointment.mode
+                    mode: appointment.mode,
+
                 },
                 patient: {
-                    name: appointment.patientID.name,
-                    email: appointment.patientID.email,
-                    phone: appointment.patientID.phone,
-                    gender: appointment.patientID.gender,
-                    age: appointment.patientID.age,
-                    address: appointment.patientID.address,
+                    name: appointment.patientName,
+                    email: appointment.patientEmail,
+                    phone: appointment.patientContact,
+                    gender: appointment.gender,
+                    age: appointment.age,
+                    address: appointment.patientAddress,
                     disease: appointment.disease
                 }
             }))
@@ -314,22 +319,22 @@ export const getDoctorAppointments = async (req, res) => {
 
 //Api For doctor dashboard approval
 
-export const approveAppointment = async (req, res) =>{
-    try{
+export const approveAppointment = async (req, res) => {
+    try {
         const { appointmentId } = req.params;
-        if(!appointmentId){
-            return res.status(400).json({ success: false , message: "Appointment ID is required"});
+        if (!appointmentId) {
+            return res.status(400).json({ success: false, message: "Appointment ID is required" });
         }
 
         //MongoDB me `"approved"` update karo
 
         const updatedAppointment = await Appointment.findByIdAndUpdate(
             appointmentId,
-            {state: "approved"},
-            {new: true}
+            { state: "approved" },
+            { new: true }
         );
-        if(!updatedAppointment){
-            return res.status(404).json({ success: false, message: "Appointment not found"});
+        if (!updatedAppointment) {
+            return res.status(404).json({ success: false, message: "Appointment not found" });
         }
         res.status(200).json({
             success: true,
@@ -337,8 +342,37 @@ export const approveAppointment = async (req, res) =>{
             appointment: updatedAppointment
         })
     }
-    catch(error){
+    catch (error) {
         console.error("❌ Error approving appointment:", error.message);
+        res.status(500).json({ success: false, message: "Server Error: " + error.message });
+    }
+}
+// APi for doctor dashboard appointment cancellation
+export const cancelAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.params;
+        if (!appointmentId) {
+            return res.status(400).json({ success: false, message: "Appointment ID is required" });
+        }
+
+        //MongoDB me `"cancelld"` update karo
+
+        const updatedAppointment = await Appointment.findByIdAndUpdate(
+            appointmentId,
+            { state: "cancelled" },
+            { new: true }
+        );
+        if (!updatedAppointment) {
+            return res.status(404).json({ success: false, message: "Appointment not found" });
+        }
+        res.status(200).json({
+            success: true,
+            message: "Appointment cancelled successfully",
+            appointment: updatedAppointment
+        })
+    }
+    catch (error) {
+        console.error("❌ Error cancelled appointment:", error.message);
         res.status(500).json({ success: false, message: "Server Error: " + error.message });
     }
 }

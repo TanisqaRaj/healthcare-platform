@@ -5,8 +5,8 @@ import {
     getAppointmentHistory,
     getUserAppointments,
     getDoctorAppointments,
-    approveAppointment
-    // getAppointmentById,
+    approveAppointment,
+    cancelAppointment
    
     //deleteAppointment
 } from '../controllers/appointmentControl.js';
@@ -22,11 +22,12 @@ appointmentRoute.get('/current/:userId', getUserAppointments);
 // 📜 Get appointment history (past appointments)
 appointmentRoute.get('/history/:userId', getAppointmentHistory);
 
-// 🔎 Get appointment details by ID
-// appointmentRoute.get('/seedetails/:appointmentId', getAppointmentById);
+
 
 // ❌ Delete appointment
 //appointmentRoute.delete('/delete/:appointmentId', deleteAppointment);
+
+//**************************************************************************************************** */
 
 //Doctor dash appointment Routes
 
@@ -35,5 +36,8 @@ appointmentRoute.get('/docapp/:doctorId',getDoctorAppointments);
 //approval route for appointment
 
 appointmentRoute.put('/approve/:appointmentId',approveAppointment);
+
+//cancellation of appointment
+appointmentRoute.put('/cancel/:appointmentId',cancelAppointment);
 
 export default appointmentRoute;
