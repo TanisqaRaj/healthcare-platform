@@ -3,7 +3,9 @@ import {
     createAppointment,
     // getCurrentAppointments,
     getAppointmentHistory,
-    getUserAppointments
+    getUserAppointments,
+    getDoctorAppointments,
+    approveAppointment
     // getAppointmentById,
    
     //deleteAppointment
@@ -25,5 +27,13 @@ appointmentRoute.get('/history/:userId', getAppointmentHistory);
 
 // ❌ Delete appointment
 //appointmentRoute.delete('/delete/:appointmentId', deleteAppointment);
+
+//Doctor dash appointment Routes
+
+appointmentRoute.get('/docapp/:doctorId',getDoctorAppointments);
+
+//approval route for appointment
+
+appointmentRoute.put('/approve/:appointmentId',approveAppointment);
 
 export default appointmentRoute;
