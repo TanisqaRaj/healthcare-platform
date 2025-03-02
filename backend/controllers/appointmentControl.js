@@ -76,7 +76,7 @@ export const getUserAppointments = async (req, res) => {
         const appointments = await Appointment.find({ patientID: userId })
             .populate({
                 path: "doctorID",
-                select: "name email phone department experience bio"
+                select: "name email phone department experience bio profession gender username"
             })
             .populate({
                 path: "patientID",
@@ -118,9 +118,12 @@ export const getUserAppointments = async (req, res) => {
                     name: appointment.doctorID.name,
                     email: appointment.doctorID.email,
                     phone: appointment.doctorID.phone,
+                    profession: appointment.doctorID.profession,
                     department: appointment.doctorID.department,
                     experience: appointment.doctorID.experience,
-                    bio: appointment.doctorID.bio
+                    bio: appointment.doctorID.bio,
+                    gender: appointment.doctorID.gender,
+                    username: appointment.doctorID.username
                 }
             }))
         };
@@ -251,6 +254,7 @@ export const getAppointmentHistory = async (req, res) => {
                     name: appointment.doctorID.name,
                     email: appointment.doctorID.email,
                     phone: appointment.doctorID.phone,
+                    profession: appointment.doctorID.profession,
                     department: appointment.doctorID.department,
                     experience: appointment.doctorID.experience,
                     bio: appointment.doctorID.bio
