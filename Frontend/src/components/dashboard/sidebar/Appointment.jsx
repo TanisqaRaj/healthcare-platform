@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-export default function Appointment({ visible, onClose , doctorId }) {
+export default function Appointment({ visible, onClose, doctorId }) {
   const handleOnClose = (e) => {
     if (e.target.id === "container") onClose();
   };
 
-  const userId=useSelector((state)=> state.auth.user._id);
+  const userId = useSelector((state) => state.auth.user._id);
 
   const {
     register,
@@ -21,20 +21,27 @@ export default function Appointment({ visible, onClose , doctorId }) {
 
   async function onSubmit(data) {
     const appointmentData = { ...data, doctorId, userId };
-    console.log("DoctorId",doctorId);
-    console.log("userId", userId)
-    console.log("data",appointmentData)
-    try{
-      const response=await axios.post("http://localhost:8080/appointments/create",appointmentData )
-      .then((response)=>{
+    console.log("DoctorId", doctorId);
+    console.log("userId", userId);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/appointments/create",
+        appointmentData
+      );
+      // .then((response)=>{
+      //   console.log(response.data);
+      // })
+      // .catch((error)=>{
+      //   console.log(error);
+      // });
+      if (response.data.success) {
         console.log(response.data);
-      })
-      .catch((error)=>{
-        console.log(error);
-      });
-      
-    }catch(error){
-        console.log(error);
+      } else {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -224,7 +231,9 @@ export default function Appointment({ visible, onClose , doctorId }) {
               className="w-full px-3 py-1 border border-gray-300 rounded-lg"
             />
             {errors.address && (
-              <p className="text-red-700 text-sm">{errors.patientAddress.message}</p>
+              <p className="text-red-700 text-sm">
+                {errors.patientAddress.message}
+              </p>
             )}
           </div>
 
