@@ -57,6 +57,7 @@ export const createAppointment = async (req, res) => {
         res.status(201).json({ message: "Appointment created successfully", appointment: newAppointment });
     } catch (error) {
         console.error("❌ Server Error:", error.message);
+        res.status(500).json({ message: "Server Error: " + error.message});
         res.status(500).json({ message: "Server Error: " + error.message });
     }
 };

@@ -1,148 +1,45 @@
 import React, { useEffect, useState } from "react";
 import DetailedAppoitmentList from "./DetailedAppoitmentList";
+import { useSelector } from "react-redux";
+import axios from "axios";
 // import {io} from "socket.io-client";
 // const socket = io("http://localhost:8080/");
 
 const AppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  // const [appointmentState, setAppointmentState] = useState([]);
+  const [appointmentState, setAppointmentState] = useState([]);
+  const userId=useSelector((state)=> state.auth.user._id);
 
-  const appointmentState = [
-    {
-      "patient": {
-        "name": "Alisha",
-        "contact": "1234567890",
-        "mail": "sanu@gmail.com"
-      },
-      "doctor": {
-        "dname": "Taranjeet",
-        "dcontact": "1234567890",
-        "username": "taran",
-        "bio": "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-        "gender": "male",
-        "dmail": "taran1@gmail.com",
-        "profession": [
-          "General Physician",
-          "Cardiologist",
-          "General Surgeon",
-          "Pediatrician"
-        ],
-        "department": "cardiology",
-        "experience": "1"
-      },
-      "title": "Alzheimer",
-      "desc": "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-      "mode": "Offline",
-      "date": "12/3/2025",
-      "state": "Accepted"
-    },
-    {
-      "patient": {
-        "name": "Taranjeet",
-        "contact": "1234567890",
-        "mail": "taran@gmail.com"
-      },
-      "doctor": {
-        "dname": "Alisha",
-        "dcontact": "1234567890",
-        "username": "alishaalisha",
-        "bio": "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-        "gender": "male",
-        "dmail": "alisha1@gmail.com",
-        "profession": [
-          "General Physician",
-          "Cardiologist",
-          "General Surgeon",
-          "Pediatrician"
-        ],
-        "department": "cardiology",
-        "experience": "1"
-      },
-      "title": "Fever",
-      "desc": "I have fever and cold",
-      "mode": "Online",
-      "date": "12/3/2025",
-      "state": "Accepted"
-    },
-    {
-      "patient": {
-        "name": "Gaurav",
-        "contact": "1234567890",
-        "mail": "gaurav@gmail.com"
-      },
-      "doctor": {
-        "dname": "Anurag",
-        "dcontact": "1234567890",
-        "username": "anuragkumar",
-        "bio": "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-        "gender": "male",
-        "dmail": "anurag1@gmail.com",
-        "profession": [
-          "General Physician",
-          "Cardiologist",
-          "General Surgeon",
-          "Pediatrician"
-        ],
-        "department": "cardiology",
-        "experience": "1"
-      },
-      "title": "Fever",
-      "desc": "I have fever and cold",
-      "mode": "Online",
-      "date": "12/3/2025",
-      "state": "Pending"
-    },
-    {
-      "patient": {
-        "name": "Anurag",
-        "contact": "1234567890",
-        "mail": "anurag@gmail.com"
-      },
-      "doctor": {
-        "dname": "Gaurav",
-        "dcontact": "1234567890",
-        "username": "gauravkumar",
-        "bio": "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-        "gender": "male",
-        "dmail": "gaurav1@gmail.com",
-        "profession": [
-          "General Physician",
-          "Cardiologist",
-          "General Surgeon",
-          "Pediatrician"
-        ],
-        "department": "cardiology",
-        "experience": "1"
-      },
-      "title": "Fever",
-      "desc": "I have fever and cold",
-      "mode": "Online",
-      "date": "12/3/2025",
-      "state": "Pending"
-    }
-  ]
-  
   const handleShowDetails = (appointment) => {
     setSelectedAppointment(appointment);
     setPopupVisible(true);
   };
 
   // API call
-  // const fetchAppointmentlist = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:8080/appointments/seedetails/{appointment_Id}");
-  //     console.log(response.data);
-  //     const list = response.data.appointmentState;
-  //     setAppointmentState(list);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
+  const fetchAppointmentlist = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/appointments/current/${userId}`
+      );
+      console.log("userId is", userId);
+      console.log("appointment list ",response.data);
+      const success = response?.data?.success;
 
-  //  useEffect(() => {
-  //     fetchAppointmentlist();
-  //   }, []);
+      if (success) {
+        const list = response.data.appointments;
+        setAppointmentState(list || []);
+      } else {
+        alert("Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointmentlist();
+  }, []);
 
   // useEffect(() => {
   //   socket.on("connect", () => {
@@ -189,43 +86,27 @@ const AppointmentList = () => {
                   className="text-gray-800 text-center border hover:bg-gray-100"
                 >
                   <td className="px-4 py-3 border">{item.patient.name}</td>
-                  <td className="px-4 py-3 border">{item.patient.contact}</td>
-                  <td className="px-4 py-3 border">{item.title}</td>
-                  <td className="px-4 py-3 border">{item.mode}</td>
-                  <td className="px-4 py-3 border">{item.date}</td>
-                  <td className="px-4 py-3 border">{item.doctor.dname}</td>
-                  <td className="px-4 py-3 border">{item.doctor.dcontact}</td>
-                  {/* <td className="px-4 py-3 border">{item.appointmentDetails.patientName}</td>
-                  <td className="px-4 py-3 border">{item.appointmentDetails.patientPhone}</td>
-                  <td className="px-4 py-3 border">{item.appointmentDetails.title}</td>
-                  <td className="px-4 py-3 border">{item.appointmentDetails.mode}</td>
-                  <td className="px-4 py-3 border">{item.appointmentDetails.appointmentDate}</td>
-                  <td className="px-4 py-3 border">{item.doctorDetails.name}</td>
-                  <td className="px-4 py-3 border">{item.doctorDetails.phone}</td> */}
+                  <td className="px-4 py-3 border">{item.patient.phone}</td>
+                  <td className="px-4 py-3 border">{item.appointment.title}</td>
+                  <td className="px-4 py-3 border">{item.appointment.mode}</td>
+                  <td className="px-4 py-3 border">{item.appointment.date}</td>
+                  <td className="px-4 py-3 border">{item.doctor.name}</td>
+                  <td className="px-4 py-3 border">{item.doctor.phone}</td>
+                  
                   {/* appointment state */}
                   <td
                     className={`px-4 py-3 border ${
-                      item.state === "Pending"
+                      item.status === "Pending"
                         ? "text-yellow-500"
-                        : item.state === "Accepted"
+                        : item.status === "Accepted"
                         ? "text-green-500"
-                        : item.state === "Rejected"
+                        : item.status === "Rejected"
                         ? "text-red-500"
                         : "text-gray-800"
                     }`}
                   >
-                  {/* <td
-                    className={`px-4 py-3 border ${
-                      item.appointmentDetails.state === "Pending"
-                        ? "text-yellow-500"
-                        : item.appointmentDetails.state === "Accepted"
-                        ? "text-green-500"
-                        : item.appointmentDetails.state === "Rejected"
-                        ? "text-red-500"
-                        : "text-gray-800"
-                    }`}
-                  > */}
-                    {item.state}
+                  
+                    {item.status}
                   </td>
 
                   {/* get details button */}

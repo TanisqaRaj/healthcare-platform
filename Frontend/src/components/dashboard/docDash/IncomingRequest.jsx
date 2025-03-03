@@ -1,75 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 const IncomingRequest = () => {
-  // const appointmentState = [
-  //   {
-  //     name: "Alisha",
-  //     contact: "1234567890",
-  //     mail: "sanu@gmail.com",
-  //     gender: "Female",
-  //     age: "25",
-  //     address: "Patna",
-  //     title: "Alzheimer",
-  //     desc: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     mode: "Offline",
-  //     date: "12/3/2025",
-  //     state: "Accepted",
-  //   },
-  //   {
-  //     name: "Alisha",
-  //     contact: "1234567890",
-  //     mail: "sanu@gmail.com",
-  //     gender: "Female",
-  //     age: "25",
-  //     address: "Patna",
-  //     title: "Alzheimer",
-  //     desc: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     mode: "Offline",
-  //     date: "12/3/2025",
-  //     state: "Accepted",
-  //   },
-  //   {
-  //     name: "Alisha",
-  //     contact: "1234567890",
-  //     mail: "sanu@gmail.com",
-  //     gender: "Female",
-  //     age: "25",
-  //     address: "Ambala",
-  //     title: "Alzheimer",
-  //     desc: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     mode: "Offline",
-  //     date: "12/3/2025",
-  //     state: "Accepted",
-  //   },
-  //   {
-  //     name: "Alisha",
-  //     contact: "1234567890",
-  //     mail: "sanu@gmail.com",
-  //     gender: "Female",
-  //     age: "25",
-  //     address: "Patna",
-  //     title: "Alzheimer",
-  //     desc: "I have fever and coldI have fever and coldI have fever and coldI have fever and coldI have fever and cold",
-  //     mode: "Offline",
-  //     date: "12/3/2025",
-  //     state: "Accepted",
-  //   },
-  // ];
-  
-  // const appointment_Id = "67bc65be0983e0b037acead7";
 
   const [appointmentState, setAppointmentState] = useState([]);
+  const doctorId= useSelector((state)=> state.auth.doctor._id);
+  
   const fetchAppointmentlist = async () => {
+    console.log("doctorId", doctorId);
     try {
       const response = await axios.get(
-        `http://localhost:8080/appointments/seedetails/${appointment_Id}`
+        `http://localhost:8080/appointments/docapp/${doctorId}`
       );
       const success = response?.data?.success;
-
+      console.log("response data is",response.data);
       if (success) {
         console.log(response.data);
-        const list = response.data.appointmentDetails;
-        setAppointmentState(list);
+        const list = [...response.data.pendingAppointments, ...response.data.approvedAppointments];
+        console.log("appointment list :", list);
+        setAppointmentState(list || []);
       } else {
         alert("Something went wrong");
       }
@@ -79,6 +28,7 @@ const IncomingRequest = () => {
   };
 
   useEffect(() => {
+    console.log("state is", appointmentState);
     fetchAppointmentlist();
   }, []);
 
@@ -114,16 +64,16 @@ const IncomingRequest = () => {
                   key={index}
                   className="text-gray-800 text-center border hover:bg-gray-100"
                 >
-                  <td className="px-4 py-3 border">{item.patientName}</td>
-                  <td className="px-4 py-3 border">{item.age}</td>
-                  <td className="px-4 py-3 border">{item.gender}</td>
-                  <td className="px-4 py-3 border">{item.patientPhone}</td>
-                  {/* <td className="px-4 py-3 border">{item.mail}</td> */}
-                  <td className="px-4 py-3 border">{item.address}</td>
-                  <td className="px-4 py-3 border">{item.title}</td>
-                  <td className="px-4 py-3 border">{item.desc}</td>
-                  <td className="px-4 py-3 border">{item.mode}</td>
-                  <td className="px-4 py-3 border">{item.appointmentDate}</td>
+                  <td className="px-4 py-3 border">{item.patient.name}</td>
+                  <td className="px-4 py-3 border">{item.patient.age}</td>
+                  <td className="px-4 py-3 border">{item.patient.gender}</td>
+                  <td className="px-4 py-3 border">{item.patient.phone}</td>
+                  <td className="px-4 py-3 border">{item.patient.email}</td>
+                  <td className="px-4 py-3 border">{item.patient.address}</td>
+                  <td className="px-4 py-3 border">{item.appointment.title}</td>
+                  <td className="px-4 py-3 border">{item.appointment.description}</td>
+                  <td className="px-4 py-3 border">{item.appointment.mode}</td>
+                  <td className="px-4 py-3 border">{item.appointment.date}</td>
                   <td className="px-4 py-3 border">
                     <button className="borde bg-emerald-600 rounded-2xl p-1 space-y-1 shadow-xl">
                       Accept

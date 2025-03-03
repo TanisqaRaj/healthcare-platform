@@ -35,33 +35,33 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
             Patient Details
           </div>
           <p>
-            <strong>Patient Name:</strong> {appointment.patient.name}
+            <strong>Patient Name:</strong> {appointment.patient?.name}
           </p>
           <p>
-            <strong>Contact:</strong> {appointment.patient.contact}
+            <strong>Contact:</strong> {appointment.patient?.phone}
           </p>
           <p>
-            <strong>Email:</strong> {appointment.patient.mail}
+            <strong>Email:</strong> {appointment.patient?.email}
           </p>
           <p>
-            <strong>Title:</strong> {appointment.title}
+            <strong>Title:</strong> {appointment.appointment?.title}
           </p>
           <p>
-            <strong>Description:</strong> {appointment.desc}
+            <strong>Description:</strong> {appointment.appointment?.description}
           </p>
           <p>
-            <strong>Mode:</strong> {appointment.mode}
+            <strong>Mode:</strong> {appointment.appointment?.mode}
           </p>
           <p>
-            <strong>Date:</strong> {appointment.date}
+            <strong>Date:</strong> {appointment.appointment?.date}
           </p>
           <p>
-            <strong>Status:</strong> {appointment.state}
+            <strong>Status:</strong> {appointment.status}
           </p>
 
           {/* When request is accepted and mode is online */}
-          {appointment.mode === "Online" &&
-            appointment.state === "Accepted" && (
+          {appointment.appointment?.mode === "online" &&
+            appointment.status === "approved" && (
               <div className="mt-6">
                 <div className="font-semibold text-sm">
                   Click here to join meeting
@@ -76,8 +76,8 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
             )}
 
           {/* When request is accepted and mode is offline */}
-          {appointment.mode === "Offline" &&
-            appointment.state === "Accepted" && (
+          {appointment.appointment?.mode === "offline" &&
+            appointment.status === "approved" && (
               <div className="mt-6">
                 <div className="font-semibold text-sm">
                   Click here to see location
@@ -100,7 +100,7 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
           <div className="p-6 text-gray-800">
             <div>
               <strong className="mr-2  text-emerald-900">Name:</strong>{" "}
-              {appointment.doctor.dname}
+              {appointment.doctor?.name}
             </div>
             <div>
               <strong className="mr-2 text-emerald-900">Username:</strong>
@@ -108,20 +108,25 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
             </div>
             <div>
               <strong className="mr-2  text-emerald-900">Contact:</strong>
-              {appointment.doctor.contact}
+              {appointment.doctor?.phone}
             </div>
+
+            {/* gender */}
             <div>
               <strong className="mr-2  text-emerald-900">Gender:</strong>
               {appointment.doctor.gender}
             </div>
+            
             <div>
               <strong className="mr-2  text-emerald-900">Email:</strong>
-              {appointment.doctor.dmail}
+              {appointment.doctor?.email}
             </div>
             <div>
               <strong className="mr-2  text-emerald-900">Bio:</strong>
-              {appointment.doctor.bio}
+              {appointment.doctor?.bio}
             </div>
+
+            {/* profession */}
             <div className="flex gap-1 flex-wrap max-w-full">
               <strong className="mr-2  text-emerald-900">Profession:</strong>
               {appointment.doctor.profession.map((profession, index) => (
@@ -135,11 +140,11 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
             </div>
             <div>
               <strong className="mr-2  text-emerald-900">Department:</strong>
-              {appointment.doctor.department}
+              {appointment.doctor?.department}
             </div>
             <div>
               <strong className="mr-2  text-emerald-900">Experience:</strong>
-              {appointment.doctor.experience}
+              {appointment.doctor?.experience}
             </div>
           </div>
         </div>
