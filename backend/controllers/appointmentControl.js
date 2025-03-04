@@ -71,10 +71,18 @@ export const getUserAppointments = async (req, res) => {
             return res.status(400).json({ success: false, message: "User ID is required" });
         }
 
+
         console.log("Fetching all appointments for user:", userId);
 
+        const currentDate = new Date();
+        currentDate.setHours(currentDate.getHours() + 5);  // +5 hours for IST
+        currentDate.setMinutes(currentDate.getMinutes() + 30); // +30 minutes for IST
+        currentDate.setUTCHours(0, 0, 0, 0);
+
         // Fetch all appointments for the given user and populate doctor details
-        const appointments = await Appointment.find({ patientID: userId })
+        const appointments = await Appointment.find({ patientID: userId,
+            expectedDate:{ $gte:currentDate}
+         })
             .populate({
                 path: "doctorID",
                 select: "name email phone department experience bio profession gender username"
