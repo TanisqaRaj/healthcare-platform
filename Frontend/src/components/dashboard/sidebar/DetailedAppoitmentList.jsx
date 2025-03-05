@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import UserMeetingDetails from "./UserMeetingDetails";
 
 const DetailedAppoitmentList = ({ show, close, appointment }) => {
+  const [meetingDetailsVisible, setMeetingDetailsVisible] = useState(false);
   const handleClose = (e) => {
     if (e.target.id === "detAppList") close();
   };
@@ -9,8 +11,17 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
     console.log("map.....");
   };
 
+  const handlePopup= () => {
+    console.log("map.....");
+  };
+
+
   const handleMeeting = () => {
-    window.open("https://meet.google.com/wio-amdd-xnr", "_blank");
+    setMeetingDetailsVisible(true);
+  };
+
+  const handleMeetingDetailsClose = () => {
+    setMeetingDetailsVisible(false);
   };
 
   if (!show) return null;
@@ -90,6 +101,12 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
                 </button>
               </div>
             )}
+
+          <button className=" mt-10 rounded-2xl border bg-emerald-500 text-sm p-1 "
+          onClick={handlePopup}
+          >
+            cancle appointment
+          </button>
         </div>
 
         {/* doctor details */}
@@ -116,7 +133,7 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
               <strong className="mr-2  text-emerald-900">Gender:</strong>
               {appointment.doctor.gender}
             </div>
-            
+
             <div>
               <strong className="mr-2  text-emerald-900">Email:</strong>
               {appointment.doctor?.email}
@@ -149,6 +166,7 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
           </div>
         </div>
       </div>
+      <UserMeetingDetails visible={meetingDetailsVisible} onClose={handleMeetingDetailsClose} />
     </div>
   );
 };

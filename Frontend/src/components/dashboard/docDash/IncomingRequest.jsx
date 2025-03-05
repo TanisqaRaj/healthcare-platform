@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-const IncomingRequest = () => {
+import MeetingDetails from "./MeetingDetails";
 
+const IncomingRequest = () => {
+  
+  const [appVisible, setAppVisible] = useState(false);
   const [appointmentState, setAppointmentState] = useState([]);
   const doctorId= useSelector((state)=> state.auth.doctor._id);
+
+  const openPasswordPopup=()=>{
+    setAppVisible(true);
+  }
   
+  //Api call
   const fetchAppointmentlist = async () => {
     console.log("doctorId", doctorId);
     try {
@@ -32,11 +40,13 @@ const IncomingRequest = () => {
     fetchAppointmentlist();
   }, []);
 
+  const handleOnClose = () => setAppVisible(false);
+
   return (
     <div className="w-full">
       <div className="pb-5 ">
         <p className="px-4 pt-10 lg:px-10 pb-6 text-2xl font-bold text-gray-700">
-          Appointments
+          Appointments requests
         </p>
         <div className="overflow-x-auto px-4 lg:px-10 ">
           <table className="min-w-full border border-gray-300 rounded-lg shadow-md">
@@ -75,7 +85,9 @@ const IncomingRequest = () => {
                   <td className="px-4 py-3 border">{item.appointment.mode}</td>
                   <td className="px-4 py-3 border">{item.appointment.date}</td>
                   <td className="px-4 py-3 border">
-                    <button className="borde bg-emerald-600 rounded-2xl p-1 space-y-1 shadow-xl">
+                    <button className="borde bg-emerald-600 rounded-2xl p-1 space-y-1 shadow-xl"
+                    onClick={openPasswordPopup}
+                    >
                       Accept
                     </button>
                     <button className="border bg-red-400 rounded-2xl p-1 space-y-1 px-2 shadow-xl">
@@ -88,6 +100,7 @@ const IncomingRequest = () => {
           </table>
         </div>
       </div>
+       <MeetingDetails onClose={handleOnClose} visible={appVisible} />
     </div>
   );
 };
