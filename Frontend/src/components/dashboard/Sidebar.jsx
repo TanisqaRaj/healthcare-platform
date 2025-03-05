@@ -15,7 +15,7 @@ const Sidebar = () => {
     { title: "Book Appointment", icon: <FaBookMedical /> ,path:"/bookappointment"},
     { title: "Appointments", icon: <FaNotesMedical />,  },
     { title: "Appointment List", icon: <FaListUl /> , path: "/appointmentlist"},
-    { title: "Appointment History", icon: <TbHistoryToggle /> },
+    { title: "Appointment History", icon: <TbHistoryToggle />, path:"/appointmenthistory" },
     { title: "Buy Medicine", icon: <AiTwotoneMedicineBox />, path:"/pharmacy" },
   ];
 

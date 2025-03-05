@@ -19,6 +19,7 @@ export default function Appointment({ visible, onClose, doctorId }) {
     formState: { errors, isSubmitting },
   } = useForm();
 
+  //API call
   async function onSubmit(data) {
     const appointmentData = { ...data, doctorId, userId };
     console.log("DoctorId", doctorId);

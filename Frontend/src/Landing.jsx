@@ -3,7 +3,7 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import doctor from "./assets/images/doctorsGrpPic.png";
-import doctors from './assets/images/Doctors.jpg'
+import doctors from './assets/images/Doctors.png.png'
 import CountUp from "react-countup";
 
 const Landing = () => {
