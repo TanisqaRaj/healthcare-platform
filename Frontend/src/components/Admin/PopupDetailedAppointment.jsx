@@ -1,29 +1,9 @@
 import React, { useState } from "react";
-import UserMeetingDetails from "./UserMeetingDetails";
 
-const DetailedAppoitmentList = ({ show, close, appointment }) => {
-  const [meetingDetailsVisible, setMeetingDetailsVisible] = useState(false);
+const PopupDetailedAppointment = ({ show, close, appointment }) => {
+
   const handleClose = (e) => {
     if (e.target.id === "detAppList") close();
-  };
-
-  const handleOpenMap = () => {
-    console.log("map.....");
-  };
-
-  
-
-  const handlePopup= () => {
-    console.log("map.....");
-  };
-
-
-  const handleMeeting = () => {
-    setMeetingDetailsVisible(true);
-  };
-
-  const handleMeetingDetailsClose = () => {
-    setMeetingDetailsVisible(false);
   };
 
   if (!show) return null;
@@ -71,45 +51,6 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
           <p>
             <strong>Status:</strong> {appointment.status}
           </p>
-
-          {/* When request is accepted and mode is online */}
-          {appointment.appointment?.mode === "online" &&
-            appointment.status === "approved" && (
-              <div className="mt-6">
-                <div className="font-semibold text-sm">
-                  Click here to join meeting
-                </div>
-                <button
-                  className="border p-1 text-sm bg-emerald-200 rounded-2xl px-2"
-                  onClick={handleMeeting}
-                >
-                  join now
-                </button>
-              </div>
-            )}
-
-          {/* When request is accepted and mode is offline */}
-          {appointment.appointment?.mode === "offline" &&
-            appointment.status === "approved" && (
-              <div className="mt-6">
-                <div className="font-semibold text-sm">
-                  Click here to see location
-                </div>
-                <button
-                  className="border p-1 text-sm bg-emerald-200 rounded-2xl px-2"
-                  onClick={handleOpenMap}
-                >
-                  Location
-                </button>
-              </div>
-            )}
-
-          {/* cancle button */}
-          <button className=" mt-10 rounded-2xl border bg-emerald-500 text-sm p-1 "
-          onClick={handlePopup}
-          >
-            cancle appointment
-          </button>
         </div>
 
         {/* doctor details */}
@@ -169,9 +110,8 @@ const DetailedAppoitmentList = ({ show, close, appointment }) => {
           </div>
         </div>
       </div>
-      <UserMeetingDetails visible={meetingDetailsVisible} onClose={handleMeetingDetailsClose} />
     </div>
   );
 };
 
-export default DetailedAppoitmentList;
+export default PopupDetailedAppointment;

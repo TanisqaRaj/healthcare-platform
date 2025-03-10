@@ -2,17 +2,59 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import MeetingDetails from "./MeetingDetails";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:8080");
 
 const IncomingRequest = () => {
-  
   const [appVisible, setAppVisible] = useState(false);
-  const [appointmentState, setAppointmentState] = useState([]);
-  const doctorId= useSelector((state)=> state.auth.doctor._id);
+  const [appointmens, setAppointments] = useState([]);
+  const [appointmentId, setAppointmentId] = useState("");
+  const doctorId = useSelector((state) => state.auth.doctor._id);
+  const [action, setAction] = useState("");
 
-  const openPasswordPopup=()=>{
+  function openPasswordPopup(id) {
+    setAppointmentId(id);
+    setAction("approved");
     setAppVisible(true);
   }
-  
+
+  async function rejectAction(id) {
+    setAppointmentId(id);
+    setAction("rejected");
+    await updateAppointmentStatus(id, "rejected");
+  }
+
+  async function updateAppointmentStatus(
+    appointmentId,
+    appointmentState,
+    meetingUrl = null,
+    meetingPassword = null,
+    location = null
+  ) {
+    socket.emit(
+      "updateAppointmentStatus",
+      {
+        appointmentId,
+        appointmentState,
+        meetingUrl,
+        meetingPassword,
+        location,
+      },
+      async (response) => {
+        if (response.success) {
+          console.log("Appointment status updated successfully");
+          await fetchAppointmentlist();
+        } else {
+          console.error(
+            "Failed to update appointment status:",
+            response.message
+          );
+        }
+      }
+    );
+  }
+
   //Api call
   const fetchAppointmentlist = async () => {
     console.log("doctorId", doctorId);
@@ -21,12 +63,15 @@ const IncomingRequest = () => {
         `http://localhost:8080/appointments/docapp/${doctorId}`
       );
       const success = response?.data?.success;
-      console.log("response data is",response.data);
+      console.log("response data is", response.data);
       if (success) {
         console.log(response.data);
-        const list = [...response.data.pendingAppointments, ...response.data.approvedAppointments];
+        const list = [
+          ...response.data.pendingAppointments,
+          ...response.data.approvedAppointments,
+        ];
         console.log("appointment list :", list);
-        setAppointmentState(list || []);
+        setAppointments(list || []);
       } else {
         alert("Something went wrong");
       }
@@ -36,7 +81,7 @@ const IncomingRequest = () => {
   };
 
   useEffect(() => {
-    console.log("state is", appointmentState);
+    console.log("state is", appointmens);
     fetchAppointmentlist();
   }, []);
 
@@ -69,7 +114,7 @@ const IncomingRequest = () => {
 
             {/* table body */}
             <tbody className="shadow-2xl">
-              {appointmentState.map((item, index) => (
+              {appointmens.map((item, index) => (
                 <tr
                   key={index}
                   className="text-gray-800 text-center border hover:bg-gray-100"
@@ -81,16 +126,25 @@ const IncomingRequest = () => {
                   <td className="px-4 py-3 border">{item.patient.email}</td>
                   <td className="px-4 py-3 border">{item.patient.address}</td>
                   <td className="px-4 py-3 border">{item.appointment.title}</td>
-                  <td className="px-4 py-3 border">{item.appointment.description}</td>
+                  <td className="px-4 py-3 border">
+                    {item.appointment.description}
+                  </td>
                   <td className="px-4 py-3 border">{item.appointment.mode}</td>
                   <td className="px-4 py-3 border">{item.appointment.date}</td>
+
                   <td className="px-4 py-3 border">
-                    <button className="borde bg-emerald-600 rounded-2xl p-1 space-y-1 shadow-xl"
-                    onClick={openPasswordPopup}
+                    {item.status !== "approved" && (
+                      <button
+                        className="borde bg-emerald-600 rounded-2xl p-1 space-y-1 shadow-xl"
+                        onClick={() => openPasswordPopup(item.appointmentID)}
+                      >
+                        Accept  
+                      </button>
+                    )}
+                    <button
+                      onClick={async () => rejectAction(item.appointmentID)}
+                      className="border bg-red-400 rounded-2xl p-1 space-y-1 px-2 shadow-xl"
                     >
-                      Accept
-                    </button>
-                    <button className="border bg-red-400 rounded-2xl p-1 space-y-1 px-2 shadow-xl">
                       Reject
                     </button>
                   </td>
@@ -100,7 +154,13 @@ const IncomingRequest = () => {
           </table>
         </div>
       </div>
-       <MeetingDetails onClose={handleOnClose} visible={appVisible} />
+      <MeetingDetails
+        onClose={handleOnClose}
+        visible={appVisible}
+        appointmentState={action}
+        appointmentId={appointmentId}
+        updateAppointmentStatus={updateAppointmentStatus}
+      />
     </div>
   );
 };

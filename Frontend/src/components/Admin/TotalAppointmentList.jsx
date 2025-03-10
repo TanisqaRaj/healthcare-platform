@@ -1,75 +1,71 @@
 import React, { useEffect, useState } from "react";
-import DetailedAppoitmentList from "./DetailedAppoitmentList";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { io } from "socket.io-client";
+import PopupDetailedAppointment from "./PopupDetailedAppointment";
 
-const socket = io("http://localhost:8080/"); // Replace with your backend URL
-
-const AppointmentList = () => {
+const TotalAppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [appointmentState, setAppointmentState] = useState([]);
-  const userId = useSelector((state) => state.auth.user._id);
+
+  useEffect(() => {
+    const sampleData = [
+      {
+        patient: {
+          name: "John Doe",
+          phone: "123-456-7890",
+          email: "john@example.com",
+        },
+        appointment: {
+          title: "Consultation",
+          mode: "online",
+          date: "2025-03-15",
+          description: "General consultation",
+        },
+        doctor: {
+          name: "Dr. Smith",
+          phone: "987-654-3210",
+          username: "drsmith",
+          gender: "Male",
+          email: "drsmith@example.com",
+          bio: "Experienced doctor",
+          profession: ["Cardiologist"],
+          department: "Cardiology",
+          experience: "10 years",
+        },
+        status: "Accepted",
+      },
+      {
+        patient: {
+          name: "Jane Doe",
+          phone: "123-456-7891",
+          email: "jane@example.com",
+        },
+        appointment: {
+          title: "Follow-up",
+          mode: "offline",
+          date: "2025-03-20",
+          description: "Follow-up appointment",
+        },
+        doctor: {
+          name: "Dr. Brown",
+          phone: "987-654-3211",
+          username: "drbrown",
+          gender: "Female",
+          email: "drbrown@example.com",
+          bio: "Specialist in follow-ups",
+          profession: ["General Practitioner"],
+          department: "General Medicine",
+          experience: "8 years",
+        },
+        status: "Pending",
+      },
+    ];
+    setAppointmentState(sampleData);
+  }, []);
 
   const handleShowDetails = (appointment) => {
     setSelectedAppointment(appointment);
     setPopupVisible(true);
   };
-
-  // API call to fetch appointments
-  const fetchAppointmentlist = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/appointments/current/${userId}`
-      );
-      console.log("userId is", userId);
-      console.log("appointment list ", response.data);
-      const success = response?.data?.success;
-
-      if (success) {
-        setAppointmentState(response.data.appointments || []);
-      } else {
-        alert("Something went wrong");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAppointmentlist();
-  }, []);
-
-  useEffect(() => {
-    const eventName = `updateAppointmentStatus/${userId}`;
-  
-    socket.on(eventName, (updatedAppointment) => {
-      console.log("Previous appointments:", appointmentState);
-      console.log("Received updated appointment:", updatedAppointment);
-  
-      setAppointmentState((prevAppointments) => {
-        let updatedIndex = prevAppointments.findIndex(
-          (appointment) => appointment.appointmentID === updatedAppointment.appointmentId
-        );
-  
-        console.log("updatedIndex", updatedIndex);
-  
-        if (updatedIndex !== -1) {
-          let updatedAppointments = [...prevAppointments];
-          updatedAppointments[updatedIndex] = updatedAppointment.appointment;
-          return updatedAppointments;
-        }
-  
-        return prevAppointments;
-      });
-    });
-  
-    return () => {
-      socket.off(eventName);
-    };
-  }, [userId]); // Remove `appointmentState` from dependencies
-  
 
   const handleClose = () => setPopupVisible(false);
 
@@ -81,7 +77,7 @@ const AppointmentList = () => {
         </p>
         <div className="overflow-x-auto px-4 lg:px-10">
           <table className="min-w-full border border-gray-300 rounded-lg shadow-md">
-            {/* Table Header */}
+            {/* table column name */}
             <thead className="bg-emerald-200 text-gray-700 font-semibold">
               <tr>
                 <th className="px-4 py-3 border">Name</th>
@@ -96,7 +92,7 @@ const AppointmentList = () => {
               </tr>
             </thead>
 
-            {/* Table Body */}
+            {/* table body */}
             <tbody>
               {appointmentState.map((item, index) => (
                 <tr
@@ -111,14 +107,14 @@ const AppointmentList = () => {
                   <td className="px-4 py-3 border">{item.doctor.name}</td>
                   <td className="px-4 py-3 border">{item.doctor.phone}</td>
 
-                  {/* Appointment State */}
+                  {/* appointment state */}
                   <td
                     className={`px-4 py-3 border ${
-                      item.status === "Pending".toLocaleLowerCase().trim()
+                      item.status === "Pending"
                         ? "text-yellow-500"
-                        : item.status === "Approved".toLocaleLowerCase().trim()
+                        : item.status === "Accepted"
                         ? "text-green-500"
-                        : item.status === "Rejected".toLocaleLowerCase().trim()
+                        : item.status === "Rejected"
                         ? "text-red-500"
                         : "text-gray-800"
                     }`}
@@ -126,13 +122,13 @@ const AppointmentList = () => {
                     {item.status}
                   </td>
 
-                  {/* Get Details Button */}
+                  {/* get details button */}
                   <td>
                     <button
                       className="mt-2 mb-2 text-sm bg-emerald-400 text-white items-center py-1 px-3 rounded-lg hover:bg-emerald-700 duration-300"
                       onClick={() => handleShowDetails(item)}
                     >
-                      Get Details
+                      get details
                     </button>
                   </td>
                 </tr>
@@ -141,7 +137,7 @@ const AppointmentList = () => {
           </table>
         </div>
       </div>
-      <DetailedAppoitmentList
+      <PopupDetailedAppointment
         close={handleClose}
         show={popupVisible}
         appointment={selectedAppointment}
@@ -150,4 +146,4 @@ const AppointmentList = () => {
   );
 };
 
-export default AppointmentList;
+export default TotalAppointmentList;

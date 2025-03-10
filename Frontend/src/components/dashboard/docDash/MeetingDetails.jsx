@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-const MeetingDetails = ({ visible, onClose}) => {
+
+
+const MeetingDetails = ({ visible, onClose, appointmentId, appointmentState, updateAppointmentStatus }) => {
   const {
     register,
     handleSubmit,
@@ -13,7 +15,9 @@ const MeetingDetails = ({ visible, onClose}) => {
     if (e.target.id === "container") onClose();
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    const { link, password } = data;
+    await updateAppointmentStatus(appointmentId, appointmentState, link, password);
     onClose();
   };
 
