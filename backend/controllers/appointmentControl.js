@@ -32,7 +32,7 @@ export const createAppointment = async (req, res) => {
         const { doctor, user } = await findDoctorAndUser(doctorId, userId);
 
         if (!doctor || !user) {
-            return res.status(404).json({ message: "Doctor or User not found" });
+            return res.status(404).json({ message: "Doctor or User not found", success: false });
         }
 
         const newAppointment = new Appointment({
@@ -54,11 +54,10 @@ export const createAppointment = async (req, res) => {
         await newAppointment.generateAppointmentID();
         await newAppointment.save();
 
-        res.status(201).json({ message: "Appointment created successfully", appointment: newAppointment });
+        res.status(201).json({ message: "Appointment created successfully", appointment: newAppointment, success: true });
     } catch (error) {
         console.error("❌ Server Error:", error.message);
-        res.status(500).json({ message: "Server Error: " + error.message});
-        res.status(500).json({ message: "Server Error: " + error.message });
+        res.status(500).json({ message: "Server Error: " + error.message, success: false });
     }
 };
 
@@ -283,7 +282,6 @@ export const getDoctorAppointments = async (req, res) => {
                     description: appointment.desc,
                     date: appointment.expectedDate,
                     mode: appointment.mode,
-
                 },
                 patient: {
                     name: appointment.patientName,
@@ -296,7 +294,7 @@ export const getDoctorAppointments = async (req, res) => {
                 }
             })),
             approvedAppointments: approvedAppointments.map(appointment => ({
-                refappointmentID: appointment._id,
+                appointmentID: appointment._id,
                 patientID: appointment.patientID._id,
                 status: appointment.state,
                 appointment: {

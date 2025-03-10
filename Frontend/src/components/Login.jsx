@@ -83,7 +83,7 @@ const Login = () => {
         } else if (data.user.role === "user") {
           navigate("/dashboard");
         } else if (data.user.role === "") {
-          navigate("/admin-dashboard");
+          navigate("/admindashboard");
         }
       } else {
         const errorData = await response.json();

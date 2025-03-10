@@ -11,11 +11,6 @@ import Carousel from "./Pharmacy/Components/hero/Carousel";
 import TermsAndCond from "./Pharmacy/Components/hero/footer/TermsAndCond";
 import HelpCenter from "./Pharmacy/Components/hero/footer/HelpCenter";
 import Registration from "./components/Registration";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useNavigate,
-} from "react-router-dom";
 import PrivacyPolicy from "./Pharmacy/Components/hero/footer/PrivacyPolicy";
 import Landing from "./Landing";
 import Login from "./components/Login";
@@ -28,6 +23,16 @@ import DocSidebar from "./components/dashboard/docDash/DocSidebar";
 import DocContent from "./components/dashboard/docDash/DocContent";
 import IncomingRequest from "./components/dashboard/docDash/IncomingRequest";
 import AppointmentHistory from "./components/dashboard/sidebar/AppointmentHistory";
+import AdminSidebar from "./components/Admin/AdminSidebar";
+import AdminContent from "./components/Admin/AdminContent";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
+import TotalDoctorsList from "./components/Admin/TotalDoctorsList";
+import TotalUserList from "./components/Admin/TotalUserList";
+import TotalAppointmentList from "./components/Admin/TotalAppointmentList";
 
 function App() {
   const router = createBrowserRouter([
@@ -46,7 +51,6 @@ function App() {
       element: (
         <div>
           <NavBar />
-          {/* <Header /> */}
           <About />
           <Footer />
         </div>
@@ -218,6 +222,58 @@ function App() {
           <div className="flex">
             <DocSidebar />
             <AppointmentHistory />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/admindashboard",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <AdminSidebar />
+            <AdminContent />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/doctorlist",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <AdminSidebar />
+            <TotalDoctorsList />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/userlist",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <AdminSidebar />
+            <TotalUserList />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path:"/totalappointmentlist",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <AdminSidebar />
+            <TotalAppointmentList />
           </div>
           <Footer />
         </div>

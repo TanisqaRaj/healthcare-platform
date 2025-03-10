@@ -5,7 +5,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import appointmentRoute from "./routes/appointmentRoutes.js";
 import doctorRoute from "./routes/doctorRoutes.js";
-import { Server } from "socket.io";  // Corrected import
+import { Server } from "socket.io"; // Corrected import
 import http from "http";
 import Appointment from "./models/Appointment.js";
 import Contract from "./models/Contract.js";
@@ -45,59 +45,105 @@ io.on("connection", (socket) => {
 
   // Dynamically handle the updateAppointmentStatus event using dynamic appointmentId
   socket.on("updateAppointmentStatus", async (data, callback) => {
+    console.log("Data received: ", data);
+
     const {
       appointmentId,
       meetingPassword,
       meetingUrl,
       location,
       appointmentState,
-      patientId,
     } = data;
 
-    // Generate dynamic event name
-    const dynamicEventName = `updateAppointmentStatus/${patientId}`;
-
-    const appointment = await Appointment.findOne({
-      appointmentID: appointmentId,
-    });
+    const appointment = await Appointment.findById(appointmentId)
+      .populate({
+        path: "doctorID",
+        select:
+          "name email phone department experience bio profession gender username",
+      })
+      .populate({
+        path: "appointmentID",
+        select:
+          "patientName patientEmail patientContact gender age  title desc mode state expectedDate patientAddress",
+      })
+      .select("-__v");
 
     if (!appointment) {
-      return callback({ success: false, message: "Appointment not found" });
-    }
-
-    if (appointment.user !== patientId) {
-      return callback({
+      return await callback({
         success: false,
-        message: "You are not authorized to update this appointment",
+        message: "Appointment not found",
       });
     }
 
     if (appointmentState === "approved") {
+      let existingContract = await Contract.findOne({
+        appointmentId: appointment._id,
+      });
+
+      if (existingContract) {
+        return await callback({
+          success: false,
+          message: "Contract already exists for this appointment",
+        });
+      }
+
       const contract = new Contract({
         appointmentId: appointment._id,
         meetingDetails: {
-          meetingId: Contract.generateMeetingId(),
           meetingPassword: meetingPassword,
           meetingUrl: appointment.mode === "online" ? meetingUrl : null,
           location: appointment.mode === "offline" ? location : null,
         },
       });
+      contract.generateMeetingId();
       await contract.save();
-      appointment.status = "approved";
-      await appointment.save();
-    } else {
-      appointment.status = appointmentState;
-      await appointment.save();
     }
+    appointment.state = appointmentState;
+    await appointment.save();
+
+    // Generate dynamic event name
+    const dynamicEventName = `updateAppointmentStatus/${appointment?.patientID}`;
 
     // Emit the dynamically created event to clients
     io.emit(dynamicEventName, {
       appointmentState,
       appointmentId,
-      appointment,
+      appointment: {
+        appointmentID: appointment._id, // MongoDB Appointment ID
+        customAppointmentID: appointment.appointmentID, // Custom generated Appointment ID
+        patientID: appointment.patientID._id, // User (Patient) ID
+        doctorID: appointment.doctorID._id, // Doctor ID
+        status: appointment.state,
+        appointment: {
+          title: appointment.title,
+          description: appointment.desc,
+          date: appointment.expectedDate,
+          mode: appointment.mode,
+        },
+        patient: {
+          name: appointment.patientName,
+          email: appointment.patientEmail,
+          phone: appointment.patientContact,
+          gender: appointment.gender,
+          age: appointment.age,
+          address: appointment.patientID.patientAddress,
+          disease: appointment.disease,
+        },
+        doctor: {
+          name: appointment.doctorID.name,
+          email: appointment.doctorID.email,
+          phone: appointment.doctorID.phone,
+          profession: appointment.doctorID.profession,
+          department: appointment.doctorID.department,
+          experience: appointment.doctorID.experience,
+          bio: appointment.doctorID.bio,
+          gender: appointment.doctorID.gender,
+          username: appointment.doctorID.username,
+        },
+      },
     });
 
-    callback({ success: true, message: "Appointment status updated" });
+    await callback({ success: true, message: "Appointment status updated" });
   });
 
   // socket disconnect

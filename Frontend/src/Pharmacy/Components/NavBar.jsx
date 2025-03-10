@@ -10,47 +10,48 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const NavBar = () => {
-  
   const [isOpen, setIsOpen] = useState(false);
-  const navigate=useNavigate();
-  const dispatch= useDispatch();
-  const user=useSelector((state)=> state.auth.user);
-  const token=useSelector((state)=>state.auth.token);
-  const handleLogout = () =>{
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const doctor = useSelector((state) => state.auth.doctor);
+  const token = useSelector((state) => state.auth.token);
+  const handleLogout = () => {
     dispatch(logout());
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const expirytoken=async()=>{
-      const tokenObj={
-        token:token
-      }
-        if(token){
-          axios.post("http://localhost:8080/auth/verify-token" , tokenObj)
-          .then((response)=>{
-            if(response.data.success){
-              navigate("/dashboard");
-            }
-            else{
-              dispatch(logout())
-              navigate("/") //change it to protected route
-            }
-          })
-        }
-        else{
-          return;
-        }
+  const expirytoken = async () => {
+    const tokenObj = {
+      token: token,
+    };
+    if (token) {
+      axios
+        .post("http://localhost:8080/auth/verify-token", tokenObj)
+        .then((response) => {
+          if (response.data.success) {
+            response.data.user.role === "user"
+              ? navigate("/dashboard")
+              : navigate("/doctordashboard");
+          } else {
+            dispatch(logout());
+            navigate("/"); //change it to protected route
+          }
+        });
+    } else {
+      return;
     }
-    useEffect(()=>{
-      expirytoken();
-      AOS.init({
-        duration: 1000,
-        once: true,
-      });
-    },[])
+  };
+  useEffect(() => {
+    expirytoken();
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
 
   return (
     <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
@@ -61,10 +62,17 @@ const NavBar = () => {
         </div>
         {/* Navigation Bar */}
         <nav className="flex-grow flex justify-center space-x-6">
-          <a className="text-gray-700 hover:text-teal-600" href="/" onClick={handleLogout}>
+          <a
+            className="text-gray-700 hover:text-teal-600"
+            href="/"
+            onClick={handleLogout}
+          >
             Home
           </a>
-          <a className="text-gray-700 hover:text-teal-600" href="/about">
+          <a
+            className="text-gray-700 hover:text-teal-600"
+            onClick={() => navigate("/about")}
+          >
             About
           </a>
           {/* Services */}
@@ -94,16 +102,22 @@ const NavBar = () => {
             )}
           </div>
           {/* Contact */}
-          <a className="text-gray-700 hover:text-teal-600" href="/contact">
+          <a
+            className="text-gray-700 hover:text-teal-600"
+            onClick={() => navigate("/contact")}
+          >
             Contact
           </a>
-          <a className="text-gray-700 hover:text-teal-600 hover:cursor-pointer" onClick={()=>navigate("/pharmacy")}>
+          <a
+            className="text-gray-700 hover:text-teal-600 hover:cursor-pointer"
+            onClick={() => navigate("/pharmacy")}
+          >
             Pharmacy
           </a>
         </nav>
         {/* Login/Register Section */}
         <div className="flex items-center space-x-4">
-          {user ? (
+          {user || doctor ? (
             <button
               onClick={handleLogout}
               className="text-gray-700 hover:text-red-600"
@@ -115,7 +129,10 @@ const NavBar = () => {
               <a className="text-gray-700 hover:text-teal-600" href="/login">
                 Login
               </a>
-              <a className="text-gray-700 hover:text-teal-600" href="/registration">
+              <a
+                className="text-gray-700 hover:text-teal-600"
+                href="/registration"
+              >
                 SignUp
               </a>
             </>

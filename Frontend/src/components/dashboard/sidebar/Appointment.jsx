@@ -38,6 +38,10 @@ export default function Appointment({ visible, onClose, doctorId }) {
       // });
       if (response.data.success) {
         console.log(response.data);
+        onClose();
+        setTimeout(() => {
+          alert("Appointment booked successfully!");
+        }, 500);
       } else {
         console.log(response.data);
       }
