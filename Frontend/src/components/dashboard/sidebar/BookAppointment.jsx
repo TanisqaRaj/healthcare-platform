@@ -91,7 +91,7 @@ const BookAppointment = () => {
   const handleOnClose = () => setAppVisible(false);
 
   return (
-    <div>
+    <div className="w-full overflow-hidden">
       <DashHeader setFilteredDoctors={setFilteredDoctors} />
       <div className="pb-5 px-10 py-10">
         <InfiniteScroll

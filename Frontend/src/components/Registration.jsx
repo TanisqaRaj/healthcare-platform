@@ -112,7 +112,7 @@ const Registration = () => {
 
   return (
     <div
-      className="w-[100vw] min-h-screen flex justify-center items-center rounded-lg py-20 px-40 bg-opacity-20 backdrop-blur-sm"
+      className="w-full min-h-screen flex justify-center items-center rounded-lg py-20 px-40 bg-opacity-20 backdrop-blur-sm"
       style={{
         backgroundImage: "url('../src/assets/images/BGregistration.jpg')",
         backgroundSize: "cover",

@@ -65,12 +65,12 @@ const Landing = () => {
   }, []);
 
   return (
-    <div className="w-[100vw] m-0 p-0">
+    <div className="w-full m-0 p-0 overflow-hidden">
       <title>Doctor Appointment</title>
 
       {/* Landing Hero Section */}
       <section
-        className="bg-emerald-700 w-[100vw] h-[100vh] text-white py-20"
+        className="bg-emerald-700 w-full min-h-screen text-white py-20"
         data-aos="fade-up"
       >
         <div className="container mx-auto flex flex-col md:flex-row items-center p-4">
@@ -140,7 +140,7 @@ const Landing = () => {
       </div>
 
       {/* Landing Services Section */}
-      <section className="py-20 px-4 w-[100vw]">
+      <section className="py-20 px-4 w-full">
         <div className="container mx-auto mr-0 justify-between">
           <div
             className="flex flex-col md:flex-row items-center mb-10"
@@ -205,7 +205,7 @@ const Landing = () => {
 
       {/* Landing Video Section */}
       <section
-        className="bg-gray-200 py-20 w-[100vw] h-[100vh]"
+        className="bg-gray-200 py-20 w-[100vw] min-h-screen"
         data-aos="zoom-in "
       >
         <div className="container mx-auto text-center ">
@@ -234,7 +234,7 @@ const Landing = () => {
       </section>
 
       {/* Landing Health Tips Section */}
-      <section className="py-20 w-[100vw] h-[100vh] px-8">
+      <section className="py-20 w-[100vw] min-h-screen px-8">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-10">
             Basic Safety Medication Usages

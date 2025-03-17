@@ -19,6 +19,10 @@ const Sidebar = () => {
     { title: "Buy Medicine", icon: <AiTwotoneMedicineBox />, path:"/pharmacy" },
   ];
 
+  const openprofile=()=>{
+    navigate("/userprofile")
+  }
+
   return (
     <div
       className={`${
@@ -38,7 +42,8 @@ const Sidebar = () => {
       {/* Profile Picture */}
       {open && (
         <div className="flex flex-col items-center mb-12">
-          <div className="h-24 w-24 border shadow-lg rounded-full overflow-hidden">
+          <div className="h-24 w-24 border shadow-lg rounded-full overflow-hidden"
+          onClick={openprofile}>
             <img
               src={`data:image/png;base64,${user?.image}`}
               className="h-full w-full object-cover"

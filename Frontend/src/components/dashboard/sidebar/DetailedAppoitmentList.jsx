@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import UserMeetingDetails from "./UserMeetingDetails";
+import { useNavigate } from "react-router-dom";
 
 const DetailedAppoitmentList = ({ show, close, appointment }) => {
   const [meetingDetailsVisible, setMeetingDetailsVisible] = useState(false);
+  const navigate = useNavigate ();
   const handleClose = (e) => {
     if (e.target.id === "detAppList") close();
   };
 
   const handleOpenMap = () => {
-    console.log("map.....");
+    // navigate("/map");
   };
-
-  
 
   const handlePopup= () => {
     console.log("map.....");
   };
-
 
   const handleMeeting = () => {
     setMeetingDetailsVisible(true);
