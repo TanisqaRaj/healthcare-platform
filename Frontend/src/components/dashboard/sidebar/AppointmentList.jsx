@@ -43,38 +43,38 @@ const AppointmentList = () => {
 
   useEffect(() => {
     const eventName = `updateAppointmentStatus/${userId}`;
-  
+
     socket.on(eventName, (updatedAppointment) => {
       console.log("Previous appointments:", appointmentState);
       console.log("Received updated appointment:", updatedAppointment);
-  
+
       setAppointmentState((prevAppointments) => {
         let updatedIndex = prevAppointments.findIndex(
-          (appointment) => appointment.appointmentID === updatedAppointment.appointmentId
+          (appointment) =>
+            appointment.appointmentID === updatedAppointment.appointmentId
         );
-  
+
         console.log("updatedIndex", updatedIndex);
-  
+
         if (updatedIndex !== -1) {
           let updatedAppointments = [...prevAppointments];
           updatedAppointments[updatedIndex] = updatedAppointment.appointment;
           return updatedAppointments;
         }
-  
+
         return prevAppointments;
       });
     });
-  
+
     return () => {
       socket.off(eventName);
     };
   }, [userId]); // Remove `appointmentState` from dependencies
-  
 
   const handleClose = () => setPopupVisible(false);
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-auto">
       <div className="pb-5">
         <p className="px-4 pt-10 lg:px-10 pb-6 text-2xl font-bold text-gray-700">
           Appointments
@@ -127,9 +127,9 @@ const AppointmentList = () => {
                   </td>
 
                   {/* Get Details Button */}
-                  <td>
+                  <td className="p-2"> 
                     <button
-                      className="mt-2 mb-2 text-sm bg-emerald-400 text-white items-center py-1 px-3 rounded-lg hover:bg-emerald-700 duration-300"
+                      className="text-sm bg-emerald-400 text-white items-center py-1 px-3 rounded-lg hover:bg-emerald-700 duration-300"
                       onClick={() => handleShowDetails(item)}
                     >
                       Get Details

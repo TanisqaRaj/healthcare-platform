@@ -4,7 +4,7 @@ import { FaCartPlus } from "react-icons/fa6";
 
 const Header = () => {
   return (
-    <header className="w-[100vw] h-16 shadow-xl bg-gradient-to-r from-emerald-500 to-green-700">
+    <header className="w-full h-16 shadow-xl bg-gradient-to-r from-emerald-500 to-green-700">
       <div className="h-full container mx-auto flex items-center px-4 py-3 justify-between ">
 
         {/*----------- SearchBar and SearchLogo ---------------*/}

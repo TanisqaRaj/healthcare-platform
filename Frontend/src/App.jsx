@@ -33,6 +33,9 @@ import {
 import TotalDoctorsList from "./components/Admin/TotalDoctorsList";
 import TotalUserList from "./components/Admin/TotalUserList";
 import TotalAppointmentList from "./components/Admin/TotalAppointmentList";
+import UserProfile from "./components/dashboard/sidebar/Profile/UserProfile";
+import DoctorProfile from "./components/dashboard/sidebar/Profile/DoctorProfile";
+import Map from "./components/Map";
 
 function App() {
   const router = createBrowserRouter([
@@ -274,6 +277,58 @@ function App() {
           <div className="flex">
             <AdminSidebar />
             <TotalAppointmentList />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path:"/userprofile",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <Sidebar />
+            <UserProfile />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path:"/doctorprofile",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <DocSidebar />
+            <DoctorProfile />
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/map",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <Sidebar />
+            <Map/>
+          </div>
+          <Footer />
+        </div>
+      ),
+    },
+    {
+      path: "/docmap",
+      element: (
+        <div>
+          <NavBar />
+          <div className="flex">
+            <DocSidebar />
+            <Map/>
           </div>
           <Footer />
         </div>

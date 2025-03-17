@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import MeetingDetails from "./MeetingDetails";
 import { io } from "socket.io-client";
+import Map from "../../Map";
 
 const socket = io("http://localhost:8080");
 
@@ -12,11 +13,18 @@ const IncomingRequest = () => {
   const [appointmentId, setAppointmentId] = useState("");
   const doctorId = useSelector((state) => state.auth.doctor._id);
   const [action, setAction] = useState("");
+  const [mapVisible, setMapVisible] = useState(false);
 
   function openPasswordPopup(id) {
     setAppointmentId(id);
     setAction("approved");
     setAppVisible(true);
+  }
+
+  function openMap(id) {
+    // setAppointmentId(id);
+    // setAction("approved");
+    setMapVisible(true);
   }
 
   async function rejectAction(id) {
@@ -86,9 +94,10 @@ const IncomingRequest = () => {
   }, []);
 
   const handleOnClose = () => setAppVisible(false);
+  const handleMap = () => setMapVisible(false);
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-auto">
       <div className="pb-5 ">
         <p className="px-4 pt-10 lg:px-10 pb-6 text-2xl font-bold text-gray-700">
           Appointments requests
@@ -136,9 +145,16 @@ const IncomingRequest = () => {
                     {item.status !== "approved" && (
                       <button
                         className="borde bg-emerald-600 rounded-2xl p-1 space-y-1 shadow-xl"
-                        onClick={() => openPasswordPopup(item.appointmentID)}
+                        // onClick={() => openPasswordPopup(item.appointmentID)}
+                        onClick={() => {
+                          if (item.appointment.mode === "offline") {
+                            openMap(item.appointmentID);
+                          } else if (item.appointment.mode === "online") {
+                            openPasswordPopup(item.appointmentID);
+                          }
+                        }}
                       >
-                        Accept  
+                        Accept
                       </button>
                     )}
                     <button
@@ -161,6 +177,10 @@ const IncomingRequest = () => {
         appointmentId={appointmentId}
         updateAppointmentStatus={updateAppointmentStatus}
       />
+      {mapVisible === true && (
+        <Map onclose={handleMap}/>
+      )}
+      
     </div>
   );
 };

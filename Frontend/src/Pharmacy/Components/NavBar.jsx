@@ -54,7 +54,7 @@ const NavBar = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow-md w-[100vw] sticky top-0 z-50">
+    <header className="bg-white shadow-md w-full sticky top-0 z-50 overflow-hidden">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo Section */}
         <div className="flex items-center">
@@ -70,7 +70,7 @@ const NavBar = () => {
             Home
           </a>
           <a
-            className="text-gray-700 hover:text-teal-600"
+            className="text-gray-700 hover:text-teal-600 hover:cursor-pointer"
             onClick={() => navigate("/about")}
           >
             About
@@ -103,7 +103,7 @@ const NavBar = () => {
           </div>
           {/* Contact */}
           <a
-            className="text-gray-700 hover:text-teal-600"
+            className="text-gray-700 hover:text-teal-600 hover:cursor-pointer"
             onClick={() => navigate("/contact")}
           >
             Contact

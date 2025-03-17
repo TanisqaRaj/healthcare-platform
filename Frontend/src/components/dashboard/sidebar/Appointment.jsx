@@ -1,4 +1,4 @@
-import React, { version } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -30,12 +30,6 @@ export default function Appointment({ visible, onClose, doctorId }) {
         "http://localhost:8080/appointments/create",
         appointmentData
       );
-      // .then((response)=>{
-      //   console.log(response.data);
-      // })
-      // .catch((error)=>{
-      //   console.log(error);
-      // });
       if (response.data.success) {
         console.log(response.data);
         onClose();

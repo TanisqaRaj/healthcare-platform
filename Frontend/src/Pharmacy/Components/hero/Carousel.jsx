@@ -40,7 +40,7 @@ const Carousel = () => {
   }, [currentIndex]);
 
   return (
-    <div className="w-[100vw]">
+    <div className="w-full">
       <div className="relative">
         <button
           className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
