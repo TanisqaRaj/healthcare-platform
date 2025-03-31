@@ -5,38 +5,38 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sharp from "sharp";
 
+
+// 🗜️ Compress Image Using Sharp
 const compressImage = async (base64String) => {
   if (!base64String) return null;
 
-  // ✅ Detect Image Format from Base64 Header
-  const detectedFormat = base64String.match(/^data:image\/(png|jpeg);base64,/);
-  const format = detectedFormat ? detectedFormat[1] : "jpeg"; // Default to JPEG
+  // ✅ Detect Image Format (JPEG or PNG)
+  let format = "jpeg";
+  if (base64String.startsWith("/9j")) format = "jpeg";
+  else if (base64String.startsWith("iVBORw0KGgo")) format = "png";
 
-  // ✅ Extract Base64 Data Part
-  const base64Parts = base64String.split(",");
-  if (base64Parts.length < 2) {
-    console.error("❌ Invalid Base64 format");
-    return null;
-  }
+  // ✅ Ensure Prefix Exists
+  const base64Data = base64String.startsWith("data:image")
+    ? base64String
+    : `data:image/${format};base64,${base64String}`;
 
-  const buffer = Buffer.from(base64Parts[1], "base64");
+  // ✅ Convert Base64 to Buffer
+  const buffer = Buffer.from(base64Data.split(",")[1], "base64");
 
+  // ✅ Compress Using Sharp
   try {
-    // ✅ Compress Image Using Sharp
     const compressedBuffer = await sharp(buffer)
       .resize({ width: 300 }) // Resize to 300px width
       .toFormat(format) // Explicitly set the image format
       .jpeg({ quality: 60 }) // Compress as JPEG with 60% quality
       .toBuffer();
 
-    // ✅ Return Full Base64 Image String
-    return `data:image/${format};base64,${compressedBuffer.toString("base64")}`;
+    return compressedBuffer.toString("base64");
   } catch (error) {
     console.error("❌ Sharp Error:", error.message);
     throw new Error("Image compression failed");
   }
 };
-
 
 // ✅ User Registration
 export const registerUser = async (req, res) => {
@@ -95,27 +95,25 @@ export const registerDoctor = async (req, res) => {
   } = req.body;
 
   try {
-    // Optimize query by projecting only `_id` (or other necessary fields)
-    const doctorExists = await Doctor.findOne(
-      { $or: [{ email }, { phone }, { username }, { mciNumber }] },
-      { _id: 1 }
-    );
+    const doctorExists = await Doctor.findOne({
+      $or: [{ email }, { phone }, { username }, { mciNumber }],
+    });
     if (doctorExists)
       return res.status(400).json({ message: "Doctor already exists" });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Compress image only if it's not already optimized
+    // 🗜️ Compress Profile Image if Provided (JPEG/PNG Only)
     const compressedImage = image ? await compressImage(image) : null;
 
-    // Compress certificate only if it's an image
+    // 📄 Store Certificate as-is if PDF, Otherwise Compress if Image
     const certificateData =
       certificate && certificate.startsWith("JVBER")
-        ? certificate
+        ? certificate // Store PDF as-is
         : certificate
-          ? await compressImage(certificate)
-          : null;
+        ? await compressImage(certificate) // Compress if it's an image
+        : null;
 
     const doctor = new Doctor({
       role,
@@ -123,8 +121,8 @@ export const registerDoctor = async (req, res) => {
       email,
       phone,
       username,
-      certificate: certificateData,
-      image: compressedImage,
+      certificate: certificateData, // Store PDF or Compressed Image
+      image: compressedImage, // Store Compressed Profile Image
       bio,
       gender,
       mciNumber,
@@ -135,7 +133,6 @@ export const registerDoctor = async (req, res) => {
     });
 
     await doctor.save();
-
     // Send minimal data in the response
     return res.status(201).json({
       message: "Doctor registered successfully",
