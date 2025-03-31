@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import PopupDetailedAppointment from "./PopupDetailedAppointment";
+import axios from "axios"; // Import axios for API calls
 
 const TotalAppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);
@@ -7,59 +8,16 @@ const TotalAppointmentList = () => {
   const [appointmentState, setAppointmentState] = useState([]);
 
   useEffect(() => {
-    const sampleData = [
-      {
-        patient: {
-          name: "John Doe",
-          phone: "123-456-7890",
-          email: "john@example.com",
-        },
-        appointment: {
-          title: "Consultation",
-          mode: "online",
-          date: "2025-03-15",
-          description: "General consultation",
-        },
-        doctor: {
-          name: "Dr. Smith",
-          phone: "987-654-3210",
-          username: "drsmith",
-          gender: "Male",
-          email: "drsmith@example.com",
-          bio: "Experienced doctor",
-          profession: ["Cardiologist"],
-          department: "Cardiology",
-          experience: "10 years",
-        },
-        status: "Accepted",
-      },
-      {
-        patient: {
-          name: "Jane Doe",
-          phone: "123-456-7891",
-          email: "jane@example.com",
-        },
-        appointment: {
-          title: "Follow-up",
-          mode: "offline",
-          date: "2025-03-20",
-          description: "Follow-up appointment",
-        },
-        doctor: {
-          name: "Dr. Brown",
-          phone: "987-654-3211",
-          username: "drbrown",
-          gender: "Female",
-          email: "drbrown@example.com",
-          bio: "Specialist in follow-ups",
-          profession: ["General Practitioner"],
-          department: "General Medicine",
-          experience: "8 years",
-        },
-        status: "Pending",
-      },
-    ];
-    setAppointmentState(sampleData);
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/appointments/all");
+        setAppointmentState(response.data.appointments); // Update state with fetched data
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
+
+    fetchAppointments(); // Call the API on component mount
   }, []);
 
   const handleShowDetails = (appointment) => {

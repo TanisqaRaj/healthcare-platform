@@ -1,10 +1,11 @@
 import  { useState } from "react";
 import { BsLayoutSidebarInset } from "react-icons/bs";
-import { FaNotesMedical } from "react-icons/fa";
-import { TbHistoryToggle } from "react-icons/tb";
+import { FaUserDoctor } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
 import { AiTwotoneMedicineBox } from "react-icons/ai";
 import { FaBookMedical } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { FaUserCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const AdminSidebar = () => {
@@ -13,8 +14,9 @@ const AdminSidebar = () => {
     const user = useSelector((state) => state.auth.user);
      const sidebarItems = [
         { title: "Total appointment", icon: <FaBookMedical /> ,path:"/totalappointmentlist"},
-        { title: "Registered Doctor", icon: <FaNotesMedical />, path:"/doctorlist" },
-        { title: "registered User", icon: <TbHistoryToggle />, path:"/userlist" },
+        { title: "Registered Doctor", icon: <FaUserDoctor />, path:"/doctorlist" },
+        { title: "registered User", icon: <FaUser />, path:"/userlist" },
+        { title: "Verify Doctor", icon: <FaUserCheck />, path: "https://www.nmc.org.in/information-desk/indian-medical-register/" },
         { title: "Buy Medicine", icon: <AiTwotoneMedicineBox />, path:"/pharmacy" },
       ];
 

@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { BsLayoutSidebarInset } from "react-icons/bs";
 import { FaNotesMedical, FaListUl } from "react-icons/fa";
 import { TbHistoryToggle } from "react-icons/tb";
@@ -9,31 +9,25 @@ import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const sidebarItems = [
-    { title: "Book Appointment", icon: <FaBookMedical /> ,path:"/bookappointment"},
-    { title: "Appointments", icon: <FaNotesMedical />,  },
-    { title: "Appointment List", icon: <FaListUl /> , path: "/appointmentlist"},
-    { title: "Appointment History", icon: <TbHistoryToggle />, path:"/appointmenthistory" },
-    { title: "Buy Medicine", icon: <AiTwotoneMedicineBox />, path:"/pharmacy" },
+    { title: "Book Appointment", icon: <FaBookMedical />, path: "/bookappointment" },
+    { title: "Appointments", icon: <FaNotesMedical />, },
+    { title: "Appointment List", icon: <FaListUl />, path: "/appointmentlist" },
+    { title: "Appointment History", icon: <TbHistoryToggle /> },
+    { title: "Buy Medicine", icon: <AiTwotoneMedicineBox />, path: "/pharmacy" },
   ];
-
-  const openprofile=()=>{
-    navigate("/userprofile")
-  }
 
   return (
     <div
-      className={`${
-        open ? "w-[250px]" : "w-[60px]"
-      } duration-400 p-4 flex flex-col h-[100vh] bg-emerald-500 text-black rounded-r-xl  justify-start sticky top-0`}
+      className={`${open ? "w-[250px]" : "w-[60px]"
+        } duration-400 p-4 flex flex-col max-h-[90vh] h-[90vh] bg-emerald-500 text-black rounded-r-xl  justify-start sticky top-0`}
     >
       {/* Toggle Icon */}
       <div
-        className={`${
-          !open && "rotate-180 justify-center"
-        } flex justify-end mb-6 cursor-pointer`}
+        className={`${!open && "rotate-180 justify-center"
+          } flex justify-end mb-6 cursor-pointer`}
         onClick={() => setOpen(!open)}
       >
         <BsLayoutSidebarInset />
@@ -42,8 +36,7 @@ const Sidebar = () => {
       {/* Profile Picture */}
       {open && (
         <div className="flex flex-col items-center mb-12">
-          <div className="h-24 w-24 border shadow-lg rounded-full overflow-hidden"
-          onClick={openprofile}>
+          <div className="h-24 w-24 border shadow-lg rounded-full overflow-hidden">
             <img
               src={`data:image/png;base64,${user?.image}`}
               className="h-full w-full object-cover"
@@ -57,13 +50,12 @@ const Sidebar = () => {
 
       {/* Sidebar Items */}
       <div className="space-y-6">
-        {sidebarItems.map((item, index) => (          
+        {sidebarItems.map((item, index) => (
           <div
             key={index}
-            className={`flex items-center gap-4 cursor-pointer hover:bg-emerald-600 px-4 py-2 rounded-md ${
-              !open && "justify-center"
-            }`}
-            onClick={() => navigate(item.path)} 
+            className={`flex items-center gap-4 cursor-pointer hover:bg-emerald-600 px-4 py-2 rounded-md ${!open && "justify-center"
+              }`}
+            onClick={() => navigate(item.path)}
           >
             <div className="text-xl">{item.icon}</div>
             {open && (

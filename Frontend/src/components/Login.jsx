@@ -18,7 +18,6 @@ const Login = () => {
   const phoneRegex = /^[0-9]{10}$/; // Simple phone number validation
   const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/; // Simple username validation
   const passwordRegex = /^[A-Za-z]+@[0-9]+$/;
-  ;
 
   const navigateRegister = () => {
     navigate("/registration");
@@ -29,8 +28,14 @@ const Login = () => {
     e.preventDefault();
     setErrorMessage("");
 
-
     // Frontend validation
+    if (!loginType) {
+      setErrorMessage({
+        loginTypeError: "Please select a role.",
+      });
+      return;
+    }
+
     if (
       !emailRegex.test(identifier) &&
       !phoneRegex.test(identifier) &&
@@ -48,7 +53,7 @@ const Login = () => {
 
     if (!passwordRegex.test(password)) {
       setErrorMessage({
-        passwordError: "Password is required",
+        passwordError: "Correct Password is required",
       });
       return;
     } else {
@@ -57,13 +62,26 @@ const Login = () => {
 
     // Backend call
     try {
+      const requestBody = {
+        password,
+        role: loginType,
+      };
+
+      // Send only email or username based on the role
+      if (emailRegex.test(identifier)) {
+        requestBody.email = identifier;
+      } else {
+        requestBody.username = identifier;
+      }
+
+      console.log("Request Body:", requestBody); // Log the request body for debugging
+
       const response = await fetch("http://localhost:8080/auth/login", {
-        
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email:identifier, username:identifier, password, role:loginType }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
@@ -82,8 +100,8 @@ const Login = () => {
           navigate("/doctordashboard");
         } else if (data.user.role === "user") {
           navigate("/dashboard");
-        } else if (data.user.role === "") {
-          navigate("/admindashboard");
+        } else if (data.user.role === "admin") {
+          navigate("/admindashboard"); // Handle admin redirection here
         }
       } else {
         const errorData = await response.json();
@@ -134,6 +152,11 @@ const Login = () => {
               {errorMessage.passwordError}
             </div>
           )}
+          {errorMessage.loginTypeError && (
+            <div className="mb-4 text-red-500 text-sm">
+              {errorMessage.loginTypeError}
+            </div>
+          )}
 
           <form
             onSubmit={(e) => {
@@ -155,9 +178,10 @@ const Login = () => {
                 onChange={(e) => setLoginType(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 sm:py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option value="">Select role</option>
+                <option value="">Select role</option> {/* Updated default value */}
                 <option value="user">User</option>
                 <option value="doctor">Doctor</option>
+                <option value="admin">Admin</option>
               </select>
             </div>
             {/* Identifier Input */}

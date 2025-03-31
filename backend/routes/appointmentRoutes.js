@@ -5,8 +5,8 @@ import {
     getAppointmentHistory,
     getUserAppointments,
     getDoctorAppointments,
-    approveAppointment,
-    cancelAppointment
+    getAllAppointments,
+    getAppointmentStats
    
     //deleteAppointment
 } from '../controllers/appointmentControl.js';
@@ -33,11 +33,11 @@ appointmentRoute.get('/history/:userId', getAppointmentHistory);
 
 appointmentRoute.get('/docapp/:doctorId',getDoctorAppointments);
 
-//approval route for appointment
+//***************************************************************************************************** */
+//Admin Routes for appointments
+appointmentRoute.get('/all',getAllAppointments);
 
-appointmentRoute.put('/approve/:appointmentId',approveAppointment);
-
-//cancellation of appointment
-appointmentRoute.put('/cancel/:appointmentId',cancelAppointment);
+// 📊 Get appointment statistics
+appointmentRoute.get('/stats', getAppointmentStats);
 
 export default appointmentRoute;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const AppointmentHistory = () => {
@@ -60,7 +60,7 @@ const AppointmentHistory = () => {
                   className="text-gray-800 text-center border hover:bg-gray-100"
                 >
                   <td className="px-4 py-3 border">
-                    {item.appointment.customAppointmentId}
+                    {item.customAppointmentID}
                   </td>
                   <td className="px-4 py-3 border">{item.patient.name}</td>
                   <td className="px-4 py-3 border">{item.patient.phone}</td>

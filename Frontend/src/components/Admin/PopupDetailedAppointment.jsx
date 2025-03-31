@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 const PopupDetailedAppointment = ({ show, close, appointment }) => {
 
@@ -112,6 +112,35 @@ const PopupDetailedAppointment = ({ show, close, appointment }) => {
       </div>
     </div>
   );
+};
+PopupDetailedAppointment.propTypes = {
+  show: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  appointment: PropTypes.shape({
+    patient: PropTypes.shape({
+      name: PropTypes.string,
+      phone: PropTypes.string,
+      email: PropTypes.string,
+    }),
+    appointment: PropTypes.shape({
+      title: PropTypes.string,
+      description: PropTypes.string,
+      mode: PropTypes.string,
+      date: PropTypes.string,
+    }),
+    status: PropTypes.string,
+    doctor: PropTypes.shape({
+      name: PropTypes.string,
+      username: PropTypes.string,
+      phone: PropTypes.string,
+      gender: PropTypes.string,
+      email: PropTypes.string,
+      bio: PropTypes.string,
+      profession: PropTypes.arrayOf(PropTypes.string),
+      department: PropTypes.string,
+      experience: PropTypes.string,
+    }),
+  }).isRequired,
 };
 
 export default PopupDetailedAppointment;

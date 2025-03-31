@@ -9,6 +9,11 @@ const findDoctorAndUser = async (doctorId, userId) => {
     return { doctor, user };
 };
 
+// Helper function to get total number of appointments in the database
+const getTotalAppointmentsCount = async () => {
+    return await Appointment.countDocuments();
+};
+
 // Create a new appointment
 
 export const createAppointment = async (req, res) => {
@@ -219,26 +224,73 @@ export const getAppointmentHistory = async (req, res) => {
     }
 };
 
+// Fetch all appointments in the database
+export const getAllAppointments = async (req, res) => {
+    try {
+        const totalAppointmentsCount = await getTotalAppointmentsCount(); // Get total count of appointments
 
+        const appointments = await Appointment.find()
+            .populate({
+                path: "doctorID",
+                select: "name email phone department experience bio profession gender username"
+            })
+            .populate({
+                path: "patientID",
+                select: "name email phone gender age patientAddress"
+            })
+            .select('-__v')
+            .lean();
 
-// ❌ Delete appointment
-// export const deleteAppointment = async (req, res) => {
-//     try {
-//         const { appointmentId } = req.params;
+        if (!appointments.length) {
+            return res.status(404).json({ success: false, message: "No appointments found" });
+        }
 
-//         const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId);
+        // Prepare structured response
+        const response = {
+            success: true,
+            totalAppointments: appointments.length,
+            totalAppointmentsCount, // Include total count in the response
+            appointments: appointments.map((appointment) => ({
+                appointmentID: appointment._id, // MongoDB Appointment ID
+                customAppointmentID: appointment.appointmentID, // Custom generated Appointment ID
+                patientID: appointment.patientID._id, // User (Patient) ID
+                doctorID: appointment.doctorID._id, // Doctor ID
+                status: appointment.state,
+                appointment: {
+                    title: appointment.title,
+                    description: appointment.desc,
+                    date: appointment.expectedDate,
+                    mode: appointment.mode
+                },
+                patient: {
+                    name: appointment.patientName,
+                    email: appointment.patientEmail,
+                    phone: appointment.patientContact,
+                    gender: appointment.gender,
+                    age: appointment.age,
+                    address: appointment.patientID.patientAddress,
+                    disease: appointment.disease
+                },
+                doctor: {
+                    name: appointment.doctorID.name,
+                    email: appointment.doctorID.email,
+                    phone: appointment.doctorID.phone,
+                    profession: appointment.doctorID.profession,
+                    department: appointment.doctorID.department,
+                    experience: appointment.doctorID.experience,
+                    bio: appointment.doctorID.bio,
+                    gender: appointment.doctorID.gender,
+                    username: appointment.doctorID.username
+                }
+            }))
+        };
 
-//         if (!deletedAppointment) {
-//             return res.status(404).json({ message: "Appointment not found" });
-//         }
-
-//         res.status(200).json({ message: "Appointment deleted successfully" });
-//     } catch (error) {
-//         console.error("❌ Error deleting appointment:", error.message);
-//         res.status(500).json({ message: "Server Error: " + error.message });
-//     }
-// };
-
+        res.status(200).json(response);
+    } catch (error) {
+        console.error("❌ Error fetching all appointments:", error.message);
+        res.status(500).json({ success: false, message: "Server Error: " + error.message });
+    }
+};
 
 //*********************************  Doctor Dash appointment list *************************************************************************************/
 
@@ -324,62 +376,22 @@ export const getDoctorAppointments = async (req, res) => {
     }
 };
 
-//Api For doctor dashboard approval
-
-export const approveAppointment = async (req, res) => {
+export const getAppointmentStats = async (req, res) => {
     try {
-        const { appointmentId } = req.params;
-        if (!appointmentId) {
-            return res.status(400).json({ success: false, message: "Appointment ID is required" });
-        }
+        const totalAppointments = await Appointment.countDocuments();
+        const pendingAppointments = await Appointment.countDocuments({ state: "pending" });
+        const completedAppointments = await Appointment.countDocuments({ state: "completed" });
 
-        //MongoDB me `"approved"` update karo
-
-        const updatedAppointment = await Appointment.findByIdAndUpdate(
-            appointmentId,
-            { state: "approved" },
-            { new: true }
-        );
-        if (!updatedAppointment) {
-            return res.status(404).json({ success: false, message: "Appointment not found" });
-        }
         res.status(200).json({
             success: true,
-            message: "Appointment approved successfully",
-            appointment: updatedAppointment
-        })
-    }
-    catch (error) {
-        console.error("❌ Error approving appointment:", error.message);
+            totalAppointments,
+            pendingAppointments,
+            completedAppointments,
+        });
+    } catch (error) {
+        console.error("❌ Error fetching appointment stats:", error.message);
         res.status(500).json({ success: false, message: "Server Error: " + error.message });
     }
-}
-// APi for doctor dashboard appointment cancellation
-export const cancelAppointment = async (req, res) => {
-    try {
-        const { appointmentId } = req.params;
-        if (!appointmentId) {
-            return res.status(400).json({ success: false, message: "Appointment ID is required" });
-        }
+};
 
-        //MongoDB me `"cancelld"` update karo
 
-        const updatedAppointment = await Appointment.findByIdAndUpdate(
-            appointmentId,
-            { state: "cancelled" },
-            { new: true }
-        );
-        if (!updatedAppointment) {
-            return res.status(404).json({ success: false, message: "Appointment not found" });
-        }
-        res.status(200).json({
-            success: true,
-            message: "Appointment cancelled successfully",
-            appointment: updatedAppointment
-        })
-    }
-    catch (error) {
-        console.error("❌ Error cancelled appointment:", error.message);
-        res.status(500).json({ success: false, message: "Server Error: " + error.message });
-    }
-}
