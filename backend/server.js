@@ -9,6 +9,7 @@ import { Server } from "socket.io"; // Corrected import
 import http from "http";
 import Appointment from "./models/Appointment.js";
 import Contract from "./models/Contract.js";
+import { error } from "console";
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
+app.get("/", (req, res) => {
+  res.send("Welcome to the main server!");
+  activeStatus = true;
+});
 app.use("/auth", authRoutes); // Use the auth route as the base path
 app.use("/appointments", appointmentRoute); // Use the appointment route as the base path
 app.use("/doctors", doctorRoute); // Use the doctor route as the base path
