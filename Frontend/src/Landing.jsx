@@ -5,6 +5,7 @@ import "aos/dist/aos.css";
 import doctor from "./assets/images/doctorsGrpPic1.webp";
 import doctors from './assets/images/Doctors.png.png'
 import CountUp from "react-countup";
+import LazyImage from "./LazyImage";
 
 const Landing = () => {
   useEffect(() => {
@@ -90,11 +91,9 @@ const Landing = () => {
             </a>
           </div>
           <div className="md:w-1/2 mt-10 md:mt-0 flex justify-end h-[80vh]">
-            <img
+            <LazyImage
               alt="Doctor"
-              // className="rounded-lg shadow-lg"
               src={doctor}
-              // src="https://images.unsplash.com/photo-1550831107-1553da8c8464?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGRvY3RvcnxlbnwwfHx8fDE2NjU2NjY2NzA&ixlib=rb-1.2.1&q=80&w=1080"
               width={500}
             />
           </div>
@@ -107,12 +106,11 @@ const Landing = () => {
         data-aos="fade-right"
       >
         <div className="md:w-1/2">
-          <img
+          <LazyImage
             alt="Doctor and Patient"
             className="rounded-lg shadow-lg"
             height={300}
             src={doctors}
-            // src="https://storage.googleapis.com/a1aa/image/buWFEDMxXxIfWqRLRKURPIjw9eej0uj94p012ovfpS4iae4fE.jpg"
             width={500}
           />
         </div>
@@ -147,7 +145,7 @@ const Landing = () => {
             data-aos="fade-right"
           >
             <div className="md:w-1/2">
-              <img
+              <LazyImage
                 alt="Doctor and Patient"
                 className="rounded-lg shadow-lg"
                 height={300}
@@ -191,7 +189,7 @@ const Landing = () => {
               </a>
             </div>
             <div className="md:w-1/2 mt-10 md:mt-0 p-4 items-end">
-              <img
+              <LazyImage
                 alt="Medication"
                 className="rounded-lg shadow-lg"
                 height={300}
@@ -253,7 +251,7 @@ const Landing = () => {
               className="bg-white p-6 rounded-lg shadow-lg"
               data-aos="fade-up"
             >
-              <img
+              <LazyImage
                 alt="Health Tip 1"
                 className="rounded-lg mb-4"
                 height={200}
@@ -271,7 +269,7 @@ const Landing = () => {
               data-aos="fade-up"
               data-aos-delay="200"
             >
-              <img
+              <LazyImage
                 alt="Health Tip 2"
                 className="rounded-lg mb-4"
                 height={200}
@@ -288,7 +286,7 @@ const Landing = () => {
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <img
+              <LazyImage
                 alt="Health Tip 3"
                 className="rounded-lg mb-4"
                 height={200}
