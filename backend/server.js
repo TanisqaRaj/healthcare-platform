@@ -41,7 +41,7 @@ app.use("/doctors", doctorRoute); // Use the doctor route as the base path
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: "https://medimentor.netlify.app/",
   },
 });
 
