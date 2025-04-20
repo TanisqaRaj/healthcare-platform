@@ -68,7 +68,7 @@ const IncomingRequest = () => {
     console.log("doctorId", doctorId);
     try {
       const response = await axios.get(
-        `http://localhost:8080/appointments/docapp/${doctorId}`
+        `https://healthcare-platform-server.vercel.app/appointments/docapp/${doctorId}`
       );
       const success = response?.data?.success;
       console.log("response data is", response.data);
