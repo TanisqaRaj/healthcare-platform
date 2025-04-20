@@ -9,7 +9,7 @@ const AppointmentHistory = () => {
   const fetchAppointmentHistory = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/appointments/history/${userId}`
+        `https://healthcare-platform-server.vercel.app/appointments/history/${userId}`
       );
       console.log("userId is", userId);
       console.log("appointment history list ", response.data);

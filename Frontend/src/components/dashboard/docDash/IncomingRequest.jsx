@@ -5,7 +5,7 @@ import MeetingDetails from "./MeetingDetails";
 import { io } from "socket.io-client";
 import Map from "../../Map";
 
-const socket = io("http://localhost:8080");
+const socket = io("https://healthcare-platform-server.vercel.app/");
 
 const IncomingRequest = () => {
   const [appVisible, setAppVisible] = useState(false);

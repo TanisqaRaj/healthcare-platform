@@ -10,7 +10,7 @@ const TotalAppointmentList = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/appointments/all");
+        const response = await axios.get("https://healthcare-platform-server.vercel.app/appointments/all");
         setAppointmentState(response.data.appointments); // Update state with fetched data
       } catch (error) {
         console.error("Error fetching appointments:", error);

@@ -27,7 +27,7 @@ export default function Appointment({ visible, onClose, doctorId }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/appointments/create",
+        "https://healthcare-platform-server.vercel.app/appointments/create",
         appointmentData
       );
       if (response.data.success) {

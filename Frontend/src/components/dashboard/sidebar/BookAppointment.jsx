@@ -21,7 +21,7 @@ const BookAppointment = () => {
   // Count Total Doctors
   const fetchTotalDoctors = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/doctors/totaldoctors");
+      const response = await axios.get("https://healthcare-platform-server.vercel.app/doctors/totaldoctors");
       const success = response?.data?.success;
 
       if (success) {
@@ -42,7 +42,7 @@ const BookAppointment = () => {
   // Fetch Initial Data
   const fetchInitialData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/doctors/listdoctors?page=0&limit=10");
+      const response = await axios.get("https://healthcare-platform-server.vercel.app/doctors/listdoctors?page=0&limit=10");
       const success = response?.data?.success;
 
       if (success) {
@@ -63,10 +63,10 @@ const BookAppointment = () => {
       return;
     }
     try {
-      let url = `http://localhost:8080/doctors/listdoctors?page=${page}&limit=10`;
+      let url = `https://healthcare-platform-server.vercel.app/doctors/listdoctors?page=${page}&limit=10`;
       if (visibleDoctors.length > 0) {
         const lastDoctor = visibleDoctors[visibleDoctors.length - 1];
-        url = `http://localhost:8080/doctors/listdoctors?page=${page}&limit=10&lastId=${lastDoctor._id}`;
+        url = `https://healthcare-platform-server.vercel.app/doctors/listdoctors?page=${page}&limit=10&lastId=${lastDoctor._id}`;
       }
 
       const response = await axios.get(url);

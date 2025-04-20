@@ -11,7 +11,7 @@ const AdminContent = () => {
 
     const fetchTotalUsers = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/doctors/totalusers");
+            const response = await axios.get("https://healthcare-platform-server.vercel.app/doctors/totalusers");
             const success = response?.data?.success;
 
             if (success) {
@@ -26,7 +26,7 @@ const AdminContent = () => {
 
     const fetchTotalDoctors = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/doctors/totaldoctors");
+            const response = await axios.get("https://healthcare-platform-server.vercel.app/doctors/totaldoctors");
             const success = response?.data?.success;
 
             if (success) {
@@ -41,7 +41,7 @@ const AdminContent = () => {
 
     const fetchAppointmentsData = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/appointments/stats");
+            const response = await axios.get("https://healthcare-platform-server.vercel.app/appointments/stats");
             const success = response?.data?.success;
 
             if (success) {

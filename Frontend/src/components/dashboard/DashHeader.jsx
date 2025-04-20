@@ -54,7 +54,7 @@ useEffect(() => {
       return;
     }
     const response = await axios.get(
-      `http://localhost:8080/doctors/searchdoctor?query=${searchTerm}&isDoctor=${isDoctor}`
+      `https://healthcare-platform-server.vercel.app/doctors/searchdoctor?query=${searchTerm}&isDoctor=${isDoctor}`
     );
     let success = response?.data?.success;
     if (success) {

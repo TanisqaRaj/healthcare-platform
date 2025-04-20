@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8080/"); // Replace with your backend URL
+const socket = io("https://healthcare-platform-server.vercel.app/"); // Replace with your backend URL
 
 const AppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);
@@ -21,7 +21,7 @@ const AppointmentList = () => {
   const fetchAppointmentlist = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/appointments/current/${userId}`
+        `https://healthcare-platform-server.vercel.app/appointments/current/${userId}`
       );
       console.log("userId is", userId);
       console.log("appointment list ", response.data);

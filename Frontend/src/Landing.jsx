@@ -25,7 +25,7 @@ const Landing = () => {
   const fetchTotalUsers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/doctors/totalusers"
+        "https://healthcare-platform-server.vercel.app/doctors/totalusers"
       );
       const success = response?.data?.success;
 
@@ -43,7 +43,7 @@ const Landing = () => {
   const fetchTotalDoctors = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/doctors/totaldoctors"
+        "https://healthcare-platform-server.vercel.app/doctors/totaldoctors"
       );
       const success = response?.data?.success;
 
