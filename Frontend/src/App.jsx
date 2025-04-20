@@ -1,4 +1,4 @@
-import "./app.css";
+import "./App.css";
 import About from "./components/pages/About";
 import Header from "./Pharmacy/Components/Header";
 import Footer from "./Pharmacy/Components/Footer";
