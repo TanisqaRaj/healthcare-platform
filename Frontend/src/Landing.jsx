@@ -204,34 +204,43 @@ const Landing = () => {
       </section>
 
       {/* Landing Video Section */}
-      <section
-        className="bg-gray-200 py-20 w-[100vw] min-h-screen"
-        data-aos="zoom-in "
-      >
-        <div className="container mx-auto text-center ">
-          <h2 className="text-3xl font-bold mb-4">
-            Doctor Pharmacy Reservation
-          </h2>
-          <p className="mb-6">
-            Reserve your spot with our expert doctors. Get the best healthcare
-            services at your convenience.
-          </p>
-          <a
-            className="bg-emerald-600 text-white px-6 py-2 rounded-full font-semibold"
-            href="/reserve"
-          >
-            Reserve Now
-          </a>
-          <div className="mt-10 ">
-            <img
-              alt="Doctor Video"
-              className="rounded-lg shadow-lg mx-auto h-[60vh]"
-              src="https://storage.googleapis.com/a1aa/image/mfx3ThaRELQaFi4RJppZNyeTXCwIuKg0vdbLN9yxuuYqmHfnA.jpg"
-              width={700}
-            />
-          </div>
-        </div>
-      </section>
+  <section
+  className="bg-gray-200 py-20 w-[100vw] min-h-screen"
+  data-aos="zoom-in"
+>
+  <div className="container mx-auto text-center">
+    <h2 className="text-3xl font-bold mb-4">
+      Doctor Pharmacy Reservation
+    </h2>
+    <p className="mb-6">
+      Reserve your spot with our expert doctors. Get the best healthcare
+      services at your convenience.
+    </p>
+    <a
+      className="bg-emerald-600 text-white px-6 py-2 rounded-full font-semibold"
+      href="/login"
+    >
+      Reserve Now
+    </a>
+
+    {/* Embedded YouTube Video */}
+    <div className="mt-10 max-w-4xl mx-auto">
+      <iframe
+        className="rounded-lg shadow-lg w-full h-[60vh]"
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/74DWwSxsVSs?si=u72BmFp_AZdDeydO"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      ></iframe>
+    </div>
+  </div>
+</section>
+
+
 
       {/* Landing Health Tips Section */}
       <section className="py-20 w-[100vw] min-h-screen px-8">

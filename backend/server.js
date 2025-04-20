@@ -9,7 +9,7 @@ import { Server } from "socket.io"; // Corrected import
 import http from "http";
 import Appointment from "./models/Appointment.js";
 import Contract from "./models/Contract.js";
-import { error } from "console";
+
 
 // Load environment variables
 dotenv.config();
