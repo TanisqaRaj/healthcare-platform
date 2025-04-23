@@ -1,6 +1,6 @@
 import  { useEffect, useState } from "react";
 import PopupDetailedAppointment from "./PopupDetailedAppointment";
-import axios from "axios"; // Import axios for API calls
+import axios from "axios"; 
 
 const TotalAppointmentList = () => {
   const [popupVisible, setPopupVisible] = useState(false);

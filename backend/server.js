@@ -100,7 +100,6 @@ io.on("connection", (socket) => {
           location: appointment.mode === "offline" ? location : null,
         },
       });
-      contract.generateMeetingId();
       await contract.save();
     }
     appointment.state = appointmentState;
